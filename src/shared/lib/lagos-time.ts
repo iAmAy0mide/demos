@@ -24,3 +24,9 @@ export function formatLagosLongDate(date: Date) { return new Intl.DateTimeFormat
 export function formatLagosTime(date: Date) { return new Intl.DateTimeFormat("en-NG", { timeZone: LAGOS_TIME_ZONE, hour: "2-digit", minute: "2-digit" }).format(date); }
 export function lagosDateKey(date: Date) { const { year, month, day } = lagosDateParts(date); return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`; }
 export function lagosDateTime(date: Date, hour: number, minute = 0) { return `${lagosDateKey(date)}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00+01:00`; }
+export function nextLagosBusinessDayLabels(date: Date) {
+  const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const todayIndex = weekdays.indexOf(lagosWeekday(date));
+  const startIndex = todayIndex === -1 ? 0 : Math.min(todayIndex + 1, weekdays.length - 1);
+  return [...weekdays.slice(startIndex), ...weekdays].slice(0, 3);
+}

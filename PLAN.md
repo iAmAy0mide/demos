@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 5: Rentbook (custom internal tool)**
-> Status: `In progress (part 1 of 2)`
+> Status: `In progress (stabilized, 5A complete)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -286,6 +286,25 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-07, Phase 5 stabilization (5A)
+
+| Slice | Status | Verified state |
+|---|---|---|
+| Foundations and persistence | Partial | Typed seeds, reducer and persisted state exist; validation remains shallow. |
+| Shell and overview | Partial | Top navigation, property selector and overview exist; property filtering and overview metrics/feed/chart are incomplete. |
+| Rent roll | Partial | Route and table component exist; saved views, bulk reminders and keyboard flow are incomplete. |
+| Record payment | Partial | Dialog allocates oldest-first and persists; focus management, validation feedback and success toast are incomplete. |
+| Receipts and reminders | Missing | No completed receipt or reminder flow. |
+| Tenants and properties | Missing | Placeholder routes still render the overview. |
+| Reports and maintenance | Missing | Placeholder routes still render the overview. |
+| Command palette and shortcuts | Missing | Not implemented. |
+| Responsive and accessibility pass | Partial | Static checks pass; browser viewport and keyboard verification could not run in this execution environment. |
+
+- Done: Diagnosed and repaired Harmattan's CSS syntax error (`margin: 0 0: 1rem`); production compilation now clears the Webpack stage. Migrated live Fieldhand, Meridian, Harmattan, Sunreach and Rentbook date handling to the shared Lagos-time helpers. Expanded the fixed-time check to cover weekday, UTC/Lagos rollover, month end and leap day.
+- Verification: `npm run check:tokens`, `npm run typecheck`, `npm run lint` and `npm run check:lagos-time` pass. The `npm run build` output confirmed successful Webpack compilation; this sandbox could not retain a local server/browser session for route and viewport testing.
+- Known issues: Full production-build completion and browser-only Axmion-pill checks must be re-run in the project owner's browser. The pill source is collapsed by default and implements click, hover/focus, Escape and outside-click behavior, but this is source inspection rather than visual validation.
+- Next session (5B), priority order: (1) complete the shell: command palette, reset confirmation, mobile bottom nav, and property switcher filtering every screen; complete the overview metrics, chart and payment feed. (2) complete rent roll saved views, filters, bulk reminder flow and keyboard navigation. (3) complete record-payment validation, allocation preview, focus management and success toast. Do not start receipts, reminders, tenant/property detail, reports or maintenance until those slices are complete.
 
 ### Session: 2026-10-07, Phase 5 audit before repair
 

@@ -279,12 +279,19 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-07 | 4 | Kept Harmattan illustrations in CSS and inline SVG. | This preserves the crafted visual language without network image requests or heavy assets. |
 | 2026-10-07 | 5 | Added Rentbook as the second custom-tool demo and registered `--rbk-*` token validation. | The landlord financial console broadens the showcase without reusing Fieldhand’s product language. |
 | 2026-10-07 | 6 | Reserved Stockroom as an owner-approved optional phase. | A third tool should be built only if Rentbook proves the additional portfolio breadth is needed. |
+| 2026-10-07 | 5 | Used Hanken Grotesk and Spline Sans Mono for Rentbook. | Both are available through `next/font` and give financial values a clear, tabular ledger voice distinct from Fieldhand. |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-07, Phase 5 foundation
+- Done: Added Rentbook’s scoped font/token system, typed property-management domain model, seed portfolio, pure charge/payment/amount-in-words helpers, reducer-backed payment integrity guard, validated persistence provider, and a first overview dashboard slice.
+- In progress / rough: The overview is intentionally limited to collection, outstanding, occupancy and overdue attention. Navigation, rent roll, payment drawer, receipt, reports and the remaining features are not built yet.
+- Known issues: `npm run check:tokens`, `npm run typecheck`, and `npm run lint` pass. Production build and viewport/keyboard validation remain pending.
+- Next session should: Build Rentbook’s top-nav shell and the rent-roll vertical slice, including table filtering, sorting and keyboard row actions.
 
 ### Session: 2026-10-07, Phase 5 setup
 - Done: Marked Harmattan approved; registered Rentbook in project documentation, the shared demo route cycle and the token-validation script; added its scoped token stub; renumbered later phases and reserved optional Stockroom.

@@ -1,1 +1,1 @@
-.rentbook-demo { --rbk-paper: #f6f8f7; --rbk-ink: #0e1a15; --rbk-emerald: #0b6b4d; }
+.rentbook-demo { --rbk-paper:#f6f8f7; --rbk-surface:#ffffff; --rbk-ink:#0e1a15; --rbk-emerald:#0b6b4d; --rbk-muted:#62706a; --rbk-line:#d9e1dc; --rbk-red:#a63127; --rbk-red-pale:#fce9e6; --rbk-shadow:rgba(14,26,21,.08); --rbk-font-sans:var(--font-rbk-sans),sans-serif; --rbk-font-mono:var(--font-rbk-mono),monospace; min-height:100dvh; background:var(--rbk-paper); color:var(--rbk-ink); }

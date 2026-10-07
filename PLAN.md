@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 1: Fieldhand (custom internal tool)**
-> Status: `In progress`
+> Status: `Ready for review`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -19,7 +19,7 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | # | Phase | Status |
 |---|---|---|
 | 0 | Scaffold, route groups, shared demo shell | Approved |
-| 1 | Fieldhand (custom internal tool) | In progress |
+| 1 | Fieldhand (custom internal tool) | Ready for review |
 | 2 | Sunreach Power (landing page) | Not started |
 | 3 | Meridian Freight (business site) | Not started |
 | 4 | Harmattan Coffee Co. (business site) | Not started |
@@ -236,6 +236,7 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-07 | 0 | Added `motion`; deferred GSAP. | Motion is required by the stack; no Phase 0 interaction needs GSAP. |
 | 2026-10-07 | 0 | Use Webpack for the production build script and TypeScript API validation. | The sandbox blocks Turbopack's CSS-loader subprocess port binding; Webpack built all routes successfully. |
 | 2026-10-07 | 1 | Command and task overlays render through client portals. | They remain above the app chrome and retain predictable focus handling. |
+| 2026-10-07 | 1 | Persisted invalid job assignments are discarded or repaired on load. | No saved state can advance unassigned work into travel, site, or completion statuses. |
 
 ---
 
@@ -251,6 +252,12 @@ Codex writes here at the end of each session. Keep the most recent session at th
 - Known issues:
 - Next session should:
 ```
+
+### Session: 2026-10-07, Phase 1
+- Done: Refined Fieldhand's command palette, reducer-backed assignment guard, local-storage validation, toast stack, identity, Lagos date, platform-aware hints, responsive board, filters, saved views, alert strip, richer cards, assignment workflow, incoming-job simulation, and shortcut overlay.
+- In progress / rough: The board uses native drag-and-drop with a calm reduced-motion fallback; the deliberate column scroll remains on narrow screens.
+- Known issues: No functional issues found by static checks or production build. Visual browser sweep remains for owner review in a real browser.
+- Next session should: Review Phase 1 at the requested breakpoints and keyboard flow, then wait for owner approval before starting Phase 2.
 
 ### Session: 2026-10-07, Phase 0
 - Done: App Router scaffold, all five placeholder routes, isolated token stubs, the wrapping accessible demo shell, typed route metadata, project documentation, and strict checks.

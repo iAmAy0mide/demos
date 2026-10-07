@@ -34,7 +34,7 @@ export type FieldhandAction =
   | { type: "set_filters"; filters: Partial<FieldhandFilters> }
   | { type: "set_theme"; themeMode: ThemeMode }
   | { type: "reset"; payload: FieldhandData }
-  | { type: "live_update" }
+  | { type: "live_update"; incomingJob: Job }
   | { type: "dismiss_toast"; toastId: string };
 
 const ASSIGNMENT_REQUIRED_STATUSES: JobStatus[] = ["en_route", "on_site", "done"];
@@ -75,7 +75,7 @@ export function fieldhandReducer(state: FieldhandState, action: FieldhandAction)
     case "reset":
       return addToast({ ...action.payload, filters: defaultFilters, themeMode: state.themeMode, isLoaded: true, toasts: [] }, "Demo data restored.");
     case "live_update":
-      return addToast({ ...state, jobs: state.jobs.map((job) => job.id === "VL-1039" && job.technicianId ? { ...job, status: "on_site" } : job) }, "Ade has arrived at VL-1039.");
+      return addToast({ ...state, jobs: [action.incomingJob, ...state.jobs.map((job) => job.id === "VL-1039" && job.technicianId ? { ...job, status: "on_site" as const } : job)] }, `${action.incomingJob.id} received from service desk.`);
     case "dismiss_toast":
       return { ...state, toasts: state.toasts.filter((toast) => toast.id !== action.toastId) };
   }

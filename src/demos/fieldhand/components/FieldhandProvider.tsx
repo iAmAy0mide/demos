@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
 
-import { createSeedData } from "@/src/demos/fieldhand/data/seedData";
+import { createIncomingJob, createSeedData } from "@/src/demos/fieldhand/data/seedData";
 import { fieldhandReducer, initialFieldhandState } from "@/src/demos/fieldhand/lib/fieldhandReducer";
 import { readPersistedFieldhandState, savePersistedFieldhandState } from "@/src/demos/fieldhand/lib/persistence";
 import type { FieldhandFilters, Job, JobStatus, ThemeMode } from "@/src/demos/fieldhand/types";
@@ -58,7 +58,7 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
       setFilters: (filters) => dispatch({ type: "set_filters", filters }),
       setThemeMode: (themeMode) => dispatch({ type: "set_theme", themeMode }),
       resetDemo: () => dispatch({ type: "reset", payload: createSeedData(new Date()) }),
-      simulateLiveUpdate: () => dispatch({ type: "live_update" }),
+      simulateLiveUpdate: () => dispatch({ type: "live_update", incomingJob: createIncomingJob(new Date(), state.jobs.length) }),
       dismissToast: (toastId) => dispatch({ type: "dismiss_toast", toastId }),
     }),
     [dispatch, state],

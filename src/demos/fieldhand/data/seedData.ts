@@ -3,6 +3,13 @@ import type { Customer, FieldhandData, Job, Quote, Technician } from "@/src/demo
 const VAT_PERCENT = 7.5;
 const DEFAULT_DURATION = 90;
 
+const INCOMING_JOB_TITLES: Record<Job["category"], string[]> = {
+  generator: ["Generator transfer switch diagnostic", "Generator coolant leak inspection"],
+  ac: ["Cassette AC airflow assessment", "Split unit condensate drain repair"],
+  solar: ["Solar charge controller diagnostic", "Hybrid inverter performance check"],
+  electrical: ["Circuit breaker nuisance-trip assessment", "Three-phase voltage imbalance test"],
+};
+
 const customers: Customer[] = [
   { id: "cus-001", name: "Adaeze Okonkwo", company: "Mosaic House", phone: "+234 803 441 9982", email: "adaeze@mosaichouse.ng" },
   { id: "cus-002", name: "Bayo Adeyemi", company: "Aster Logistics", phone: "+234 802 778 1409", email: "bayo@asterlogistics.ng" },
@@ -82,4 +89,12 @@ export function createSeedData(today: Date): FieldhandData {
   ];
 
   return { customers, technicians, jobs, quotes };
+}
+
+export function createIncomingJob(today: Date, jobCount: number): Job {
+  const categories: Job["category"][] = ["generator", "ac", "solar", "electrical"];
+  const category = categories[jobCount % categories.length];
+  const titles = INCOMING_JOB_TITLES[category];
+  const title = titles[jobCount % titles.length];
+  return createJob(today, { id: `VL-${1050 + jobCount}`, title, customerId: "cus-010", address: "Service intake, Lagos", area: "Lekki", category, priority: "normal", status: "unassigned", technicianId: null, scheduledStart: null, durationMinutes: DEFAULT_DURATION, notes: "Received from Voltline service desk.", quoteId: null, activityMessage: "New job received from service desk." });
 }

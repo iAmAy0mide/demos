@@ -3,6 +3,7 @@ import type { FieldhandData, FieldhandFilters, JobStatus, ThemeMode } from "@/sr
 export type FieldhandState = FieldhandData & {
   filters: FieldhandFilters;
   themeMode: ThemeMode;
+  toast: string | null;
   isLoaded: boolean;
 };
 
@@ -20,6 +21,7 @@ export const initialFieldhandState: FieldhandState = {
   quotes: [],
   filters: defaultFilters,
   themeMode: "system",
+  toast: null,
   isLoaded: false,
 };
 
@@ -29,12 +31,13 @@ export type FieldhandAction =
   | { type: "update_notes"; jobId: string; notes: string }
   | { type: "set_filters"; filters: Partial<FieldhandFilters> }
   | { type: "set_theme"; themeMode: ThemeMode }
-  | { type: "reset"; payload: FieldhandData };
+  | { type: "reset"; payload: FieldhandData }
+  | { type: "live_update" };
 
 export function fieldhandReducer(state: FieldhandState, action: FieldhandAction): FieldhandState {
   switch (action.type) {
     case "hydrate":
-      return { ...action.payload, filters: defaultFilters, isLoaded: true };
+      return { ...action.payload, filters: defaultFilters, isLoaded: true, toast: null };
     case "move_job":
       return {
         ...state,
@@ -51,6 +54,8 @@ export function fieldhandReducer(state: FieldhandState, action: FieldhandAction)
     case "set_theme":
       return { ...state, themeMode: action.themeMode };
     case "reset":
-      return { ...action.payload, filters: defaultFilters, themeMode: state.themeMode, isLoaded: true };
+      return { ...action.payload, filters: defaultFilters, themeMode: state.themeMode, isLoaded: true, toast: "Demo data restored." };
+    case "live_update":
+      return { ...state, jobs: state.jobs.map((job) => job.id === "VL-1039" ? { ...job, status: "on_site" } : job), toast: "Ade has arrived at VL-1039." };
   }
 }

@@ -15,6 +15,7 @@ type FieldhandContextValue = {
   setFilters: (filters: Partial<FieldhandFilters>) => void;
   setThemeMode: (themeMode: ThemeMode) => void;
   resetDemo: () => void;
+  simulateLiveUpdate: () => void;
 };
 
 const FieldhandContext = createContext<FieldhandContextValue | null>(null);
@@ -54,6 +55,7 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
       setFilters: (filters) => dispatch({ type: "set_filters", filters }),
       setThemeMode: (themeMode) => dispatch({ type: "set_theme", themeMode }),
       resetDemo: () => dispatch({ type: "reset", payload: createSeedData(new Date()) }),
+      simulateLiveUpdate: () => dispatch({ type: "live_update" }),
     }),
     [dispatch, state],
   );

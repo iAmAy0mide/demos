@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, ClipboardList, Command, LayoutPanelLeft, PanelLeftClose, PanelLeftOpen, SunMoon } from "lucide-react";
+import { CalendarDays, ClipboardList, Command, LayoutPanelLeft, PanelLeftClose, PanelLeftOpen, RotateCcw, SunMoon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -24,13 +24,15 @@ function getResolvedTheme(themeMode: "system" | ResolvedTheme): ResolvedTheme {
 }
 
 export function FieldhandShell({ children }: FieldhandShellProps) {
-  const { state, setThemeMode } = useFieldhand();
+  const { state, setThemeMode, resetDemo, simulateLiveUpdate } = useFieldhand();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     document.documentElement.dataset.fieldhandTheme = getResolvedTheme(state.themeMode);
   }, [state.themeMode]);
+
+  useEffect(() => { if (!state.isLoaded) return; const timer = window.setTimeout(simulateLiveUpdate, 9000); return () => window.clearTimeout(timer); }, [simulateLiveUpdate, state.isLoaded]);
 
   return (
     <div className="min-h-dvh bg-[var(--fld-canvas)] text-[var(--fld-text)]">
@@ -53,10 +55,12 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
           <header className="flex h-14 items-center gap-3 border-b border-[var(--fld-line)] bg-[var(--fld-canvas)] px-4">
             <CommandPalette />
             <button aria-label="Toggle color theme" className="grid size-10 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)]" onClick={() => setThemeMode(state.themeMode === "dark" ? "light" : "dark")} type="button"><SunMoon size={16} /></button>
+            <button aria-label="Reset demo" className="grid size-10 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)]" onClick={resetDemo} type="button"><RotateCcw size={16} /></button>
             <button aria-label="Open command palette" className="grid size-10 place-items-center rounded-md bg-[var(--fld-signal)] text-white hover:brightness-110" type="button"><Command size={17} /></button>
           </header>
           {children}
           <Suspense fallback={null}><JobDrawer /></Suspense>
+          {state.toast && <p className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 border border-[var(--fld-line)] bg-[var(--fld-panel)] px-4 py-3 text-sm shadow-xl" aria-live="polite">{state.toast}</p>}
         </div>
       </div>
     </div>

@@ -5,12 +5,13 @@ import { createContext, useContext, useEffect, useMemo, useReducer } from "react
 import { createSeedData } from "@/src/demos/fieldhand/data/seedData";
 import { fieldhandReducer, initialFieldhandState } from "@/src/demos/fieldhand/lib/fieldhandReducer";
 import { readPersistedFieldhandState, savePersistedFieldhandState } from "@/src/demos/fieldhand/lib/persistence";
-import type { FieldhandFilters, JobStatus, ThemeMode } from "@/src/demos/fieldhand/types";
+import type { FieldhandFilters, Job, JobStatus, ThemeMode } from "@/src/demos/fieldhand/types";
 import type { FieldhandState } from "@/src/demos/fieldhand/lib/fieldhandReducer";
 
 type FieldhandContextValue = {
   state: FieldhandState;
   moveJob: (jobId: string, status: JobStatus, technicianId?: string | null) => void;
+  createJob: (job: Job) => void;
   updateNotes: (jobId: string, notes: string) => void;
   setFilters: (filters: Partial<FieldhandFilters>) => void;
   setThemeMode: (themeMode: ThemeMode) => void;
@@ -51,6 +52,7 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
     () => ({
       state,
       moveJob: (jobId, status, technicianId) => dispatch({ type: "move_job", jobId, status, technicianId: technicianId ?? null }),
+      createJob: (job) => dispatch({ type: "create_job", job }),
       updateNotes: (jobId, notes) => dispatch({ type: "update_notes", jobId, notes }),
       setFilters: (filters) => dispatch({ type: "set_filters", filters }),
       setThemeMode: (themeMode) => dispatch({ type: "set_theme", themeMode }),

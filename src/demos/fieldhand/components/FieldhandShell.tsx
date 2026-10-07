@@ -56,7 +56,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
             <CommandPalette />
             <button aria-label="Toggle color theme" className="grid size-10 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)]" onClick={() => setThemeMode(state.themeMode === "dark" ? "light" : "dark")} type="button"><SunMoon size={16} /></button>
             <button aria-label="Reset demo" className="grid size-10 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)]" onClick={resetDemo} type="button"><RotateCcw size={16} /></button>
-            <button aria-label="Open command palette" className="grid size-10 place-items-center rounded-md bg-[var(--fld-signal)] text-white hover:brightness-110" type="button"><Command size={17} /></button>
+            <button aria-label="Open command palette" className="grid size-10 place-items-center rounded-md bg-[var(--fld-signal)] text-white hover:brightness-110" type="button" onClick={() => window.dispatchEvent(new Event("fieldhand:open-command"))}><Command size={17} /></button>
           </header>
           {children}
           <Suspense fallback={null}><JobDrawer /></Suspense>

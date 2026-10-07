@@ -1,4 +1,4 @@
-import type { FieldhandData, FieldhandFilters, JobStatus, ThemeMode } from "@/src/demos/fieldhand/types";
+import type { FieldhandData, FieldhandFilters, Job, JobStatus, ThemeMode } from "@/src/demos/fieldhand/types";
 
 export type FieldhandState = FieldhandData & {
   filters: FieldhandFilters;
@@ -28,6 +28,7 @@ export const initialFieldhandState: FieldhandState = {
 export type FieldhandAction =
   | { type: "hydrate"; payload: FieldhandData & { themeMode: ThemeMode } }
   | { type: "move_job"; jobId: string; status: JobStatus; technicianId: string | null }
+  | { type: "create_job"; job: Job }
   | { type: "update_notes"; jobId: string; notes: string }
   | { type: "set_filters"; filters: Partial<FieldhandFilters> }
   | { type: "set_theme"; themeMode: ThemeMode }
@@ -47,6 +48,8 @@ export function fieldhandReducer(state: FieldhandState, action: FieldhandAction)
             : job,
         ),
       };
+    case "create_job":
+      return { ...state, jobs: [action.job, ...state.jobs], toast: `${action.job.id} created and ready to dispatch.` };
     case "set_filters":
       return { ...state, filters: { ...state.filters, ...action.filters } };
     case "update_notes":

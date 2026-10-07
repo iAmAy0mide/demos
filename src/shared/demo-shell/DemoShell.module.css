@@ -8,6 +8,7 @@
 .disclosure summary::-webkit-details-marker { display: none; }
 .conceptLabel { position: absolute; right: 0; bottom: calc(100% + .5rem); width: max-content; max-width: min(16rem, calc(100vw - 1.5rem)); padding: .6rem .75rem; color: CanvasText; background: Canvas; border: 1px solid color-mix(in srgb, CanvasText 22%, transparent); border-radius: .5rem; box-shadow: 0 .5rem 1.5rem color-mix(in srgb, CanvasText 16%, transparent); }
 .fieldhandShell { left: 50%; right: auto; bottom: max(.75rem, env(safe-area-inset-bottom)); transform: translateX(-50%); }
+.shell:global(.harmattan-shell) { left:50%; right:auto; transform:translateX(-50%); }
 .fieldhandShell > :not(.disclosure) { display: none; }
 .fieldhandShell .disclosure summary { font-size: 0; min-width: 2.75rem; justify-content: center; }
 .fieldhandShell .disclosure summary::after { content: "Ax"; font-size: .7rem; }

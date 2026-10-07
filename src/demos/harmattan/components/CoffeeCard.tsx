@@ -1,0 +1,3 @@
+"use client";
+import Link from "next/link"; import type { Coffee } from "../types"; import { CoffeeBag } from "./CoffeeBag"; import { naira } from "../lib/pricing"; import { useBag } from "../lib/useBag";
+export function CoffeeCard({coffee}:{coffee:Coffee}){const {add}=useBag();return <article className="hrm-coffee-card"><Link href={`/work/harmattan/coffees/${coffee.slug}`}><CoffeeBag coffee={coffee}/></Link><div><p>{coffee.origin} · {coffee.roast}</p><h3><Link href={`/work/harmattan/coffees/${coffee.slug}`}>{coffee.name}</Link></h3><p>{coffee.notes.join(' · ')}</p><strong>{naira(coffee.price)}</strong><button onClick={()=>add(coffee.slug)}>Add to bag</button></div></article>}

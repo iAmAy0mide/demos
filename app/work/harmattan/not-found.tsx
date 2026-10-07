@@ -1,0 +1,1 @@
+import Link from "next/link"; export default function NotFound(){return <main className="hrm-page"><p className="hrm-kicker">404</p><h1>That cup is not on the menu.</h1><p>The coffee may be between harvests. Let’s find another good one.</p><Link className="hrm-button" href="/work/harmattan/coffees">See coffees</Link></main>}

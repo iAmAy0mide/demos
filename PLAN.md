@@ -241,12 +241,20 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-07 | 2 | Replaced the Fieldhand-only token checker with a prefix-aware all-demo check. | New work cannot introduce undefined scoped tokens without failing the shared verification command. |
 | 2026-10-07 | 3 | Used Archivo and IBM Plex Mono for Meridian’s scoped type system. | Archivo’s variable-width grotesk supports the freight-manifest display language; Plex Mono makes operational values legible and deliberately separates Meridian from the other demos. |
 | 2026-10-07 | 3 | Implemented the route map as a single dependency-free SVG. | The static, CSS-animated vector stays performant and avoids shipping a map-processing pipeline to visitors. |
+| 2026-10-07 | 4 | Used Fraunces and Instrument Sans in Harmattan's route-scoped layout. | Their soft editorial contrast supports the café-and-magazine design without borrowing another demo's voice. |
+| 2026-10-07 | 4 | Kept Harmattan illustrations in CSS and inline SVG. | This preserves the crafted visual language without network image requests or heavy assets. |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-07, Phase 4 implementation
+- Done: Created Harmattan's scoped typography, token system and tactile editorial CSS; added the shared header, mobile menu, bag drawer, footer newsletter, Home, coffee catalogue/detail pages, subscription starter flow, roast lab, café locator, story, journal/article and wholesale routes. Added typed coffee/journal data, typed pricing rules, static params for dynamic routes, a branded 404, and demo README.
+- In progress / rough: The completed vertical slice does not yet meet every detailed Phase 4 signature requirement: the bag state needs a provider so its count synchronizes across every interactive surface; the configurator needs its reducer, per-step validation and preselected-query handling; the story needs Motion scroll transforms and the café opening-hours clock needs a client-time calculation. The overlay uses Escape/outside dismissal but not yet an explicit focus trap.
+- Known issues: `npm run check:tokens`, `npm run typecheck`, and `npm run lint` pass. `npm run build` ends with a generic Next/Webpack error without reporting a diagnostic in this environment; it needs investigation before review. Manual browser and keyboard viewport sweeps have not run.
+- Next session should: Continue only Phase 4: complete the remaining signature mechanics and accessibility requirements, diagnose the build diagnostic, then verify all required viewports before marking it Ready for review.
 
 ### Session: 2026-10-07, Phase 4 planning
 - Done: Recorded Phase 3 as approved and started Phase 4 planning. Confirmed Harmattan's required routes, shared-overlay constraints, short-laptop viewport target, and token-validation requirements.

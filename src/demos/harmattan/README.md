@@ -1,3 +1,3 @@
 # Harmattan Coffee Co.
 
-Harmattan Coffee Co. will be a specialty coffee business site built in Phase 4. Product, café, subscription, and tasting-profile data will remain typed and local to this folder.
+Harmattan is a warm, editorial specialty-coffee site built around recurring subscription revenue. Typed coffee and journal data power static detail routes. The client-side pages provide a persistent bag, subscription price calculation, roast explorer, location filter and simulated form success states. All illustrations are CSS/SVG; no external images are requested.

@@ -1,3 +1,3 @@
-import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Harmattan Coffee Co." };
-export default function HarmattanPage() { return <main><h1>Harmattan Coffee Co.</h1><p>Slow-roasted coffee for deliberate mornings.</p></main>; }
+import type { Metadata } from "next"; import { HomePage } from "@/src/demos/harmattan/components/Pages";
+export const metadata: Metadata = { title: "Harmattan Coffee Co. | Coffee for deliberate mornings", description:"Small-lot coffee roasted in Lagos and delivered with care." };
+export default function HarmattanPage() { return <HomePage/>; }

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
+import { ScheduleTimeline } from "@/src/demos/fieldhand/components/ScheduleTimeline";
 
 export const metadata: Metadata = { title: "Fieldhand schedule" };
 
-export default function FieldhandSchedulePage() {
-  return <main className="p-6"><h1 className="text-xl font-semibold">Today’s schedule</h1></main>;
-}
+export default function FieldhandSchedulePage() { return <ScheduleTimeline />; }

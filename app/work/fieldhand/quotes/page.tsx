@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
+import { QuoteWorkspace } from "@/src/demos/fieldhand/components/QuoteWorkspace";
 
 export const metadata: Metadata = { title: "Fieldhand quotes" };
 
-export default function FieldhandQuotesPage() {
-  return <main className="p-6"><h1 className="text-xl font-semibold">Quotes</h1></main>;
-}
+export default function FieldhandQuotesPage() { return <QuoteWorkspace />; }

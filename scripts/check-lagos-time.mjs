@@ -6,6 +6,8 @@ const checks = [
   [new Date("2026-10-07T10:00:00Z"), "Wednesday", "07", "morning"],
   [new Date("2026-10-31T23:30:00Z"), "Sunday", "01", "morning"],
   [new Date("2026-10-31T22:30:00Z"), "Saturday", "31", "evening"],
+  [new Date("2028-02-29T12:00:00Z"), "Tuesday", "29", "afternoon"],
+  [new Date("2026-11-30T23:30:00Z"), "Tuesday", "01", "morning"],
 ];
 for (const [date, weekday, day, period] of checks) {
   const value = data(date); const actualPeriod = Number(value.hour) < 12 ? "morning" : Number(value.hour) < 17 ? "afternoon" : "evening";

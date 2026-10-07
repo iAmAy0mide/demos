@@ -83,4 +83,7 @@ export type FieldhandFilters = {
   priority: Priority | "all";
   status: JobStatus | "all";
   area: Job["area"] | "all";
+  category: ServiceCategory | "all";
 };
+
+export type Toast = { id: string; message: string };

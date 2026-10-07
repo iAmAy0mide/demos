@@ -17,6 +17,7 @@ type FieldhandContextValue = {
   setThemeMode: (themeMode: ThemeMode) => void;
   resetDemo: () => void;
   simulateLiveUpdate: () => void;
+  dismissToast: (toastId: string) => void;
 };
 
 const FieldhandContext = createContext<FieldhandContextValue | null>(null);
@@ -58,6 +59,7 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
       setThemeMode: (themeMode) => dispatch({ type: "set_theme", themeMode }),
       resetDemo: () => dispatch({ type: "reset", payload: createSeedData(new Date()) }),
       simulateLiveUpdate: () => dispatch({ type: "live_update" }),
+      dismissToast: (toastId) => dispatch({ type: "dismiss_toast", toastId }),
     }),
     [dispatch, state],
   );

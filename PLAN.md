@@ -235,6 +235,7 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 |---|---|---|---|
 | 2026-10-07 | 0 | Added `motion`; deferred GSAP. | Motion is required by the stack; no Phase 0 interaction needs GSAP. |
 | 2026-10-07 | 0 | Use Webpack for the production build script and TypeScript API validation. | The sandbox blocks Turbopack's CSS-loader subprocess port binding; Webpack built all routes successfully. |
+| 2026-10-07 | 1 | Command and task overlays render through client portals. | They remain above the app chrome and retain predictable focus handling. |
 
 ---
 

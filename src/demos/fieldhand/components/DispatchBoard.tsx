@@ -35,7 +35,7 @@ function JobCard({ job }: { job: Job }) {
 }
 
 export function DispatchBoard() {
-  const { state, moveJob } = useFieldhand();
+  const { state, moveJob, setFilters } = useFieldhand();
   const filteredJobs = filterJobs(state.jobs, state.filters);
 
   if (!state.isLoaded) return <main className="p-6 text-sm text-[var(--fld-muted)]" aria-live="polite">Loading dispatch board…</main>;
@@ -44,7 +44,8 @@ export function DispatchBoard() {
     <main className="min-w-0 p-4 md:p-6">
       <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="font-mono text-xs text-[var(--fld-muted)]">Tuesday · Lagos operations</p><h1 className="mt-1 text-2xl font-semibold tracking-[-0.04em]">Dispatch board</h1></div><button type="button" className="inline-flex min-h-10 items-center gap-2 bg-[var(--fld-signal)] px-3 text-sm font-medium text-white hover:brightness-110"><Plus size={16} />New job</button></div>
       <section className="mt-5 grid grid-cols-2 border-y border-[var(--fld-line)] md:grid-cols-4" aria-label="Today’s operations"><Metric label="Jobs today" value={state.jobs.length.toString()} /><Metric label="On-time rate" value="94%" /><Metric label="Unassigned" value={countJobsForStatus(state.jobs, "unassigned").toString()} /><Metric label="Revenue today" value="₦418k" /></section>
-      <section className="mt-5 overflow-x-auto pb-3" aria-label="Job status board"><div className="grid min-w-[1100px] grid-cols-5 gap-3">{boardColumns.map(({ status, label }) => <section key={status} onDragOver={(event) => event.preventDefault()} onDrop={(event) => moveJob(event.dataTransfer.getData("text/plain"), status)}><div className="mb-2 flex items-center justify-between border-b border-[var(--fld-line)] pb-2"><h2 className="text-sm font-medium">{label}</h2><span className="font-mono text-xs text-[var(--fld-muted)]">{countJobsForStatus(filteredJobs, status)}</span></div><div className="space-y-2">{filteredJobs.filter((job) => job.status === status).map((job) => <JobCard key={job.id} job={job} />)}</div></section>)}</div></section>
+      <div className="mt-5 flex gap-2"><select aria-label="Filter by priority" value={state.filters.priority} onChange={(event) => setFilters({ priority: event.target.value as typeof state.filters.priority })} className="h-9 border border-[var(--fld-line)] bg-[var(--fld-raised)] px-2 text-sm"><option value="all">All priorities</option><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select><button type="button" className="border border-[var(--fld-line)] px-3 text-sm hover:border-[var(--fld-signal)]" onClick={() => setFilters({ priority: "all", technicianId: "all", status: "all", area: "all" })}>Clear filters</button></div>
+      <section className="mt-3 overflow-x-auto pb-3" aria-label="Job status board"><div className="grid min-w-[1100px] grid-cols-5 gap-3">{boardColumns.map(({ status, label }) => <section key={status} onDragOver={(event) => event.preventDefault()} onDrop={(event) => moveJob(event.dataTransfer.getData("text/plain"), status)}><div className="mb-2 flex items-center justify-between border-b border-[var(--fld-line)] pb-2"><h2 className="text-sm font-medium">{label}</h2><span className="font-mono text-xs text-[var(--fld-muted)]">{countJobsForStatus(filteredJobs, status)}</span></div><div className="space-y-2">{filteredJobs.filter((job) => job.status === status).map((job) => <JobCard key={job.id} job={job} />)}</div></section>)}</div></section>
     </main>
   );
 }

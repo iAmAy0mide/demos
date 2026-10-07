@@ -1,3 +1,5 @@
 # Fieldhand
 
-Fieldhand will be a dispatch console for Lagos field-service teams, built in Phase 1. Its stateful job, technician, and quote mock data will live in this folder and persist locally only after validation.
+Fieldhand is a dispatch console for Voltline Services, a Lagos field-service company.
+
+It demonstrates a reducer-backed dispatch board, HTML drag/drop plus keyboard moves, deep-linkable job details, a technician schedule with conflict visibility, a quote workspace, command palette, theme persistence, reset, and simulated live status updates. Seed data is generated after mount for today’s schedule and is validated before local-storage state is used.

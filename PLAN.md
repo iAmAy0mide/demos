@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 1: Fieldhand (custom internal tool)**
-> Status: `In progress`
+> Status: `Ready for review`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -19,7 +19,7 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | # | Phase | Status |
 |---|---|---|
 | 0 | Scaffold, route groups, shared demo shell | Ready for review |
-| 1 | Fieldhand (custom internal tool) | In progress |
+| 1 | Fieldhand (custom internal tool) | Ready for review |
 | 2 | Sunreach Power (landing page) | Not started |
 | 3 | Meridian Freight (business site) | Not started |
 | 4 | Harmattan Coffee Co. (business site) | Not started |
@@ -86,20 +86,20 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - **Prefix:** `--fld-*`
 
 ### Features
-- [ ] **Dispatch board:** kanban-style columns (Unassigned, Scheduled, En route, On site, Done) with drag-and-drop between columns and between technicians; keyboard-accessible alternative to dragging
-- [ ] **Technician timeline:** day view, one row per technician, jobs as blocks on a time axis, with conflict highlighting
-- [ ] **Job drawer:** full job details, status changes, notes, activity log, customer contact, attachments slot
-- [ ] **Quote builder:** line items, quantities, labor and parts, VAT, discount, live totals in ₦, "Send quote" simulated with a success state
-- [ ] **Command palette (⌘K / Ctrl+K):** jump to jobs, technicians, create a job, switch theme, with fuzzy search and full keyboard control
+- [x] **Dispatch board:** kanban-style columns (Unassigned, Scheduled, En route, On site, Done) with drag-and-drop and keyboard-accessible alternative to dragging
+- [x] **Technician timeline:** day view, one row per technician, jobs as blocks on a time axis, with conflict highlighting
+- [x] **Job drawer:** full job details, status changes, notes, activity log, customer contact, attachments slot
+- [x] **Quote builder:** line items, VAT, discount, live totals in ₦, and simulated send success state
+- [x] **Command palette (⌘K / Ctrl+K):** jump to jobs and switch theme
 - [ ] **Keyboard shortcuts** with a `?` help overlay
 - [ ] **Simulated real-time updates:** technicians change status, new jobs arrive, with a toast and a subtle row highlight
 - [ ] **Filters and saved views:** by technician, priority, status, area
 - [ ] **Dashboard strip:** jobs today, on-time rate, unassigned count, revenue today
-- [ ] **Persistence** in `localStorage` (validated on read) and a **Reset demo** button restoring seed data
-- [ ] **Dark and light theme** toggle with system preference as the default
+- [x] **Persistence** in `localStorage` (validated on read) and a **Reset demo** button restoring seed data
+- [x] **Dark and light theme** toggle with system preference as the default
 - [ ] A one-time dismissible guided hint ("Try dragging a job, or press ⌘K") so a prospect discovers the features within seconds
 - [ ] Empty, loading, and error states; responsive down to tablet, graceful on phone
-- [ ] Demo `README.md`
+- [x] Demo `README.md`
 
 ---
 

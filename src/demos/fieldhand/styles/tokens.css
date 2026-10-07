@@ -1,4 +1,4 @@
-.fieldhand-demo {
+:root[data-fieldhand-theme="dark"], .fieldhand-demo {
   --fld-canvas: #10151f;
   --fld-panel: #151c28;
   --fld-raised: #1a2331;
@@ -17,7 +17,7 @@
   font-family: var(--fld-font-sans), sans-serif;
 }
 
-:root[data-fieldhand-theme="light"] .fieldhand-demo {
+:root[data-fieldhand-theme="light"], :root[data-fieldhand-theme="light"] .fieldhand-demo {
   --fld-canvas: #f4f7fb;
   --fld-panel: #ffffff;
   --fld-raised: #edf2f8;

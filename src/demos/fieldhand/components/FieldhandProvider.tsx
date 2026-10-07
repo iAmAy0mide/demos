@@ -1,0 +1,66 @@
+"use client";
+
+import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
+
+import { createSeedData } from "@/src/demos/fieldhand/data/seedData";
+import { fieldhandReducer, initialFieldhandState } from "@/src/demos/fieldhand/lib/fieldhandReducer";
+import { readPersistedFieldhandState, savePersistedFieldhandState } from "@/src/demos/fieldhand/lib/persistence";
+import type { FieldhandFilters, JobStatus, ThemeMode } from "@/src/demos/fieldhand/types";
+import type { FieldhandState } from "@/src/demos/fieldhand/lib/fieldhandReducer";
+
+type FieldhandContextValue = {
+  state: FieldhandState;
+  moveJob: (jobId: string, status: JobStatus, technicianId?: string | null) => void;
+  setFilters: (filters: Partial<FieldhandFilters>) => void;
+  setThemeMode: (themeMode: ThemeMode) => void;
+  resetDemo: () => void;
+};
+
+const FieldhandContext = createContext<FieldhandContextValue | null>(null);
+
+function useFieldhandState() {
+  const [state, dispatch] = useReducer(fieldhandReducer, initialFieldhandState);
+
+  useEffect(() => {
+    const seedData = createSeedData(new Date());
+    const persistedState = readPersistedFieldhandState();
+    dispatch({ type: "hydrate", payload: persistedState ?? { ...seedData, themeMode: "system" } });
+  }, []);
+
+  useEffect(() => {
+    if (!state.isLoaded) return;
+    savePersistedFieldhandState({
+      customers: state.customers,
+      technicians: state.technicians,
+      jobs: state.jobs,
+      quotes: state.quotes,
+      themeMode: state.themeMode,
+    });
+  }, [state]);
+
+  return { state, dispatch };
+}
+
+type FieldhandProviderProps = Readonly<{ children: React.ReactNode }>;
+
+export function FieldhandProvider({ children }: FieldhandProviderProps) {
+  const { state, dispatch } = useFieldhandState();
+  const contextValue = useMemo<FieldhandContextValue>(
+    () => ({
+      state,
+      moveJob: (jobId, status, technicianId) => dispatch({ type: "move_job", jobId, status, technicianId: technicianId ?? null }),
+      setFilters: (filters) => dispatch({ type: "set_filters", filters }),
+      setThemeMode: (themeMode) => dispatch({ type: "set_theme", themeMode }),
+      resetDemo: () => dispatch({ type: "reset", payload: createSeedData(new Date()) }),
+    }),
+    [dispatch, state],
+  );
+
+  return <FieldhandContext.Provider value={contextValue}>{children}</FieldhandContext.Provider>;
+}
+
+export function useFieldhand() {
+  const contextValue = useContext(FieldhandContext);
+  if (!contextValue) throw new Error("useFieldhand must be used within FieldhandProvider.");
+  return contextValue;
+}

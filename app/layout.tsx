@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/src/shared/demo-shell/DemoShell.css";
 
 export const metadata: Metadata = {
   title: { default: "Axmion Showcase", template: "%s | Axmion Showcase" },

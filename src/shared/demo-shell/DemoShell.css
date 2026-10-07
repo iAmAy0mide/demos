@@ -1,0 +1,81 @@
+.axm-shell {
+  --axm-shell-bg: #f8faf9;
+  --axm-shell-ink: #17201c;
+  --axm-shell-line: #bdc8c1;
+  --axm-shell-focus: #157450;
+  --axm-shell-hover: #dfe8e2;
+  --axm-shell-bottom: max(.75rem, env(safe-area-inset-bottom));
+  position: fixed;
+  z-index: 80;
+  left: 50%;
+  bottom: var(--axm-shell-bottom);
+  transform: translateX(-50%);
+  color: var(--axm-shell-ink);
+  font: 500 12px/1.2 ui-sans-serif, sans-serif;
+}
+
+.axm-shell-handle,
+.axm-shell-panel {
+  border: 1px solid var(--axm-shell-line);
+  background: var(--axm-shell-bg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
+}
+
+.axm-shell-handle {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 14px;
+  color: inherit;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.axm-shell-panel {
+  position: absolute;
+  bottom: 52px;
+  left: 50%;
+  display: none;
+  width: max-content;
+  min-width: 270px;
+  max-width: calc(100vw - 24px);
+  padding: 6px;
+  transform: translateX(-50%);
+  border-radius: 7px;
+}
+
+.axm-shell:hover .axm-shell-panel,
+.axm-shell:focus-within .axm-shell-panel,
+.axm-shell-panel-open {
+  display: grid;
+  gap: 2px;
+}
+
+.axm-shell-panel a,
+.axm-shell-panel span,
+.axm-shell-panel small {
+  padding: 9px 10px;
+  color: inherit;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.axm-shell-panel a:hover,
+.axm-shell-panel a:focus-visible {
+  background: var(--axm-shell-hover);
+}
+
+.axm-shell-panel small {
+  color: color-mix(in srgb, var(--axm-shell-ink) 70%, transparent);
+}
+
+.axm-shell-handle:focus-visible,
+.axm-shell-panel a:focus-visible {
+  outline: 3px solid var(--axm-shell-focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 38rem) {
+  .axm-shell-panel {
+    min-width: min(270px, calc(100vw - 24px));
+  }
+}

@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import type { DemoRouteId } from "./demoRoutes";
-import { getAdjacentDemo } from "./demoRoutes";
-import styles from "./DemoShell.module.css";
+import { demoRoutes, getAdjacentDemo } from "./demoRoutes";
 
 type DemoShellProps = { currentDemo: DemoRouteId; bottomOffset?: string };
 
@@ -21,10 +20,10 @@ export function DemoShell({ currentDemo, bottomOffset }: DemoShellProps) {
   }, []);
 
   return (
-    <aside ref={containerRef} className={styles.shell} style={bottomOffset ? { "--axm-shell-bottom": bottomOffset } as React.CSSProperties : undefined} aria-label="Axmion concept navigation">
-      <button className={styles.handle} type="button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>Axmion</button>
-      <nav className={`${styles.panel} ${open ? styles.open : ""}`} aria-label="Browse concept work">
-        <Link href="/">← Back to showcase</Link><span>{getAdjacentDemo(currentDemo, 0).name}</span><Link href={nextDemo.path}>Next work →</Link><small>Concept work by Axmion</small>
+    <aside ref={containerRef} className="axm-shell" style={bottomOffset ? { "--axm-shell-bottom": bottomOffset } as React.CSSProperties : undefined} aria-label="Axmion concept navigation">
+      <button className="axm-shell-handle" type="button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>Axmion</button>
+      <nav className={`axm-shell-panel ${open ? "axm-shell-panel-open" : ""}`} aria-label="Browse concept work">
+        <Link href="/">← Back to showcase</Link><span>{demoRoutes[currentDemo].name}</span><Link href={nextDemo.path}>Next work →</Link><small>Concept work by Axmion</small>
       </nav>
     </aside>
   );

@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
+import { useDismissibleLayer } from "@/src/demos/fieldhand/lib/useDismissibleLayer";
 
 type PaletteGroup = "Navigate" | "Actions" | "Preferences";
 type PaletteItem = { id: string; group: PaletteGroup; label: string; icon: typeof Search; run: () => void };
@@ -30,6 +31,7 @@ export function CommandPalette() {
   const shortcut = isMac ? "⌘K" : "Ctrl K";
   const close = () => setIsOpen(false);
   const open = () => { openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; setQuery(""); setIsOpen(true); };
+  useDismissibleLayer({ isOpen, onDismiss: close, layerRef: dialogRef, triggerRef: openerRef });
 
   useEffect(() => {
     const platformFrame = window.requestAnimationFrame(() => setIsMac(/Mac|iPhone|iPad/i.test(navigator.platform)));

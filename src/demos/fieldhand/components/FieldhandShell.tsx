@@ -3,9 +3,10 @@
 import { CalendarDays, ClipboardList, Command, LayoutPanelLeft, PanelLeftClose, PanelLeftOpen, Search, SunMoon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
+import { JobDrawer } from "@/src/demos/fieldhand/components/JobDrawer";
 import type { ResolvedTheme } from "@/src/demos/fieldhand/types";
 
 type FieldhandShellProps = Readonly<{ children: React.ReactNode }>;
@@ -54,6 +55,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
             <button aria-label="Open command palette" className="grid size-10 place-items-center rounded-md bg-[var(--fld-signal)] text-white hover:brightness-110" type="button"><Command size={17} /></button>
           </header>
           {children}
+          <Suspense fallback={null}><JobDrawer /></Suspense>
         </div>
       </div>
     </div>

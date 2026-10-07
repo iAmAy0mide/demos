@@ -26,6 +26,7 @@ export const initialFieldhandState: FieldhandState = {
 export type FieldhandAction =
   | { type: "hydrate"; payload: FieldhandData & { themeMode: ThemeMode } }
   | { type: "move_job"; jobId: string; status: JobStatus; technicianId: string | null }
+  | { type: "update_notes"; jobId: string; notes: string }
   | { type: "set_filters"; filters: Partial<FieldhandFilters> }
   | { type: "set_theme"; themeMode: ThemeMode }
   | { type: "reset"; payload: FieldhandData };
@@ -45,6 +46,8 @@ export function fieldhandReducer(state: FieldhandState, action: FieldhandAction)
       };
     case "set_filters":
       return { ...state, filters: { ...state.filters, ...action.filters } };
+    case "update_notes":
+      return { ...state, jobs: state.jobs.map((job) => job.id === action.jobId ? { ...job, notes: action.notes } : job) };
     case "set_theme":
       return { ...state, themeMode: action.themeMode };
     case "reset":

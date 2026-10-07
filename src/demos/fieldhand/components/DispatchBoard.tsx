@@ -2,6 +2,7 @@
 
 import { AlertTriangle, Plus } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
 
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
 import { countJobsForStatus, filterJobs } from "@/src/demos/fieldhand/lib/jobUtils";
@@ -25,7 +26,7 @@ function JobCard({ job }: { job: Job }) {
   return (
     <article draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", job.id)} className="border border-[var(--fld-line)] bg-[var(--fld-raised)] p-3 shadow-[0_1px_0_rgba(0,0,0,.16)]">
       <div className="flex items-start justify-between gap-2"><span className="font-mono text-[11px] text-[var(--fld-muted)]">{job.id}</span>{job.priority === "urgent" && <AlertTriangle className="text-[var(--fld-signal)]" size={15} aria-label="Urgent" />}</div>
-      <h2 className="mt-2 text-sm font-medium leading-5">{job.title}</h2>
+      <h2 className="mt-2 text-sm font-medium leading-5"><Link className="hover:text-[var(--fld-signal)]" href={`/work/fieldhand?job=${job.id}`}>{job.title}</Link></h2>
       <p className="mt-2 text-xs text-[var(--fld-muted)]">{job.area} · {priorityLabel[job.priority]}</p>
       <div className="mt-3 flex items-center justify-between text-xs"><span className="font-mono text-[var(--fld-muted)]">{technician?.initials ?? "—"}</span><button type="button" className="text-[var(--fld-signal)] hover:underline" onClick={() => setIsMoving((value) => !value)}>Move</button></div>
       {isMoving && <div className="mt-2 grid grid-cols-2 gap-1">{boardColumns.filter(({ status }) => status !== job.status).map(({ status, label }) => <button key={status} type="button" className="border border-[var(--fld-line)] px-1.5 py-1 text-left text-[11px] hover:border-[var(--fld-signal)]" onClick={() => { moveJob(job.id, status); setIsMoving(false); }}>{label}</button>)}</div>}

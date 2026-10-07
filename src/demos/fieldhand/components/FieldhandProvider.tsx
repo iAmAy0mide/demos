@@ -11,6 +11,7 @@ import type { FieldhandState } from "@/src/demos/fieldhand/lib/fieldhandReducer"
 type FieldhandContextValue = {
   state: FieldhandState;
   moveJob: (jobId: string, status: JobStatus, technicianId?: string | null) => void;
+  updateNotes: (jobId: string, notes: string) => void;
   setFilters: (filters: Partial<FieldhandFilters>) => void;
   setThemeMode: (themeMode: ThemeMode) => void;
   resetDemo: () => void;
@@ -49,6 +50,7 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
     () => ({
       state,
       moveJob: (jobId, status, technicianId) => dispatch({ type: "move_job", jobId, status, technicianId: technicianId ?? null }),
+      updateNotes: (jobId, notes) => dispatch({ type: "update_notes", jobId, notes }),
       setFilters: (filters) => dispatch({ type: "set_filters", filters }),
       setThemeMode: (themeMode) => dispatch({ type: "set_theme", themeMode }),
       resetDemo: () => dispatch({ type: "reset", payload: createSeedData(new Date()) }),

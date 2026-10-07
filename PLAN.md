@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 1: Fieldhand (custom internal tool)**
-> Status: `Ready for review`
+> Status: `Approved`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -18,8 +18,8 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 
 | # | Phase | Status |
 |---|---|---|
-| 0 | Scaffold, route groups, shared demo shell | Ready for review |
-| 1 | Fieldhand (custom internal tool) | Ready for review |
+| 0 | Scaffold, route groups, shared demo shell | Approved |
+| 1 | Fieldhand (custom internal tool) | Approved |
 | 2 | Sunreach Power (landing page) | Not started |
 | 3 | Meridian Freight (business site) | Not started |
 | 4 | Harmattan Coffee Co. (business site) | Not started |

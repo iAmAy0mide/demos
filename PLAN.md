@@ -253,6 +253,12 @@ Codex writes here at the end of each session. Keep the most recent session at th
 - Next session should:
 ```
 
+### Session: 2026-10-07, Phase 1 refinement
+- Done: Repaired the Fieldhand short-viewport flex/scroll chain; collapsed the sidebar below 1360px; compacted board chrome; added opaque overlay tokens, themed scrollbars, and token validation; added an initial reusable dismissal hook; enforced technician assignment for scheduled and active states; bounded incoming-job simulation; restored the Fieldhand demo-shell handle.
+- In progress / rough: The reusable dismissal hook is integrated with the command palette; remaining board card menus and filters still need the fuller shared-layer and keyboard-menu pass requested by the owner.
+- Known issues: Static checks pass. The browser sweep at the specified viewport sizes remains pending in a real browser.
+- Next session should: Complete the outstanding dismissible-menu behavior, filter popover, card/menu keyboard navigation, and visual viewport review before requesting Phase 1 approval.
+
 ### Session: 2026-10-07, Phase 1
 - Done: Refined Fieldhand's command palette, reducer-backed assignment guard, local-storage validation, toast stack, identity, Lagos date, platform-aware hints, responsive board, filters, saved views, alert strip, richer cards, assignment workflow, incoming-job simulation, and shortcut overlay.
 - In progress / rough: The board uses native drag-and-drop with a calm reduced-motion fallback; the deliberate column scroll remains on narrow screens.

@@ -34,11 +34,11 @@
   --fld-backdrop: rgba(24, 34, 50, .32);
 }
 
-.fieldhand-demo * {
+.fieldhand-demo *, .fieldhand-overlay * {
   scrollbar-color: var(--fld-line) transparent;
   scrollbar-width: thin;
 }
 
-.fieldhand-demo *::-webkit-scrollbar { width: .5rem; height: .5rem; }
-.fieldhand-demo *::-webkit-scrollbar-thumb { background: var(--fld-line); border: 2px solid transparent; border-radius: 999px; background-clip: padding-box; }
-.fieldhand-demo *:focus-visible { outline: 2px solid var(--fld-focus); outline-offset: 2px; }
+.fieldhand-demo *::-webkit-scrollbar, .fieldhand-overlay *::-webkit-scrollbar { width: .5rem; height: .5rem; }
+.fieldhand-demo *::-webkit-scrollbar-thumb, .fieldhand-overlay *::-webkit-scrollbar-thumb { background: var(--fld-line); border: 2px solid transparent; border-radius: 999px; background-clip: padding-box; }
+.fieldhand-demo *:focus-visible, .fieldhand-overlay *:focus-visible { outline: 2px solid var(--fld-focus); outline-offset: 2px; }

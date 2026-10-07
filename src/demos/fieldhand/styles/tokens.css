@@ -1,1 +1,25 @@
-.fieldhand-demo { --fld-surface: #10141c; --fld-ink: #e5ebf5; --fld-signal: #7c8cff; --fld-muted: #96a1b2; min-height: 100dvh; background: var(--fld-surface); color: var(--fld-ink); }
+.fieldhand-demo {
+  --fld-canvas: #10151f;
+  --fld-panel: #151c28;
+  --fld-raised: #1a2331;
+  --fld-line: #2b3545;
+  --fld-text: #e8edf5;
+  --fld-muted: #93a0b3;
+  --fld-hover: #202a39;
+  --fld-selected: #1b2a4a;
+  --fld-signal: #7189ff;
+  min-height: 100dvh;
+  font-family: var(--fld-font-sans), sans-serif;
+}
+
+:root[data-fieldhand-theme="light"] .fieldhand-demo {
+  --fld-canvas: #f4f7fb;
+  --fld-panel: #ffffff;
+  --fld-raised: #edf2f8;
+  --fld-line: #d6deea;
+  --fld-text: #192232;
+  --fld-muted: #65738a;
+  --fld-hover: #e8eef8;
+  --fld-selected: #e5eaff;
+  --fld-signal: #465ee9;
+}

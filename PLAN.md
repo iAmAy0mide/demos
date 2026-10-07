@@ -280,12 +280,22 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-07 | 5 | Added Rentbook as the second custom-tool demo and registered `--rbk-*` token validation. | The landlord financial console broadens the showcase without reusing Fieldhand’s product language. |
 | 2026-10-07 | 6 | Reserved Stockroom as an owner-approved optional phase. | A third tool should be built only if Rentbook proves the additional portfolio breadth is needed. |
 | 2026-10-07 | 5 | Used Hanken Grotesk and Spline Sans Mono for Rentbook. | Both are available through `next/font` and give financial values a clear, tabular ledger voice distinct from Fieldhand. |
+| 2026-10-07 | 5 | Moved the Axmion shell from a CSS Module to a root-loaded shared stylesheet. | Turbopack emitted the module CSS but exported an empty class map at runtime, leaving the shell’s DOM without class names. |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-07, Phase 5 shell-style diagnostic repair
+
+- Root cause, verified in the live dev build: Tailwind v4’s scanner and Rentbook stylesheet import both worked. `rbk-top` and `rbk-brand` were present in the rendered DOM but had no source or emitted CSS selector, while the existing `rbk-primary` selector matched. The Axmion module stylesheet was emitted, but Turbopack’s client bundle exported its CSS Module as `{}`; `styles.shell`, `styles.handle`, and `styles.panel` therefore rendered no class names. There were no CSS parse or `@import` errors, and Rentbook/Axmion tokens resolved within their owning wrappers.
+- Done: added the Rentbook sticky document-bar styling, responsive navigation, branded property control, rent-roll search trigger, and single top-bar payment action; removed the duplicate overview action. Replaced the broken Axmion CSS Module with root-loaded `DemoShell.css`, scoped `--axm-shell-*` tokens, and retained click, hover/focus, Escape, and outside-click collapse behavior.
+- Guard: `check:tokens` now also checks `rbk-*` and `axm-shell-*` component class references against their stylesheet definitions. It exposed and repaired the pre-existing missing `rbk-dialog` selector.
+- Browser evidence: Firefox at 1296×640 showed Rentbook with its ruled sticky header, emerald R mark, active Overview underline, styled property switcher/search/payment controls, and a centered collapsed Axmion handle. Harmattan showed its independent editorial hero with the same styled collapsed handle. The emitted CSS bundles contain matching selectors for all of those DOM classes. Expanded state is supplied by the live `axm-shell-panel-open` class and hover/focus selector; it includes Back to showcase, Rentbook, Next work, and the concept label.
+- Verification: `corepack pnpm run check:tokens`, `lint`, `typecheck`, and `build` pass; pnpm emits a sandbox-only read-only store-lock warning before it runs each script. Commit: `65f3276 fix(rentbook): restore shell styles`.
+- Scope stop: no 5B work started. Existing uncommitted Rentbook route/provider work remains deliberately untouched.
 
 ### Session: 2026-10-07, Phase 5 stabilization (5A)
 

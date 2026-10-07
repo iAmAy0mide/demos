@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
 
-import { createIncomingJob, createSeedData } from "@/src/demos/fieldhand/data/seedData";
+import { createIncomingJob, createSeedData, MAX_UNASSIGNED_JOBS } from "@/src/demos/fieldhand/data/seedData";
 import { fieldhandReducer, initialFieldhandState } from "@/src/demos/fieldhand/lib/fieldhandReducer";
 import { readPersistedFieldhandState, savePersistedFieldhandState } from "@/src/demos/fieldhand/lib/persistence";
 import type { FieldhandFilters, Job, JobStatus, ThemeMode } from "@/src/demos/fieldhand/types";
@@ -58,7 +58,13 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
       setFilters: (filters) => dispatch({ type: "set_filters", filters }),
       setThemeMode: (themeMode) => dispatch({ type: "set_theme", themeMode }),
       resetDemo: () => dispatch({ type: "reset", payload: createSeedData(new Date()) }),
-      simulateLiveUpdate: () => dispatch({ type: "live_update", incomingJob: createIncomingJob(new Date(), state.jobs.length) }),
+      simulateLiveUpdate: () => {
+        const unassigned = state.jobs.filter((job) => job.status === "unassigned").length;
+        const openTitles = state.jobs.filter((job) => job.status !== "done").map((job) => job.title);
+        const incomingJobs = state.jobs.filter((job) => job.id.startsWith("VL-10") && job.activity.some((entry) => entry.message === "New job received from service desk.")).length;
+        const incomingJob = unassigned >= MAX_UNASSIGNED_JOBS ? null : createIncomingJob(new Date(), incomingJobs, openTitles);
+        if (incomingJob) dispatch({ type: "live_update", incomingJob });
+      },
       dismissToast: (toastId) => dispatch({ type: "dismiss_toast", toastId }),
     }),
     [dispatch, state],

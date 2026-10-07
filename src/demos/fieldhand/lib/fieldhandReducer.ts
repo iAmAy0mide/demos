@@ -37,7 +37,7 @@ export type FieldhandAction =
   | { type: "live_update"; incomingJob: Job }
   | { type: "dismiss_toast"; toastId: string };
 
-const ASSIGNMENT_REQUIRED_STATUSES: JobStatus[] = ["en_route", "on_site", "done"];
+const ASSIGNMENT_REQUIRED_STATUSES: JobStatus[] = ["scheduled", "en_route", "on_site", "done"];
 
 function requiresTechnician(status: JobStatus) {
   return ASSIGNMENT_REQUIRED_STATUSES.includes(status);

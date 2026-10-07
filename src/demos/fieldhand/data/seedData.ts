@@ -2,6 +2,8 @@ import type { Customer, FieldhandData, Job, Quote, Technician } from "@/src/demo
 
 const VAT_PERCENT = 7.5;
 const DEFAULT_DURATION = 90;
+export const MAX_INCOMING_JOBS_PER_SESSION = 3;
+export const MAX_UNASSIGNED_JOBS = 8;
 
 const INCOMING_JOB_TITLES: Record<Job["category"], string[]> = {
   generator: ["Generator transfer switch diagnostic", "Generator coolant leak inspection"],
@@ -91,10 +93,12 @@ export function createSeedData(today: Date): FieldhandData {
   return { customers, technicians, jobs, quotes };
 }
 
-export function createIncomingJob(today: Date, jobCount: number): Job {
+export function createIncomingJob(today: Date, jobCount: number, openTitles: readonly string[]): Job | null {
+  if (jobCount >= MAX_INCOMING_JOBS_PER_SESSION) return null;
   const categories: Job["category"][] = ["generator", "ac", "solar", "electrical"];
-  const category = categories[jobCount % categories.length];
-  const titles = INCOMING_JOB_TITLES[category];
-  const title = titles[jobCount % titles.length];
+  const choices = categories.flatMap((category) => INCOMING_JOB_TITLES[category].map((title) => ({ category, title }))).filter((choice) => !openTitles.includes(choice.title));
+  const next = choices[jobCount % choices.length];
+  if (!next) return null;
+  const { category, title } = next;
   return createJob(today, { id: `VL-${1050 + jobCount}`, title, customerId: "cus-010", address: "Service intake, Lagos", area: "Lekki", category, priority: "normal", status: "unassigned", technicianId: null, scheduledStart: null, durationMinutes: DEFAULT_DURATION, notes: "Received from Voltline service desk.", quoteId: null, activityMessage: "New job received from service desk." });
 }

@@ -8,7 +8,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-const ASSIGNMENT_REQUIRED_STATUSES: JobStatus[] = ["en_route", "on_site", "done"];
+const ASSIGNMENT_REQUIRED_STATUSES: JobStatus[] = ["scheduled", "en_route", "on_site", "done"];
 
 function isPersistedFieldhandState(value: unknown): value is PersistedFieldhandState {
   if (!isRecord(value)) return false;
@@ -28,10 +28,9 @@ function isValidJob(job: unknown): job is Job {
 }
 
 function repairPersistedState(state: PersistedFieldhandState): PersistedFieldhandState | null {
-  if (!state.jobs.every(isValidJob)) return null;
   const technicianIds = new Set(state.technicians.map((technician) => technician.id));
   const jobs = state.jobs.map((job) => {
-    if (job.technicianId && !technicianIds.has(job.technicianId)) {
+    if ((job.technicianId && !technicianIds.has(job.technicianId)) || !isValidJob(job)) {
       return { ...job, technicianId: null, status: "unassigned" as const };
     }
     return job;

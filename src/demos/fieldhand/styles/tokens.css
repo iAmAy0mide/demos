@@ -8,6 +8,11 @@
   --fld-hover: #202a39;
   --fld-selected: #1b2a4a;
   --fld-signal: #7189ff;
+  --fld-focus: #9baaff;
+  --fld-surface-overlay: #151c28;
+  --fld-border-strong: #53627b;
+  --fld-shadow-overlay: 0 1.5rem 3.5rem rgba(0, 0, 0, .42);
+  --fld-backdrop: rgba(5, 9, 16, .58);
   min-height: 100dvh;
   font-family: var(--fld-font-sans), sans-serif;
 }
@@ -22,4 +27,18 @@
   --fld-hover: #e8eef8;
   --fld-selected: #e5eaff;
   --fld-signal: #465ee9;
+  --fld-focus: #465ee9;
+  --fld-surface-overlay: #ffffff;
+  --fld-border-strong: #a9b7cb;
+  --fld-shadow-overlay: 0 1.5rem 3.5rem rgba(32, 48, 74, .22);
+  --fld-backdrop: rgba(24, 34, 50, .32);
 }
+
+.fieldhand-demo * {
+  scrollbar-color: var(--fld-line) transparent;
+  scrollbar-width: thin;
+}
+
+.fieldhand-demo *::-webkit-scrollbar { width: .5rem; height: .5rem; }
+.fieldhand-demo *::-webkit-scrollbar-thumb { background: var(--fld-line); border: 2px solid transparent; border-radius: 999px; background-clip: padding-box; }
+.fieldhand-demo *:focus-visible { outline: 2px solid var(--fld-focus); outline-offset: 2px; }

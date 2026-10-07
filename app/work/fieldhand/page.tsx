@@ -1,3 +1,4 @@
 import type { Metadata } from "next";
+import { DispatchBoard } from "@/src/demos/fieldhand/components/DispatchBoard";
 export const metadata: Metadata = { title: "Fieldhand" };
-export default function FieldhandPage() { return <main><h1>Fieldhand</h1><p>Dispatch operations, made visible.</p></main>; }
+export default function FieldhandPage() { return <DispatchBoard />; }

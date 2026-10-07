@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 5: Rentbook (custom internal tool)**
-> Status: `In progress`
+> Status: `In progress (part 1 of 2)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -23,7 +23,7 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | 2 | Sunreach Power (landing page) | Approved |
 | 3 | Meridian Freight (business site) | Approved |
 | 4 | Harmattan Coffee Co. (business site) | Approved |
-| 5 | Rentbook (second custom tool) | In progress |
+| 5 | Rentbook (second custom tool) | In progress (part 1 of 2) |
 | 6 | Stockroom (optional third tool; owner decision after Phase 5) | Not started |
 | 7 | Axmion hub (built last, covers every demo that exists) | Not started |
 | 8 | Polish: performance, a11y, responsive, motion | Not started |
@@ -286,6 +286,27 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-07, Phase 5 audit before repair
+
+| Requirement | Status | Evidence from the checked source |
+|---|---|---|
+| Routes | Partial | Only `/work/rentbook` exists; the rent roll, tenants, properties, payments, reports, and maintenance routes are absent. |
+| Top bar, navigation, property switcher | Missing | No Rentbook shell component exists; the overview renders its own header only. |
+| Command palette and Reset demo | Missing | No command UI, keyboard shortcut handler, confirmation, or reset control is rendered. |
+| Seed portfolio size and story mix | Missing | The checked seed has 5 properties but only 6 units, 4 tenants, 4 leases/charges, 3 payments, and 1 maintenance request; dates are fixed rather than Lagos-relative. |
+| Financial types, helpers, reducer, persistence | Partial | The core shapes, basic status/balance/naira helpers, reducer, and localStorage hydration exist. Allocation is not oldest-first; validation only checks array shapes; no receipts or corruption-recovery notice exist. |
+| Overview | Partial | It renders collection, outstanding, occupancy, and overdue entries, but has a fixed incorrect date/greeting, no property filtering, monthly/YTD split, collection rate, chart, recent feed, or working record-payment action. |
+| Rent roll | Missing | No component or route exists. |
+| Record payment | Missing | A visually present button has no handler; no dialog, validation, allocation preview, toast, or persistence flow was exercised. |
+| Receipts and reminders | Missing | No related route, component, or data mechanic exists. |
+| Tenants and properties | Missing | Domain data exists, but no list/detail routes, ledger, statement, or unit-grid view exists. |
+| Reports and maintenance | Missing | Only one maintenance record is seeded; there are no screens, reports, exports, or update drawer. |
+
+- Done: Completed a source audit before changing Rentbook UI or behavior. This audit did not claim browser verification; it records only what was inspected in the current codebase.
+- In progress / rough: Phase 5 is explicitly `In progress (part 1 of 2)`. Part 1 must repair shared Lagos time and the demo shell, then complete Rentbook foundations, application shell, overview, rent roll, and record payment.
+- Known issues: Rentbook's fixed Tuesday greeting is incorrect for the stated Wednesday, 7 October 2026 Lagos date. The shared demo shell has styling but does not meet the requested collapsible, controlled, self-contained behavior.
+- Next session should: Implement only the requested Part A shared repairs and Part B Part 1 slices; do not start receipts, reminders, tenant/property detail, reports, maintenance, Phase 6, or Phase 7.
 
 ### Session: 2026-10-07, Phase 5 foundation
 - Done: Added Rentbook’s scoped font/token system, typed property-management domain model, seed portfolio, pure charge/payment/amount-in-words helpers, reducer-backed payment integrity guard, validated persistence provider, and a first overview dashboard slice.

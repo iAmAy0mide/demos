@@ -1,12 +1,13 @@
 "use client";
 
-import { CalendarDays, ClipboardList, Command, LayoutPanelLeft, PanelLeftClose, PanelLeftOpen, Search, SunMoon } from "lucide-react";
+import { CalendarDays, ClipboardList, Command, LayoutPanelLeft, PanelLeftClose, PanelLeftOpen, SunMoon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
 import { JobDrawer } from "@/src/demos/fieldhand/components/JobDrawer";
+import { CommandPalette } from "@/src/demos/fieldhand/components/CommandPalette";
 import type { ResolvedTheme } from "@/src/demos/fieldhand/types";
 
 type FieldhandShellProps = Readonly<{ children: React.ReactNode }>;
@@ -50,7 +51,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
         </aside>
         <div className="min-w-0">
           <header className="flex h-14 items-center gap-3 border-b border-[var(--fld-line)] bg-[var(--fld-canvas)] px-4">
-            <button className="flex min-h-9 min-w-44 flex-1 items-center gap-2 rounded-md border border-[var(--fld-line)] px-3 text-left text-sm text-[var(--fld-muted)] hover:border-[var(--fld-signal)]" type="button"><Search size={15} aria-hidden="true" />Search jobs, customers, or actions<span className="ml-auto font-mono text-xs">⌘K</span></button>
+            <CommandPalette />
             <button aria-label="Toggle color theme" className="grid size-10 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)]" onClick={() => setThemeMode(state.themeMode === "dark" ? "light" : "dark")} type="button"><SunMoon size={16} /></button>
             <button aria-label="Open command palette" className="grid size-10 place-items-center rounded-md bg-[var(--fld-signal)] text-white hover:brightness-110" type="button"><Command size={17} /></button>
           </header>

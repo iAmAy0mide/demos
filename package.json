@@ -9,7 +9,8 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "check:tokens": "node scripts/check-demo-tokens.mjs",
-    "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs"
+    "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs",
+    "check:lagos-time": "node scripts/check-lagos-time.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.52.0",

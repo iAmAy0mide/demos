@@ -1,0 +1,14 @@
+const zone = "Africa/Lagos";
+function data(date) {
+  return new Intl.DateTimeFormat("en-GB", { timeZone: zone, weekday: "long", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).formatToParts(date).reduce((result, part) => ({ ...result, [part.type]: part.value }), {});
+}
+const checks = [
+  [new Date("2026-10-07T10:00:00Z"), "Wednesday", "07", "morning"],
+  [new Date("2026-10-31T23:30:00Z"), "Sunday", "01", "morning"],
+  [new Date("2026-10-31T22:30:00Z"), "Saturday", "31", "evening"],
+];
+for (const [date, weekday, day, period] of checks) {
+  const value = data(date); const actualPeriod = Number(value.hour) < 12 ? "morning" : Number(value.hour) < 17 ? "afternoon" : "evening";
+  if (value.weekday !== weekday || value.day !== day || actualPeriod !== period) throw new Error(`Lagos time check failed for ${date.toISOString()}`);
+}
+console.log("Lagos time checks passed.");

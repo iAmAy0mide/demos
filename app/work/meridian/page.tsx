@@ -1,3 +1,4 @@
 import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Meridian Freight" };
-export default function MeridianPage() { return <main><h1>Meridian Freight</h1><p>Cargo movement with a clear line of sight.</p></main>; }
+import { HomePage } from "@/src/demos/meridian/components/home/HomePage";
+export const metadata: Metadata = { title: "Meridian Freight | Lagos freight forwarding", description: "Sea, air, road and customs coordination for serious cargo moving through Nigeria." };
+export default function MeridianPage() { return <HomePage />; }

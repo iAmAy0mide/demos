@@ -6,8 +6,8 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 
 ## Current stage
 
-> **Phase 1: Fieldhand (custom internal tool)**
-> Status: `Ready for review`
+> **Phase 4: Harmattan Coffee Co. (business site)**
+> Status: `In progress`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -19,10 +19,10 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | # | Phase | Status |
 |---|---|---|
 | 0 | Scaffold, route groups, shared demo shell | Approved |
-| 1 | Fieldhand (custom internal tool) | Ready for review |
-| 2 | Sunreach Power (landing page) | Not started |
-| 3 | Meridian Freight (business site) | Not started |
-| 4 | Harmattan Coffee Co. (business site) | Not started |
+| 1 | Fieldhand (custom internal tool) | Approved |
+| 2 | Sunreach Power (landing page) | Approved |
+| 3 | Meridian Freight (business site) | Approved |
+| 4 | Harmattan Coffee Co. (business site) | In progress |
 | 5 | Axmion hub (built last) | Not started |
 | 6 | Polish: performance, a11y, responsive, motion | Not started |
 
@@ -67,7 +67,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - [x] Placeholder `page.tsx` for each route that renders the demo name (to be replaced in later phases)
 - [x] Per-demo `tokens.css` stub with prefixed variables
 - [x] Shared demo shell (pill) with route order: Fieldhand → Sunreach → Meridian → Harmattan, wrapping
-- [x] Configure `@/` path alias, `pnpm typecheck` script, strict lint rules (no unused vars, no `any`)
+- [x] Configure `@/` path alias, `npm run typecheck` script, strict lint rules (no unused vars, no `any`)
 - [x] `.gitignore`, base `README.md` (how to run, structure, scripts)
 - [x] Verify: dev server runs, all five routes load, build passes
 
@@ -105,7 +105,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 
 ## Phase 2: Sunreach Power (landing page)
 
-**Client story:** a solar and inverter installer in Lagos wants qualified leads. One page, one goal: get a site survey booked.
+**Client story:** a solar and inverter installer in Lagos wants qualified leads. One page, one goal: get a site inspection booked.
 
 ### Design language
 - **Feel:** high contrast, energetic, optimistic, and trustworthy. Big benefit-led headlines.
@@ -237,6 +237,10 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-07 | 0 | Use Webpack for the production build script and TypeScript API validation. | The sandbox blocks Turbopack's CSS-loader subprocess port binding; Webpack built all routes successfully. |
 | 2026-10-07 | 1 | Command and task overlays render through client portals. | They remain above the app chrome and retain predictable focus handling. |
 | 2026-10-07 | 1 | Persisted invalid job assignments are discarded or repaired on load. | No saved state can advance unassigned work into travel, site, or completion statuses. |
+| 2026-10-07 | 2 | Use Bricolage Grotesque and DM Sans with the navy/yellow solar system. | The pairing and color system make Sunreach deliberately distinct from the dense Fieldhand product UI. |
+| 2026-10-07 | 2 | Replaced the Fieldhand-only token checker with a prefix-aware all-demo check. | New work cannot introduce undefined scoped tokens without failing the shared verification command. |
+| 2026-10-07 | 3 | Used Archivo and IBM Plex Mono for Meridian’s scoped type system. | Archivo’s variable-width grotesk supports the freight-manifest display language; Plex Mono makes operational values legible and deliberately separates Meridian from the other demos. |
+| 2026-10-07 | 3 | Implemented the route map as a single dependency-free SVG. | The static, CSS-animated vector stays performant and avoids shipping a map-processing pipeline to visitors. |
 
 ---
 
@@ -244,8 +248,26 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
 
+### Session: 2026-10-07, Phase 4 planning
+- Done: Recorded Phase 3 as approved and started Phase 4 planning. Confirmed Harmattan's required routes, shared-overlay constraints, short-laptop viewport target, and token-validation requirements.
+- In progress / rough: No Harmattan UI has been built yet. The next implementation session should establish the scoped visual system before composing pages.
+- Known issues: The user-provided Phase 4 brief attachment ends mid-configurator specification; the recorded requirements are sufficient to begin with the stated route and feature scope.
+- Next session should: Implement Phase 4 in vertical slices: scoped fonts/tokens and shared shell first, then data/state foundations, Home and subscription configurator, followed by commerce/editorial routes and verification.
+
+### Session: 2026-10-07, Phase 3
+- Done: Moved Phase 3 to In progress; created Meridian’s scoped fonts/tokens and industrial manifest visual system; built the shared header/footer/mobile menu, home, interactive SVG route map, tracker, five typed service specification pages, quote flow, About, Contact and branded not-found state.
+- In progress / rough: The map uses simplified vector landmasses rather than the optional dot-matrix generator. Tracker results are typed demo records; a real browser viewport/keyboard sweep remains pending.
+- Known issues: `npm run typecheck`, `npm run lint`, and `npm run check:tokens` pass. `npm run build` fails before Meridian validation due to pre-existing Fieldhand module-resolution failures; no approved demo was modified.
+- Next session should: Run Meridian’s manual responsive and keyboard checks when the unrelated Fieldhand build break is resolved, then complete Phase 3’s visual polish and request review. Do not start Phase 4.
+
 **Template**
 ```
+
+### Session: 2026-10-07, Phase 2
+- Done: Began Sunreach with the isolated font/token system, functional typed savings estimator, calculator-led hero, package and five-year comparison context, FAQs, social proof, inspection booking flow, metadata, and all-demo token validation.
+- In progress / rough: The form is a compact functional vertical slice and still needs the requested reducer/draft persistence, full inline validation, annotation mobile sheet, mobile CTA, and visual/browser sweep before Phase 2 can be marked ready for review.
+- Known issues: `npm run check:tokens`, `npm run typecheck`, `npm run lint`, and `npm run build` pass. Production compilation needs network access for Next.js to fetch and self-host the required Google font files.
+- Next session should: Complete only the remaining Phase 2 form/accessibility/mobile requirements, then re-run production build and viewport checks.
 ### Session: <date>, Phase <n>
 - Done:
 - In progress / rough:

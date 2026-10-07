@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "check:fieldhand-tokens": "node scripts/check-fieldhand-tokens.mjs"
+    "check:tokens": "node scripts/check-demo-tokens.mjs",
+    "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.52.0",

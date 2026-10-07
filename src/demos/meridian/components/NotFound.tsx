@@ -1,0 +1,2 @@
+import Link from "next/link";
+export function MeridianNotFound() { return <section className="mrd-page mrd-not-found"><p className="mrd-mono">ERROR / 404 / ROUTE NOT REGISTERED</p><h1>This freight record does not exist.</h1><p>The service or page may have moved. Return to the service register to choose a valid route.</p><Link className="mrd-button mrd-button-orange" href="/work/meridian/services">View services</Link></section>; }

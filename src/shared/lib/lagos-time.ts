@@ -21,4 +21,6 @@ export function lagosDayOfWeek(date: Date) { return lagosWeekday(date).slice(0, 
 export function lagosHour(date: Date) { return lagosDateParts(date).hour; }
 export function greetingPeriod(date: Date): GreetingPeriod { const hour = lagosHour(date); return hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening"; }
 export function formatLagosLongDate(date: Date) { return new Intl.DateTimeFormat("en-GB", { timeZone: LAGOS_TIME_ZONE, weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(date); }
+export function formatLagosTime(date: Date) { return new Intl.DateTimeFormat("en-NG", { timeZone: LAGOS_TIME_ZONE, hour: "2-digit", minute: "2-digit" }).format(date); }
 export function lagosDateKey(date: Date) { const { year, month, day } = lagosDateParts(date); return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`; }
+export function lagosDateTime(date: Date, hour: number, minute = 0) { return `${lagosDateKey(date)}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00+01:00`; }

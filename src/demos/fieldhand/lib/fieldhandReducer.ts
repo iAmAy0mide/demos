@@ -44,7 +44,7 @@ function requiresTechnician(status: JobStatus) {
 }
 
 function addToast(state: FieldhandState, message: string): FieldhandState {
-  const toast = { id: `${Date.now()}-${message}`, message };
+  const toast = { id: crypto.randomUUID(), message };
   return { ...state, toasts: [...state.toasts, toast].slice(-3) };
 }
 

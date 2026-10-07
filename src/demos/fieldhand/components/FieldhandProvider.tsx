@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useMemo, useReducer } from "react
 import { createIncomingJob, createSeedData, MAX_UNASSIGNED_JOBS } from "@/src/demos/fieldhand/data/seedData";
 import { fieldhandReducer, initialFieldhandState } from "@/src/demos/fieldhand/lib/fieldhandReducer";
 import { readPersistedFieldhandState, savePersistedFieldhandState } from "@/src/demos/fieldhand/lib/persistence";
+import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 import type { FieldhandFilters, Job, JobStatus, ThemeMode } from "@/src/demos/fieldhand/types";
 import type { FieldhandState } from "@/src/demos/fieldhand/lib/fieldhandReducer";
 
@@ -24,12 +25,14 @@ const FieldhandContext = createContext<FieldhandContextValue | null>(null);
 
 function useFieldhandState() {
   const [state, dispatch] = useReducer(fieldhandReducer, initialFieldhandState);
+  const now = useLagosNow();
 
   useEffect(() => {
-    const seedData = createSeedData(new Date());
+    if (!now) return;
+    const seedData = createSeedData(now);
     const persistedState = readPersistedFieldhandState();
     dispatch({ type: "hydrate", payload: persistedState ?? { ...seedData, themeMode: "system" } });
-  }, []);
+  }, [now]);
 
   useEffect(() => {
     if (!state.isLoaded) return;
@@ -42,13 +45,13 @@ function useFieldhandState() {
     });
   }, [state]);
 
-  return { state, dispatch };
+  return { state, dispatch, now };
 }
 
 type FieldhandProviderProps = Readonly<{ children: React.ReactNode }>;
 
 export function FieldhandProvider({ children }: FieldhandProviderProps) {
-  const { state, dispatch } = useFieldhandState();
+  const { state, dispatch, now } = useFieldhandState();
   const contextValue = useMemo<FieldhandContextValue>(
     () => ({
       state,
@@ -57,17 +60,17 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
       updateNotes: (jobId, notes) => dispatch({ type: "update_notes", jobId, notes }),
       setFilters: (filters) => dispatch({ type: "set_filters", filters }),
       setThemeMode: (themeMode) => dispatch({ type: "set_theme", themeMode }),
-      resetDemo: () => dispatch({ type: "reset", payload: createSeedData(new Date()) }),
+      resetDemo: () => now && dispatch({ type: "reset", payload: createSeedData(now) }),
       simulateLiveUpdate: () => {
         const unassigned = state.jobs.filter((job) => job.status === "unassigned").length;
         const openTitles = state.jobs.filter((job) => job.status !== "done").map((job) => job.title);
         const incomingJobs = state.jobs.filter((job) => job.id.startsWith("VL-10") && job.activity.some((entry) => entry.message === "New job received from service desk.")).length;
-        const incomingJob = unassigned >= MAX_UNASSIGNED_JOBS ? null : createIncomingJob(new Date(), incomingJobs, openTitles);
+        const incomingJob = !now || unassigned >= MAX_UNASSIGNED_JOBS ? null : createIncomingJob(now, incomingJobs, openTitles);
         if (incomingJob) dispatch({ type: "live_update", incomingJob });
       },
       dismissToast: (toastId) => dispatch({ type: "dismiss_toast", toastId }),
     }),
-    [dispatch, state],
+    [dispatch, now, state],
   );
 
   return <FieldhandContext.Provider value={contextValue}>{children}</FieldhandContext.Provider>;

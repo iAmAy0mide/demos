@@ -1,4 +1,5 @@
 import type { Customer, FieldhandData, Job, Quote, Technician } from "@/src/demos/fieldhand/types";
+import { lagosDateTime } from "@/src/shared/lib/lagos-time";
 
 const VAT_PERCENT = 7.5;
 const DEFAULT_DURATION = 90;
@@ -37,9 +38,7 @@ const technicians: Technician[] = [
 ];
 
 function atTime(today: Date, hour: number, minute = 0) {
-  const timestamp = new Date(today);
-  timestamp.setHours(hour, minute, 0, 0);
-  return timestamp.toISOString();
+  return lagosDateTime(today, hour, minute);
 }
 
 function activity(id: string, timestamp: string, message: string): Job["activity"] {

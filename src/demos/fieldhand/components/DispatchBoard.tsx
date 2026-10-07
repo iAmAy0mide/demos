@@ -6,13 +6,15 @@ import { useEffect, useState } from "react";
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
 import { countJobsForStatus, filterJobs, findSchedulingConflicts } from "@/src/demos/fieldhand/lib/jobUtils";
 import type { Job, JobStatus, ServiceCategory } from "@/src/demos/fieldhand/types";
+import { formatLagosLongDate, formatLagosTime } from "@/src/shared/lib/lagos-time";
+import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 const boardColumns: { status: JobStatus; label: string }[] = [{ status: "unassigned", label: "Unassigned" }, { status: "scheduled", label: "Scheduled" }, { status: "en_route", label: "En route" }, { status: "on_site", label: "On site" }, { status: "done", label: "Done" }];
 const TECHNICIAN_REQUIRED: JobStatus[] = ["scheduled", "en_route", "on_site", "done"];
 const categoryIcons: Record<ServiceCategory, typeof Bolt> = { generator: Wrench, ac: Snowflake, solar: Sun, electrical: Bolt };
 const technicianHues: Record<string, string> = { "tech-ade": "bg-sky-700", "tech-ngozi": "bg-violet-700", "tech-tobi": "bg-amber-700", "tech-sade": "bg-emerald-700", "tech-ibrahim": "bg-rose-700", "tech-chioma": "bg-cyan-700" };
 
-function formatTime(value: string | null) { return value ? new Intl.DateTimeFormat("en-NG", { hour: "2-digit", minute: "2-digit", timeZone: "Africa/Lagos" }).format(new Date(value)) : "Unscheduled"; }
+function formatTime(value: string | null) { return value ? formatLagosTime(new Date(value)) : "Unscheduled"; }
 function requiresTechnician(status: JobStatus) { return TECHNICIAN_REQUIRED.includes(status); }
 
 function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStatus) => void }) {
@@ -55,9 +57,10 @@ function CreateJobDialog({ onClose }: { onClose: () => void }) {
 
 export function DispatchBoard() {
   const { state, moveJob, setFilters } = useFieldhand();
+  const now = useLagosNow();
   const [isCreating, setIsCreating] = useState(false);
-  const [dateLabel, setDateLabel] = useState("Lagos operations");
-  useEffect(() => { const frame = window.requestAnimationFrame(() => setDateLabel(new Intl.DateTimeFormat("en-NG", { weekday: "long", day: "numeric", month: "long", timeZone: "Africa/Lagos" }).format(new Date()))); const openCreate = () => setIsCreating(true); window.addEventListener("fieldhand:create-job", openCreate); return () => { window.cancelAnimationFrame(frame); window.removeEventListener("fieldhand:create-job", openCreate); }; }, []);
+  const dateLabel = now ? formatLagosLongDate(now) : "Lagos operations";
+  useEffect(() => { const openCreate = () => setIsCreating(true); window.addEventListener("fieldhand:create-job", openCreate); return () => window.removeEventListener("fieldhand:create-job", openCreate); }, []);
   if (!state.isLoaded) return <main className="grid h-full place-items-center text-sm text-[var(--fld-muted)]">Loading dispatch board…</main>;
   const filteredJobs = filterJobs(state.jobs, state.filters);
   const conflicts = findSchedulingConflicts(state.jobs, "tech-ade");

@@ -11,7 +11,7 @@ export function DemoShell({ currentDemo }: DemoShellProps) {
   const nextDemo = getAdjacentDemo(currentDemo, 1);
 
   return (
-    <aside className={styles.shell} aria-label="Axmion concept navigation">
+    <aside className={`${styles.shell} ${currentDemo === "fieldhand" ? styles.fieldhandShell : ""}`} aria-label="Axmion concept navigation">
       <Link className={styles.link} href="/">
         <span aria-hidden="true">←</span><span>Back to showcase</span>
       </Link>

@@ -1,0 +1,10 @@
+.shell { position: fixed; z-index: 50; right: max(.75rem, env(safe-area-inset-right)); bottom: max(.75rem, env(safe-area-inset-bottom)); display: flex; align-items: center; gap: .125rem; max-width: calc(100vw - 1.5rem); padding: .3125rem; color: CanvasText; background: color-mix(in srgb, Canvas 88%, CanvasText); border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 999px; box-shadow: 0 .5rem 1.5rem color-mix(in srgb, CanvasText 16%, transparent); backdrop-filter: blur(.75rem); font: 500 .75rem/1.2 ui-sans-serif, sans-serif; }
+.shell nav { display: flex; gap: .125rem; }
+.link, .disclosure summary { display: inline-flex; min-height: 2.75rem; align-items: center; gap: .35rem; padding: 0 .6rem; color: inherit; border-radius: 999px; text-decoration: none; }
+.link:hover, .disclosure summary:hover { background: color-mix(in srgb, CanvasText 10%, transparent); }
+.link:active, .disclosure summary:active { transform: translateY(1px); }
+.disclosure { position: relative; }
+.disclosure summary { cursor: pointer; list-style: none; }
+.disclosure summary::-webkit-details-marker { display: none; }
+.conceptLabel { position: absolute; right: 0; bottom: calc(100% + .5rem); width: max-content; max-width: min(16rem, calc(100vw - 1.5rem)); padding: .6rem .75rem; color: CanvasText; background: Canvas; border: 1px solid color-mix(in srgb, CanvasText 22%, transparent); border-radius: .5rem; box-shadow: 0 .5rem 1.5rem color-mix(in srgb, CanvasText 16%, transparent); }
+@media (max-width: 38rem) { .shell { left: .5rem; right: .5rem; justify-content: space-between; } .shell nav { margin-left: auto; } .compactLabel { display: none; } }

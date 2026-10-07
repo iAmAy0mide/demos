@@ -21,7 +21,7 @@ Project rules for Codex. Read this file completely at the start of every session
 
 > We design websites that turn attention into action. Landing pages • Business websites • Custom internal tools.
 
-The project is a **hub site** that contains **four fully working demo websites**, each presented as a case study:
+The project is a **hub site** that contains **five fully working demo websites**, each presented as a case study:
 
 | Route | Demo | Type |
 |---|---|---|
@@ -30,6 +30,7 @@ The project is a **hub site** that contains **four fully working demo websites**
 | `/work/harmattan` | Harmattan Coffee Co. | Business website (specialty coffee) |
 | `/work/fieldhand` | Fieldhand | Custom internal tool (dispatch console) |
 | `/work/sunreach` | Sunreach Power | High-converting landing page (solar) |
+| `/work/rentbook` | Rentbook | Custom internal tool (property management) |
 
 The purpose of everything here is to **close clients**. Every screen must look like a finished, paid-for product. If something looks like a template, a tutorial, or a placeholder, it is not done.
 
@@ -47,12 +48,13 @@ Then read the design brief for the demo you are working on in `PLAN.md`.
 
 ## 3. The one rule that matters most
 
-**The four demos must not look like siblings.**
+**The demos must not look like siblings.**
 
 Each demo has its own design language: its own palette, type pairing, layout logic, motion personality, and component style. A visitor clicking from one demo to the next should feel they are looking at four different studios' work.
 
 - Never copy components, spacing scales, border radii, shadows, or motion curves between demos.
 - Never reuse a font family across demos (the hub counts as a demo).
+- One tool per look: Rentbook must not resemble Fieldhand.
 - Do not let any demo drift toward a generic look: no default Tailwind palette, no stock card grids, no purple gradients, no Inter or system-font fallback as the main face.
 
 ---
@@ -112,7 +114,7 @@ src/
 - A demo may import from `src/shared/` and from its **own** folder. It must **never** import from another demo's folder.
 - `src/shared/` holds only generic, unstyled logic and the demo shell. Do not put visual components there to "save time". If two demos need a similar-looking component, each builds its own.
 - Fonts and design tokens load in the demo's own `layout.tsx` and are scoped to that layout's wrapper element. Nothing leaks to other routes.
-- Name CSS variables with the demo prefix: `--mrd-*` (Meridian), `--hrm-*` (Harmattan), `--fld-*` (Fieldhand), `--sun-*` (Sunreach), `--axm-*` (hub).
+- Name CSS variables with the demo prefix: `--mrd-*` (Meridian), `--hrm-*` (Harmattan), `--fld-*` (Fieldhand), `--sun-*` (Sunreach), `--rbk-*` (Rentbook), `--axm-*` (hub).
 
 ---
 

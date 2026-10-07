@@ -1,4 +1,4 @@
-export const demoRouteIds = ["fieldhand", "sunreach", "meridian", "harmattan"] as const;
+export const demoRouteIds = ["fieldhand", "rentbook", "sunreach", "meridian", "harmattan"] as const;
 
 export type DemoRouteId = (typeof demoRouteIds)[number];
 
@@ -6,6 +6,7 @@ type DemoRoute = { name: string; path: `/work/${DemoRouteId}` };
 
 export const demoRoutes: Record<DemoRouteId, DemoRoute> = {
   fieldhand: { name: "Fieldhand", path: "/work/fieldhand" },
+  rentbook: { name: "Rentbook", path: "/work/rentbook" },
   sunreach: { name: "Sunreach Power", path: "/work/sunreach" },
   meridian: { name: "Meridian Freight", path: "/work/meridian" },
   harmattan: { name: "Harmattan Coffee Co.", path: "/work/harmattan" },

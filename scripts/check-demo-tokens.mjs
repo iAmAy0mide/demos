@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 
 const root = new URL("../", import.meta.url);
-const demos = [["fieldhand", "fld"], ["sunreach", "sun"], ["meridian", "mrd"], ["harmattan", "hrm"], ["hub", "axm"]];
+const demos = [["fieldhand", "fld"], ["rentbook", "rbk"], ["sunreach", "sun"], ["meridian", "mrd"], ["harmattan", "hrm"], ["hub", "axm"]];
 async function collectFiles(directory) { const entries = await readdir(directory, { withFileTypes: true }); return (await Promise.all(entries.map((entry) => entry.isDirectory() ? collectFiles(new URL(`${entry.name}/`, directory)) : [new URL(entry.name, directory)]))).flat(); }
 for (const [demo, prefix] of demos) {
   const demoRoot = new URL(`src/demos/${demo}/`, root);

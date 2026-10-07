@@ -6,7 +6,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 
 ## Current stage
 
-> **Phase 4: Harmattan Coffee Co. (business site)**
+> **Phase 5: Rentbook (custom internal tool)**
 > Status: `In progress`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
@@ -22,9 +22,11 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | 1 | Fieldhand (custom internal tool) | Approved |
 | 2 | Sunreach Power (landing page) | Approved |
 | 3 | Meridian Freight (business site) | Approved |
-| 4 | Harmattan Coffee Co. (business site) | In progress |
-| 5 | Axmion hub (built last) | Not started |
-| 6 | Polish: performance, a11y, responsive, motion | Not started |
+| 4 | Harmattan Coffee Co. (business site) | Approved |
+| 5 | Rentbook (second custom tool) | In progress |
+| 6 | Stockroom (optional third tool; owner decision after Phase 5) | Not started |
+| 7 | Axmion hub (built last, covers every demo that exists) | Not started |
+| 8 | Polish: performance, a11y, responsive, motion | Not started |
 
 ---
 
@@ -32,9 +34,9 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 
 Axmion Web Innovations: *"We design websites that turn attention into action. Landing pages • Business websites • Custom internal tools."*
 
-A hub site holding four demo websites, each presented as a case study. Target audience: Nigerian and African SMEs plus international clients. Everything is fictional concept work. See `AGENTS.md` for all coding, design, and workflow rules.
+A hub site holding five demo websites, each presented as a case study. Target audience: Nigerian and African SMEs plus international clients. Everything is fictional concept work. See `AGENTS.md` for all coding, design, and workflow rules.
 
-**Cardinal rule:** the four demos must not look like siblings. Each has its own palette, type, layout logic, and motion personality.
+**Cardinal rule:** the demos must not look like siblings. Each has its own palette, type, layout logic, and motion personality.
 
 ---
 
@@ -47,12 +49,13 @@ A hub site holding four demo websites, each presented as a case study. Target au
 | `/work/harmattan` | Harmattan Coffee Co. |
 | `/work/fieldhand` | Fieldhand |
 | `/work/sunreach` | Sunreach Power |
+| `/work/rentbook` | Rentbook |
 
 Sub-routes (for example `/work/meridian/services`) are defined inside each phase.
 
 ### Shared demo shell (the only shared UI)
 
-A minimal floating pill on every `/work/*` route: `← Back to showcase · Next work →`. It is small, unobtrusive, collapsible, keyboard accessible, and neutral enough to sit on top of any of the four designs. It must not take on any demo's styling beyond staying legible on light and dark backgrounds. It also exposes a short "Concept work by Axmion" label.
+A minimal floating pill on every `/work/*` route: `← Back to showcase · Next work →`. It is small, unobtrusive, collapsible, keyboard accessible, and neutral enough to sit on top of any demo design. It must not take on any demo's styling beyond staying legible on light and dark backgrounds. It also exposes a short "Concept work by Axmion" label.
 
 ---
 
@@ -66,7 +69,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - [x] Root layout (`html`/`body` only) plus per-route-group layouts for hub and each demo
 - [x] Placeholder `page.tsx` for each route that renders the demo name (to be replaced in later phases)
 - [x] Per-demo `tokens.css` stub with prefixed variables
-- [x] Shared demo shell (pill) with route order: Fieldhand → Sunreach → Meridian → Harmattan, wrapping
+- [x] Shared demo shell (pill) with route order: Fieldhand → Rentbook → Sunreach → Meridian → Harmattan, wrapping
 - [x] Configure `@/` path alias, `npm run typecheck` script, strict lint rules (no unused vars, no `any`)
 - [x] `.gitignore`, base `README.md` (how to run, structure, scripts)
 - [x] Verify: dev server runs, all five routes load, build passes
@@ -184,12 +187,43 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 
 ---
 
-## Phase 5: Axmion hub
+## Phase 5: Rentbook (custom internal tool)
 
-**Built last** so it reflects what was actually made.
+**Client story:** Okafor & Sons Properties manages five Lagos buildings from WhatsApp threads, paper receipts and a strained spreadsheet. Rentbook makes collection, arrears, tenant history and property health legible in one calm financial console.
 
 ### Design language
-- **Feel:** confident and engineered. Ink-black with one hot signal accent. Oversized editorial type, mono labels, and precise micro-interactions. It must be clearly its own thing, distinct from all four demos.
+- **Feel:** light-first, precise, trustworthy and print-minded; a modern banking dashboard with ledger details.
+- **Palette:** cool paper white, green-black ink, deep emerald for paid and primary actions, stamp red for overdue, amber for due soon, slate for vacant.
+- **Type:** Hanken Grotesk for UI and headings, Spline Sans Mono for money, dates, IDs and tabular data.
+- **Layout:** top navigation and property switcher, wide document-like pages, airy tables, ruled lines, receipt perforations and subtle stamp graphics. Rentbook must not resemble Fieldhand's dark sidebar product UI.
+- **Motion:** gentle 150–250ms number, chart and payment-stamp feedback; no springs. Prefix: `--rbk-*`.
+
+### Routes and feature slices
+- `/work/rentbook`: overview dashboard with collection, arrears, occupancy, attention items, SVG income chart and payment feed.
+- `/work/rentbook/rent-roll`: searchable, sortable rent roll with saved views, bulk reminders and keyboard navigation.
+- `/work/rentbook/tenants` and `/tenants/[id]`: tenant list and detailed ledger, activity, lease and printable statement.
+- `/work/rentbook/properties` and `/properties/[id]`: building list and an accessible SVG unit-grid building view.
+- `/work/rentbook/payments`: payment history and print-ready, shareable receipts.
+- `/work/rentbook/reports`: collection, income, arrears-aging reports and client-side CSV export.
+- `/work/rentbook/maintenance`: light status list with update drawer.
+- Build in slices: foundations and validated reducer → shell/dashboard → rent roll → payment/receipt → reminders → tenant/property → reports/maintenance → command palette, shortcuts, states and responsive/a11y pass.
+
+### Data and mechanics
+- Typed properties, units, tenants, leases, charges, payments, receipts, maintenance requests and activity entries; all financial status is derived in pure helpers.
+- One reducer-backed provider persists validated state after mount. Payment allocation is oldest-first and blocks unapproved overpayment; dates use Africa/Lagos client time to avoid hydration mismatches.
+- Payments, reminders and overlays have focus management, Escape/outside dismissal, token focus rings, and accessible top-right toasts.
+- Demo `README.md` required.
+
+## Phase 6: Stockroom (optional)
+
+Optional third custom tool, pending owner approval after Rentbook: a light-first pharmacy or provision-store POS with keyboard-fast checkout, split payments, live stock, a credit ledger and end-of-day report. Do not build during Phase 5.
+
+## Phase 7: Axmion hub
+
+**Built last** so it reflects all demos built at that point.
+
+### Design language
+- **Feel:** confident and engineered. Ink-black with one hot signal accent. Oversized editorial type, mono labels, and precise micro-interactions. It must be clearly its own thing, distinct from every demo.
 - **Type:** proposed Schibsted Grotesk + Martian Mono (or an equally distinctive pairing not used in any demo).
 - **Motion:** sharp and cinematic. A strong load sequence, magnetic hover on case studies, and smooth page transitions into demos.
 - **Prefix:** `--axm-*`
@@ -197,7 +231,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 ### Sections
 - [ ] **Hero** built around *attention → action*, with a memorable interactive or animated element
 - [ ] **Services:** Landing pages, Business websites, Custom internal tools, each linked to the demo that proves it
-- [ ] **Selected work:** four case-study cards with **live preview** of each demo, the problem, what we built, and the conversion or UX mechanic that makes it work
+- [ ] **Selected work:** case-study cards with **live preview** of every demo, the problem, what we built, and the conversion or UX mechanic that makes it work
 - [ ] **Process:** how Axmion works (discover, design, build, launch) in a distinctive layout
 - [ ] **Why it converts:** a short section on principles (clarity, speed, one goal, trust)
 - [ ] **Contact / Start a project:** a form with simulated submission, plus email and WhatsApp CTAs (use placeholders clearly marked for real details)
@@ -207,7 +241,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 
 ---
 
-## Phase 6: Polish
+## Phase 8: Polish
 
 - [ ] Lighthouse 90+ on all five routes (mobile profile); fix regressions
 - [ ] Accessibility audit: contrast, focus order, landmarks, reduced motion, screen-reader labels
@@ -243,12 +277,20 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-07 | 3 | Implemented the route map as a single dependency-free SVG. | The static, CSS-animated vector stays performant and avoids shipping a map-processing pipeline to visitors. |
 | 2026-10-07 | 4 | Used Fraunces and Instrument Sans in Harmattan's route-scoped layout. | Their soft editorial contrast supports the café-and-magazine design without borrowing another demo's voice. |
 | 2026-10-07 | 4 | Kept Harmattan illustrations in CSS and inline SVG. | This preserves the crafted visual language without network image requests or heavy assets. |
+| 2026-10-07 | 5 | Added Rentbook as the second custom-tool demo and registered `--rbk-*` token validation. | The landlord financial console broadens the showcase without reusing Fieldhand’s product language. |
+| 2026-10-07 | 6 | Reserved Stockroom as an owner-approved optional phase. | A third tool should be built only if Rentbook proves the additional portfolio breadth is needed. |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-07, Phase 5 setup
+- Done: Marked Harmattan approved; registered Rentbook in project documentation, the shared demo route cycle and the token-validation script; added its scoped token stub; renumbered later phases and reserved optional Stockroom.
+- In progress / rough: No Rentbook application UI or state has been built yet.
+- Known issues: None introduced by the setup changes.
+- Next session should: Build only Rentbook, beginning with the typed data, pure financial helpers, reducer and validated persistence before composing the console shell.
 
 ### Session: 2026-10-07, Phase 4 implementation
 - Done: Created Harmattan's scoped typography, token system and tactile editorial CSS; added the shared header, mobile menu, bag drawer, footer newsletter, Home, coffee catalogue/detail pages, subscription starter flow, roast lab, café locator, story, journal/article and wholesale routes. Added typed coffee/journal data, typed pricing rules, static params for dynamic routes, a branded 404, and demo README.

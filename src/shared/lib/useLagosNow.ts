@@ -4,6 +4,6 @@ import { useEffect, useState } from "react";
 
 export function useLagosNow() {
   const [now, setNow] = useState<Date | null>(null);
-  useEffect(() => { setNow(new Date()); }, []);
+  useEffect(() => { const frame = window.requestAnimationFrame(() => setNow(new Date())); return () => window.cancelAnimationFrame(frame); }, []);
   return now;
 }

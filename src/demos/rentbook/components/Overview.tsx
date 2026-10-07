@@ -9,8 +9,8 @@ import { useRentbook } from "./RentbookProvider";
 
 export function Overview() {
   const { state } = useRentbook();
-  if (!state.isLoaded) return <main className="rbk-page"><p>Preparing your ledger…</p></main>;
   const today = useLagosNow();
+  if (!state.isLoaded) return <main className="rbk-page"><p>Preparing your ledger…</p></main>;
   if (!today) return <main className="rbk-page"><p>Preparing your ledger…</p></main>;
   const outstanding = state.charges.reduce((total, charge) => total + balanceForCharge(charge, state.payments), 0);
   const collected = state.payments.reduce((total, payment) => total + payment.amount, 0);

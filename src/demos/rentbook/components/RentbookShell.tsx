@@ -1,0 +1,6 @@
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useRentbook } from "./RentbookProvider";
+const links=[['Overview','/work/rentbook'],['Rent roll','/work/rentbook/rent-roll'],['Tenants','/work/rentbook/tenants'],['Properties','/work/rentbook/properties'],['Payments','/work/rentbook/payments'],['Reports','/work/rentbook/reports'],['Maintenance','/work/rentbook/maintenance']] as const;
+export function RentbookShell({children}:{children:React.ReactNode}){const {state,dispatch}=useRentbook();const path=usePathname();return <><header className="rbk-top"><Link href="/work/rentbook" className="rbk-brand">Rentbook</Link><nav>{links.map(([name,href])=><Link key={href} className={path===href?'active':''} href={href}>{name}</Link>)}</nav><select aria-label="Filter by property" value={state.selectedPropertyId} onChange={event=>dispatch({type:'select_property',propertyId:event.target.value})}><option value="all">All properties</option>{state.properties.map(property=><option key={property.id} value={property.id}>{property.name}</option>)}</select><button className="rbk-primary" onClick={()=>window.dispatchEvent(new Event('rentbook:payment'))}>Record payment</button></header>{children}</>}

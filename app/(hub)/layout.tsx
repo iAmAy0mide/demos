@@ -1,4 +1,4 @@
-import { Instrument_Serif, Martian_Mono, Schibsted_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 
 import "@/src/demos/hub/styles/tokens.css";
 import { HubFooter } from "@/src/demos/hub/components/HubFooter";
@@ -6,19 +6,34 @@ import { HubHeader } from "@/src/demos/hub/components/HubHeader";
 
 import type { Metadata } from "next";
 
-const schibsted = Schibsted_Grotesk({
-  subsets: ["latin"],
+const schibsted = localFont({
+  src: [
+    { path: "../../src/demos/hub/fonts/SchibstedGrotesk-Latin-400.woff2", weight: "400" },
+    { path: "../../src/demos/hub/fonts/SchibstedGrotesk-Latin-500.woff2", weight: "500" },
+    { path: "../../src/demos/hub/fonts/SchibstedGrotesk-Latin-600.woff2", weight: "600" },
+  ],
   variable: "--font-schibsted",
   display: "swap",
 });
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: "italic",
+const instrumentSerif = localFont({
+  src: [
+    {
+      path: "../../src/demos/hub/fonts/InstrumentSerif-Latin-400-Italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+  ],
   variable: "--font-instrument-serif",
   display: "swap",
 });
-const martian = Martian_Mono({ subsets: ["latin"], variable: "--font-martian", display: "swap" });
+const martian = localFont({
+  src: [
+    { path: "../../src/demos/hub/fonts/MartianMono-Latin-400.woff2", weight: "400" },
+    { path: "../../src/demos/hub/fonts/MartianMono-Latin-500.woff2", weight: "500" },
+  ],
+  variable: "--font-martian",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Axmion Web Innovations · Websites that turn attention into action",

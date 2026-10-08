@@ -13,9 +13,10 @@
     "check:metadata": "node scripts/check-metadata.mjs",
     "report:large-files": "node --experimental-strip-types scripts/report-large-files.ts",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:tokens && npm run check:lagos-time && npm run check:metadata && npm run check:contact && npm run check:attribution",
-    "check:full": "npm run check && npm run build",
+    "check:full": "npm run check && npm run build && npm run smoke:routes",
     "prepare": "git config core.hooksPath .githooks",
     "screenshots": "node --experimental-strip-types scripts/screenshots.ts",
+    "smoke:routes": "node --experimental-strip-types scripts/smoke-routes.ts",
     "check:tokens": "node scripts/check-demo-tokens.mjs",
     "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs",
     "check:lagos-time": "node scripts/check-lagos-time.mjs",
@@ -24,6 +25,9 @@
     "check:attribution": "node --experimental-strip-types scripts/check-attribution.ts"
   },
   "dependencies": {
+    "@fontsource/instrument-serif": "^5.3.0",
+    "@fontsource/martian-mono": "^5.3.0",
+    "@fontsource/schibsted-grotesk": "^5.3.0",
     "lucide-react": "^1.52.0",
     "motion": "^14.0.0",
     "next": "16.4.0",

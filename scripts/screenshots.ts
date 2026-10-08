@@ -7,7 +7,7 @@ const OUTPUT_DIRECTORY = ".screenshots";
 const DEVELOPMENT_PORT = 3100;
 const DEFAULT_BASE_URL = `http://127.0.0.1:${DEVELOPMENT_PORT}`;
 const EXISTING_SERVER_URL = "http://127.0.0.1:3000";
-const ROUTES = [
+const DEFAULT_ROUTES = [
   "/work/rentbook",
   "/work/rentbook/rent-roll",
   "/work/rentbook/tenants",
@@ -16,6 +16,7 @@ const ROUTES = [
   "/work/rentbook/reports",
   "/work/rentbook/maintenance",
 ];
+const ROUTES = process.env.SCREENSHOT_ROUTES?.split(",").filter(Boolean) ?? DEFAULT_ROUTES;
 const VIEWPORTS = [
   { name: "desktop", width: 1296, height: 640 },
   { name: "tablet", width: 768, height: 1024 },

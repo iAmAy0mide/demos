@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -56,9 +57,13 @@ export function DemoShell({ currentDemo, bottomOffset }: DemoShellProps) {
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
-        <span className="axm-shell-mark" aria-hidden="true">
-          A
-        </span>
+        <Image
+          className="axm-shell-mark"
+          src="/images/logo-mark-64.png"
+          alt=""
+          width={20}
+          height={20}
+        />
         Axmion
       </button>
       <nav

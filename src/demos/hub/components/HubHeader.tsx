@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -45,7 +46,7 @@ export function HubHeader() {
   return (
     <header className="axm-header">
       <Link href="/" className="axm-brand" aria-label="Axmion home">
-        <Mark />
+        <Image src="/images/logo-mark-64.png" alt="Axmion logo" width={28} height={28} priority />
         <span>Axmion</span>
       </Link>
       <nav className="axm-nav" aria-label="Primary navigation">
@@ -103,13 +104,5 @@ export function HubHeader() {
         </div>
       )}
     </header>
-  );
-}
-
-function Mark() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 30 30">
-      <path d="m4 24 11-18 11 18-5.5-4.6H9.5Z" fill="currentColor" />
-    </svg>
   );
 }

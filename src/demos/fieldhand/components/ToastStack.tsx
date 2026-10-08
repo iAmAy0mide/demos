@@ -40,7 +40,7 @@ export function ToastStack() {
   const { state } = useFieldhand();
   return (
     <div
-      className="pointer-events-none fixed top-[4.25rem] right-5 z-[60] flex w-[min(22rem,calc(100vw-2.5rem))] flex-col gap-2"
+      className="pointer-events-none fixed top-[4.25rem] right-5 z-[60] flex w-[min(22rem,calc(100vw-2.5rem))] flex-col gap-2 max-md:right-3 max-md:left-3 max-md:w-auto"
       aria-live="polite"
     >
       {state.toasts.map((toast) => (

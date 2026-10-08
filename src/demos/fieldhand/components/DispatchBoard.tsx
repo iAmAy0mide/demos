@@ -189,11 +189,11 @@ function CreateJobDialog({ onClose }: { onClose: () => void }) {
   };
   return (
     <div
-      className="fixed inset-0 z-[70] grid place-items-center bg-[var(--fld-backdrop)] p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[70] grid place-items-center bg-[var(--fld-backdrop)] p-4 backdrop-blur-sm max-md:p-0"
       role="presentation"
     >
       <form
-        className="w-full max-w-md border border-[var(--fld-border-strong)] bg-[var(--fld-surface-overlay)] p-5 shadow-[var(--fld-shadow-overlay)]"
+        className="w-full max-w-md border border-[var(--fld-border-strong)] bg-[var(--fld-surface-overlay)] p-5 shadow-[var(--fld-shadow-overlay)] max-md:max-w-none max-md:self-stretch max-md:overflow-y-auto max-md:pt-10"
         onSubmit={(event) => {
           event.preventDefault();
           create();
@@ -265,6 +265,7 @@ export function DispatchBoard() {
   const { state, moveJob, setFilters } = useFieldhand();
   const now = useLagosNow();
   const [isCreating, setIsCreating] = useState(false);
+  const [phoneStatus, setPhoneStatus] = useState<JobStatus>("unassigned");
   const dateLabel = now ? formatLagosLongDate(now) : "Lagos operations";
   useEffect(() => {
     const openCreate = () => setIsCreating(true);
@@ -389,7 +390,37 @@ export function DispatchBoard() {
         </button>
       </div>
       <section
-        className="min-h-0 overflow-x-auto px-4 pb-4 max-[560px]:min-h-[28rem] md:px-6"
+        className="min-h-0 overflow-y-auto px-4 pb-4 md:hidden"
+        aria-label="Phone job status board"
+      >
+        <div className="flex gap-2 overflow-x-auto py-2" role="tablist" aria-label="Job status">
+          {boardColumns.map(({ status, label }) => (
+            <button
+              key={status}
+              role="tab"
+              aria-selected={phoneStatus === status}
+              onClick={() => setPhoneStatus(status)}
+              className={`min-h-11 shrink-0 border-b-2 px-2 text-sm ${phoneStatus === status ? "border-[var(--fld-signal)] text-[var(--fld-signal)]" : "border-transparent"}`}
+            >
+              {label} {countJobsForStatus(filteredJobs, status)}
+            </button>
+          ))}
+        </div>
+        <div className="space-y-2 py-2">
+          {filteredJobs
+            .filter((job) => job.status === phoneStatus)
+            .map((job) => (
+              <JobCard key={job.id} job={job} onMove={move} />
+            ))}
+          {!filteredJobs.some((job) => job.status === phoneStatus) && (
+            <p className="border border-dashed border-[var(--fld-line)] p-4 text-center text-sm text-[var(--fld-muted)]">
+              Nothing here yet.
+            </p>
+          )}
+        </div>
+      </section>
+      <section
+        className="hidden min-h-0 overflow-x-auto px-4 pb-4 md:block md:px-6"
         aria-label="Job status board"
       >
         <p className="mb-1 text-xs text-[var(--fld-muted)]">Scroll sideways to see every status</p>

@@ -33,16 +33,10 @@
 }
 
 .axm-shell-mark {
-  display: inline-grid;
-  place-items: center;
   width: 1.1rem;
   height: 1.1rem;
   margin-right: 0.3rem;
-  border-radius: 50%;
-  background: var(--axm-shell-ink);
-  color: var(--axm-shell-bg);
-  font-size: 0.65rem;
-  font-weight: 800;
+  object-fit: contain;
 }
 
 .axm-shell-panel {

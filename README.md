@@ -18,7 +18,10 @@ npm run lint
 npm run typecheck
 npm run build
 npm run start
+npm run logo
 ```
+
+`npm run logo` creates the Axmion mark derivatives and Apple touch icon from `public/images/Logo.png`. Keep that transparent source PNG in place; generated derivatives are ignored and can be recreated at any time.
 
 ## Structure
 

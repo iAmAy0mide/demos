@@ -15,7 +15,7 @@ export function QuoteWorkspace() {
   }
   const totals = calculateQuoteTotals(quote);
   return (
-    <main className="grid h-full min-h-0 grid-cols-1 overflow-auto md:grid-cols-[260px_minmax(0,1fr)]">
+    <main className="grid h-full min-h-0 grid-cols-1 overflow-auto pb-20 md:grid-cols-[260px_minmax(0,1fr)] md:pb-0">
       <aside className="border-r border-[var(--fld-line)] p-4">
         <h1 className="text-lg font-semibold">Quotes</h1>
         <div className="mt-4 space-y-1">
@@ -37,7 +37,7 @@ export function QuoteWorkspace() {
           ))}
         </div>
       </aside>
-      <section className="p-6">
+      <section className="p-4 md:p-6">
         <p className="font-mono text-xs text-[var(--fld-muted)]">
           {quote.id} · {quote.status}
         </p>

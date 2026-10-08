@@ -86,7 +86,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
   return (
     <div className="min-h-dvh bg-[var(--fld-canvas)] text-[var(--fld-text)]">
       <aside
-        className={`fixed inset-y-0 left-0 z-40 overflow-hidden border-r border-[var(--fld-line)] bg-[var(--fld-panel)] p-2 transition-[width] duration-150 ${isSidebarCollapsed ? "w-16" : "w-56"}`}
+        className={`fixed inset-y-0 left-0 z-40 hidden overflow-hidden border-r border-[var(--fld-line)] bg-[var(--fld-panel)] p-2 transition-[width] duration-150 md:block ${isSidebarCollapsed ? "w-16" : "w-56"}`}
       >
         <div className="flex h-12 items-center justify-between gap-2 px-2">
           {isSidebarCollapsed ? (
@@ -127,9 +127,16 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
         </nav>
       </aside>
       <div
-        className={`grid min-h-dvh min-w-0 grid-rows-[3.5rem_minmax(0,1fr)] transition-[margin] duration-150 ${isSidebarCollapsed ? "ml-16" : "ml-56"}`}
+        className={`grid min-h-dvh min-w-0 grid-rows-[3.5rem_minmax(0,1fr)] pb-[calc(4.5rem+env(safe-area-inset-bottom))] transition-[margin] duration-150 md:pb-0 ${isSidebarCollapsed ? "md:ml-16" : "md:ml-56"}`}
       >
         <header className="flex items-center gap-3 border-b border-[var(--fld-line)] bg-[var(--fld-canvas)] px-4">
+          <div className="flex min-w-0 items-center gap-2 md:hidden">
+            <FieldhandMark />
+            <div className="min-w-0">
+              <p className="font-semibold tracking-[-.04em]">Fieldhand</p>
+              <p className="truncate text-[11px] text-[var(--fld-muted)]">Voltline Services</p>
+            </div>
+          </div>
           <CommandPalette />
           <button
             aria-label="Toggle color theme"
@@ -162,6 +169,31 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
         </Suspense>
         {!isEmbedded && <ToastStack />}
         <ShortcutOverlay />
+        <nav
+          className="fixed inset-x-0 bottom-0 z-40 grid h-[calc(4.5rem+env(safe-area-inset-bottom))] grid-cols-4 border-t border-[var(--fld-line)] bg-[var(--fld-panel)] px-2 pb-[env(safe-area-inset-bottom)] md:hidden"
+          aria-label="Phone navigation"
+        >
+          {navigationItems.map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`grid min-h-11 place-items-center gap-0.5 text-[11px] ${pathname === href ? "text-[var(--fld-signal)]" : "text-[var(--fld-muted)]"}`}
+            >
+              <Icon size={18} aria-hidden="true" />
+              {label}
+            </Link>
+          ))}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("fieldhand:create-job"))}
+            className="grid min-h-11 place-items-center gap-0.5 text-[11px] text-[var(--fld-signal)]"
+          >
+            <span className="grid size-7 place-items-center rounded-full bg-[var(--fld-signal)] text-white">
+              <Command size={15} />
+            </span>
+            New job
+          </button>
+        </nav>
       </div>
     </div>
   );

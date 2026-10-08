@@ -42,6 +42,10 @@ export const metadata: Metadata = {
     title: "Axmion Web Innovations · Websites that turn attention into action",
     description: "Websites and tools designed to turn attention into action.",
   },
+  icons: {
+    icon: "/images/logo-mark-64.png",
+    apple: "/images/apple-touch-icon.png",
+  },
 };
 
 type HubLayoutProps = Readonly<{ children: React.ReactNode }>;

@@ -56,8 +56,10 @@
   letter-spacing: -0.07em;
   text-decoration: none;
 }
-.axm-brand svg {
-  width: 1.45rem;
+.axm-brand img {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
 }
 .axm-nav {
   display: flex;

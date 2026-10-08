@@ -82,6 +82,12 @@
   padding-top: clamp(3rem, 11vh, 8rem);
 }
 
+.rbk-kicker {
+  margin: 0 0 0.75rem;
+  color: var(--rbk-muted);
+  font: 0.72rem var(--rbk-font-mono);
+}
+
 .rbk-deferred-panel {
   position: relative;
   display: grid;

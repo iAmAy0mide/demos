@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { buildContextMessage, buildWhatsAppLink } from "@/src/shared/config/contact";
 
-const navigation = ["Work", "Services", "Process", "Contact"];
+const navigation = ["Work"];
 
 export function HubHeader() {
   const [isOpen, setIsOpen] = useState(false);

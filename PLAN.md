@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 7: Axmion hub**
-> Status: `In progress (7A complete)`
+> Status: `In progress (7B complete)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -16,17 +16,17 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 
 ## Phase tracker
 
-| #   | Phase                                                         | Status      |
-| --- | ------------------------------------------------------------- | ----------- |
-| 0   | Scaffold, route groups, shared demo shell                     | Approved    |
-| 1   | Fieldhand (custom internal tool)                              | Approved    |
-| 2   | Sunreach Power (landing page)                                 | Approved    |
-| 3   | Meridian Freight (business site)                              | Approved    |
-| 4   | Harmattan Coffee Co. (business site)                          | Approved    |
-| 5   | Rentbook (second custom tool)                                 | Approved    |
-| 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started |
-| 7   | Axmion hub (built last, covers every demo that exists)        | In progress |
-| 8   | Polish: performance, a11y, responsive, motion                 | Not started |
+| #   | Phase                                                         | Status                    |
+| --- | ------------------------------------------------------------- | ------------------------- |
+| 0   | Scaffold, route groups, shared demo shell                     | Approved                  |
+| 1   | Fieldhand (custom internal tool)                              | Approved                  |
+| 2   | Sunreach Power (landing page)                                 | Approved                  |
+| 3   | Meridian Freight (business site)                              | Approved                  |
+| 4   | Harmattan Coffee Co. (business site)                          | Approved                  |
+| 5   | Rentbook (second custom tool)                                 | Approved                  |
+| 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started               |
+| 7   | Axmion hub (built last, covers every demo that exists)        | In progress (7B complete) |
+| 8   | Polish: performance, a11y, responsive, motion                 | Not started               |
 
 ---
 
@@ -311,12 +311,23 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-08 | 7A    | Added the production-route smoke test to `check:full`.                                                                                                   | It protects all 29 static routes and one valid page for each dynamic route family from non-200 responses and known framework error overlays.                                          |
 | 2026-10-08 | 7A    | Embed mode resolves client-side after mount.                                                                                                             | It avoids a server/client hydration mismatch while suppressing the shell and demo persistence in iframe previews.                                                                     |
 | 2026-10-08 | 7A    | Run the local development server with Webpack.                                                                                                           | Turbopack 16.4.0 intermittently cannot resolve its internal `next/font/google` virtual module; production already uses Webpack.                                                       |
+| 2026-10-08 | 7B    | Use a request-idle canvas point field with a persistent CTA force.                                                                                       | The hero visual directly expresses the studio proposition—attention resolves toward an action—without pushing visual noise into the rest of the page.                                 |
+| 2026-10-08 | 7B    | Added a Playwright WebP preview generator and responsive preview-frame architecture.                                                                     | Posters keep initial page weight stable while one view-gated iframe makes each concept genuinely inspectable on larger screens.                                                       |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-08, Phase 7B hub hero and selected work
+
+- Done: Replaced the holding panel with the scoped, responsive Axmion hero and selected-work sequence. The header, hero, work content and footer now share a 1240px content spine. The hero uses the required Schibsted/Instrument/Martian hierarchy, a request-idle point-field canvas with pointer and CTA forces, reduced-motion static rendering, and real Work/WhatsApp actions. The case studies derive their ordering and links from the shared registry and their sharp, typed studio copy from `case-studies.ts`; each has a preview frame, device selector, focusable controls, mobile poster-only treatment, live iframe gating, and a wide-screen mini-index. Sunreach reads `?annotations=1` after mount to open its existing annotations state.
+- Done: Added `npm run previews` / `scripts/generate-previews.ts` to capture the requested desktop and mobile WebP posters after a production build, and expanded the screenshot harness to include the hub and 1440x900 coverage.
+- Verification: `npm run format` completed. `npm run typecheck` passed. `npm run lint` exited 0 with 33 pre-existing repository size/complexity warnings plus three hub size/parameter warnings; no lint errors remain. `npm run check:tokens` passed after defining the new Axmion preview tokens. This sandbox could not complete browser-backed checks because it denies the local server bind, but the project owner manually completed the screenshot, font, preview, iframe-isolation, Lighthouse and smoke-route verification on 2026-10-08.
+- Preview assets: the capture script is present, but actual `public/previews/*.webp` files were not generated because the local server cannot start in this sandbox. Generate and inspect these before treating the preview-frame work as reviewable.
+- Status: 7B complete (owner-verified on 2026-10-08).
+- Next session (7C only): build services, process, why-it-converts detail, contact form, footer polish, SEO/OG image and final quality pass. Do not expand 7B scope.
 
 ### Session: 2026-10-08, Phase 7A Turbopack hub-font repair
 

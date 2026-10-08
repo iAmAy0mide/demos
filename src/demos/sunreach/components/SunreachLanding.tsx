@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDown, Check, ChevronDown, Phone, Sun } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { faqs, packages, propertyLabels, testimonials } from "@/src/demos/sunreach/data/content";
 import { formatNaira, calculateSolarEstimate } from "@/src/demos/sunreach/lib/estimate";
@@ -66,6 +66,12 @@ export function SunreachLanding() {
   });
   const formRef = useRef<HTMLElement>(null);
   const estimate = useMemo(() => calculateSolarEstimate(input), [input]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setShowWhy(new URLSearchParams(window.location.search).get("annotations") === "1");
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
   const update = <K extends keyof CalculatorInput>(key: K, value: CalculatorInput[K]) =>
     setInput((current) => ({ ...current, [key]: value }));
   const book = () => {

@@ -16,6 +16,8 @@
     "check:full": "npm run check && npm run build && npm run smoke:routes",
     "prepare": "git config core.hooksPath .githooks",
     "screenshots": "node --experimental-strip-types scripts/screenshots.ts",
+    "logo": "node --experimental-strip-types scripts/generate-logo-assets.ts",
+    "previews": "node --experimental-strip-types scripts/generate-previews.ts",
     "smoke:routes": "node --experimental-strip-types scripts/smoke-routes.ts",
     "check:tokens": "node scripts/check-demo-tokens.mjs",
     "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs",

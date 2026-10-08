@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { services } from "@/src/demos/meridian/data/services";
+import { AxmionAttribution } from "@/src/shared/components/AxmionAttribution";
 export function MeridianFooter() {
   return (
     <footer className="mrd-footer">
@@ -40,7 +41,9 @@ export function MeridianFooter() {
           </p>
         </section>
       </div>
-      <p className="mrd-footer-note">Concept work by Axmion Web Innovations.</p>
+      <div className="mrd-footer-note">
+        <AxmionAttribution demoName="Meridian Freight" tone="onDark" />
+      </div>
     </footer>
   );
 }

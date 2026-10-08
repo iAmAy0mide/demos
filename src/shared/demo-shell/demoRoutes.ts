@@ -1,19 +1,20 @@
-export const demoRouteIds = ["fieldhand", "rentbook", "sunreach", "meridian", "harmattan"] as const;
+import { publishedWorks, type Work } from "@/src/shared/works";
 
-export type DemoRouteId = (typeof demoRouteIds)[number];
+export type DemoRouteId = Work["id"];
 
-type DemoRoute = { name: string; path: `/work/${DemoRouteId}` };
+export function getWorkPosition(currentDemo: DemoRouteId) {
+  return publishedWorks.findIndex((work) => work.id === currentDemo) + 1;
+}
 
-export const demoRoutes: Record<DemoRouteId, DemoRoute> = {
-  fieldhand: { name: "Fieldhand", path: "/work/fieldhand" },
-  rentbook: { name: "Rentbook", path: "/work/rentbook" },
-  sunreach: { name: "Sunreach Power", path: "/work/sunreach" },
-  meridian: { name: "Meridian Freight", path: "/work/meridian" },
-  harmattan: { name: "Harmattan Coffee Co.", path: "/work/harmattan" },
-};
+export function getCurrentWork(currentDemo: DemoRouteId) {
+  const work = publishedWorks.find((item) => item.id === currentDemo);
+  if (!work) {
+    throw new Error(`Missing published work entry for ${currentDemo}.`);
+  }
+  return work;
+}
 
-export function getAdjacentDemo(currentDemo: DemoRouteId, direction: -1 | 1) {
-  const currentIndex = demoRouteIds.indexOf(currentDemo);
-  const adjacentIndex = (currentIndex + direction + demoRouteIds.length) % demoRouteIds.length;
-  return demoRoutes[demoRouteIds[adjacentIndex]];
+export function getNextWork(currentDemo: DemoRouteId) {
+  const currentIndex = publishedWorks.findIndex((work) => work.id === currentDemo);
+  return publishedWorks[(currentIndex + 1) % publishedWorks.length];
 }

@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { lagosDateKey } from "@/src/shared/lib/lagos-time";
+import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 import { useRentbook } from "./RentbookProvider";
@@ -9,6 +10,7 @@ import { balanceForCharge, naira } from "../lib/finance";
 export function PaymentDialog() {
   const { state, dispatch } = useRentbook();
   const now = useLagosNow();
+  const isEmbedded = useIsEmbedded();
   const [open, setOpen] = useState(false);
   const [tenantId, setTenantId] = useState("");
   const [amount, setAmount] = useState("");
@@ -81,7 +83,7 @@ export function PaymentDialog() {
     window.setTimeout(() => setSuccess(""), 5000);
   }
   if (!open) {
-    return success ? (
+    return success && !isEmbedded ? (
       <p className="rbk-toast" role="status">
         {success}
       </p>

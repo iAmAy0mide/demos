@@ -77,3 +77,26 @@ for (const [demo, prefix] of demos) {
 
 await verifyScopedClasses("Rentbook", new URL("src/demos/rentbook/", root), "rbk");
 await verifyScopedClasses("Axmion shell", new URL("src/shared/demo-shell/", root), "axm-shell");
+await verifyScopedClasses(
+  "Axmion attribution",
+  new URL("src/shared/components/AxmionAttribution/", root),
+  "axm-attr",
+);
+
+const attributionCss = await readFile(
+  new URL("src/shared/components/AxmionAttribution/AxmionAttribution.css", root),
+  "utf8",
+);
+const attributionTokens = [...attributionCss.matchAll(/--axm-attr-([a-z-]+):/g)].map(
+  (match) => match[1],
+);
+const attributionRefs = [...attributionCss.matchAll(/var\(--axm-attr-([a-z-]+)/g)].map(
+  (match) => match[1],
+);
+const missingAttributionTokens = [
+  ...new Set(attributionRefs.filter((token) => !attributionTokens.includes(token))),
+];
+if (missingAttributionTokens.length) {
+  console.error(`Undefined Axmion attribution tokens: ${missingAttributionTokens.join(", ")}`);
+  process.exitCode = 1;
+}

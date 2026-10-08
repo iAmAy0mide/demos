@@ -32,6 +32,19 @@
   cursor: pointer;
 }
 
+.axm-shell-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-right: 0.3rem;
+  border-radius: 50%;
+  background: var(--axm-shell-ink);
+  color: var(--axm-shell-bg);
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
 .axm-shell-panel {
   position: absolute;
   bottom: 52px;
@@ -54,7 +67,7 @@
 
 .axm-shell-panel a,
 .axm-shell-panel span,
-.axm-shell-panel small {
+.axm-shell-panel .axm-attr {
   padding: 9px 10px;
   color: inherit;
   border-radius: 4px;
@@ -64,10 +77,6 @@
 .axm-shell-panel a:hover,
 .axm-shell-panel a:focus-visible {
   background: var(--axm-shell-hover);
-}
-
-.axm-shell-panel small {
-  color: color-mix(in srgb, var(--axm-shell-ink) 70%, transparent);
 }
 
 .axm-shell-handle:focus-visible,

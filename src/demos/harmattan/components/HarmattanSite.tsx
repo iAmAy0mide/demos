@@ -4,6 +4,8 @@ import { Menu, ShoppingBag, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { AxmionAttribution } from "@/src/shared/components/AxmionAttribution";
+
 import { getCoffee } from "../data/coffees";
 import { naira } from "../lib/pricing";
 import { BagProvider, useBag } from "../lib/useBag";
@@ -242,7 +244,7 @@ function Footer() {
         </p>
         <p>Every day, 7am–8pm</p>
       </section>
-      <small>Concept work by Axmion Web Innovations</small>
+      <AxmionAttribution demoName="Harmattan Coffee Co." />
     </footer>
   );
 }

@@ -6,7 +6,9 @@ import { useMemo, useRef, useState } from "react";
 import { faqs, packages, propertyLabels, testimonials } from "@/src/demos/sunreach/data/content";
 import { formatNaira, calculateSolarEstimate } from "@/src/demos/sunreach/lib/estimate";
 import type { BackupType, CalculatorInput, PropertyType } from "@/src/demos/sunreach/types";
+import { AxmionAttribution } from "@/src/shared/components/AxmionAttribution";
 import { nextLagosBusinessDayLabels } from "@/src/shared/lib/lagos-time";
+import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 const defaults: CalculatorInput = {
@@ -47,6 +49,7 @@ function Roof({ panels }: { panels: number }) {
 
 export function SunreachLanding() {
   const now = useLagosNow();
+  const isEmbedded = useIsEmbedded();
   const surveyDays = now ? nextLagosBusinessDayLabels(now) : ["Tuesday", "Wednesday", "Thursday"];
   const [input, setInput] = useState(defaults);
   const [openFaq, setOpenFaq] = useState(0);
@@ -100,19 +103,21 @@ export function SunreachLanding() {
           </button>
         </div>
       </header>
-      <div className="fixed top-20 left-4 z-40 hidden md:block">
-        <button
-          onClick={() => setShowWhy((value) => !value)}
-          className="border border-[var(--sun-line)] bg-[var(--sun-paper)] px-3 py-2 text-xs font-bold text-[var(--sun-ink)]"
-        >
-          Why this converts
-        </button>
-        {showWhy && (
-          <p className="mt-2 w-52 border border-[var(--sun-line)] bg-[var(--sun-paper)] p-3 text-xs shadow-lg">
-            The calculator makes the benefit personal before asking for contact details.
-          </p>
-        )}
-      </div>
+      {!isEmbedded && (
+        <div className="fixed top-20 left-4 z-40 hidden md:block">
+          <button
+            onClick={() => setShowWhy((value) => !value)}
+            className="border border-[var(--sun-line)] bg-[var(--sun-paper)] px-3 py-2 text-xs font-bold text-[var(--sun-ink)]"
+          >
+            Why this converts
+          </button>
+          {showWhy && (
+            <p className="mt-2 w-52 border border-[var(--sun-line)] bg-[var(--sun-paper)] p-3 text-xs shadow-lg">
+              The calculator makes the benefit personal before asking for contact details.
+            </p>
+          )}
+        </div>
+      )}
       <section
         id="main-content"
         className="relative overflow-hidden bg-[var(--sun-navy)] px-5 pt-10 pb-10 text-[var(--sun-paper)] md:px-10 md:py-12"
@@ -514,7 +519,9 @@ export function SunreachLanding() {
       <footer className="bg-[var(--sun-navy-soft)] px-5 py-8 text-sm text-[var(--sun-paper)]">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-3 md:flex-row">
           <span>12 Adeola Odeku Street, Victoria Island, Lagos · 0801 234 5678</span>
-          <span>Concept work by Axmion Web Innovations. Figures are illustrative.</span>
+          <span className="flex items-center gap-1">
+            <AxmionAttribution demoName="Sunreach Power" tone="onDark" /> Figures are illustrative.
+          </span>
         </div>
       </footer>
     </main>

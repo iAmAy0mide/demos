@@ -17,6 +17,7 @@ import {
   savePersistedFieldhandState,
 } from "@/src/demos/fieldhand/lib/persistence";
 import type { FieldhandFilters, Job, JobStatus, ThemeMode } from "@/src/demos/fieldhand/types";
+import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 type FieldhandContextValue = {
@@ -36,18 +37,19 @@ const FieldhandContext = createContext<FieldhandContextValue | null>(null);
 function useFieldhandState() {
   const [state, dispatch] = useReducer(fieldhandReducer, initialFieldhandState);
   const now = useLagosNow();
+  const isEmbedded = useIsEmbedded();
 
   useEffect(() => {
     if (!now) {
       return;
     }
     const seedData = createSeedData(now);
-    const persistedState = readPersistedFieldhandState();
+    const persistedState = isEmbedded ? null : readPersistedFieldhandState();
     dispatch({ type: "hydrate", payload: persistedState ?? { ...seedData, themeMode: "system" } });
-  }, [now]);
+  }, [isEmbedded, now]);
 
   useEffect(() => {
-    if (!state.isLoaded) {
+    if (!state.isLoaded || isEmbedded) {
       return;
     }
     savePersistedFieldhandState({
@@ -57,15 +59,15 @@ function useFieldhandState() {
       quotes: state.quotes,
       themeMode: state.themeMode,
     });
-  }, [state]);
+  }, [isEmbedded, state]);
 
-  return { state, dispatch, now };
+  return { state, dispatch, now, isEmbedded };
 }
 
 type FieldhandProviderProps = Readonly<{ children: React.ReactNode }>;
 
 export function FieldhandProvider({ children }: FieldhandProviderProps) {
-  const { state, dispatch, now } = useFieldhandState();
+  const { state, dispatch, now, isEmbedded } = useFieldhandState();
   const contextValue = useMemo<FieldhandContextValue>(
     () => ({
       state,
@@ -77,6 +79,9 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
       setThemeMode: (themeMode) => dispatch({ type: "set_theme", themeMode }),
       resetDemo: () => now && dispatch({ type: "reset", payload: createSeedData(now) }),
       simulateLiveUpdate: () => {
+        if (isEmbedded) {
+          return;
+        }
         const unassigned = state.jobs.filter((job) => job.status === "unassigned").length;
         const openTitles = state.jobs
           .filter((job) => job.status !== "done")
@@ -96,7 +101,7 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
       },
       dismissToast: (toastId) => dispatch({ type: "dismiss_toast", toastId }),
     }),
-    [dispatch, now, state],
+    [dispatch, isEmbedded, now, state],
   );
 
   return <FieldhandContext.Provider value={contextValue}>{children}</FieldhandContext.Provider>;

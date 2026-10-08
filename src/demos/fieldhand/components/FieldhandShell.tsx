@@ -20,6 +20,7 @@ import { JobDrawer } from "@/src/demos/fieldhand/components/JobDrawer";
 import { ShortcutOverlay } from "@/src/demos/fieldhand/components/ShortcutOverlay";
 import { ToastStack } from "@/src/demos/fieldhand/components/ToastStack";
 import type { ResolvedTheme } from "@/src/demos/fieldhand/types";
+import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
 
 type FieldhandShellProps = Readonly<{ children: React.ReactNode }>;
 const LIVE_UPDATE_INTERVAL_MS = 30000;
@@ -57,6 +58,7 @@ function FieldhandMark() {
 
 export function FieldhandShell({ children }: FieldhandShellProps) {
   const { state, setThemeMode, resetDemo, simulateLiveUpdate } = useFieldhand();
+  const isEmbedded = useIsEmbedded();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const liveUpdateRef = useRef(simulateLiveUpdate);
   const pathname = usePathname();
@@ -74,12 +76,12 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
     return () => media.removeEventListener("change", sync);
   }, []);
   useEffect(() => {
-    if (!state.isLoaded) {
+    if (!state.isLoaded || isEmbedded) {
       return;
     }
     const timer = window.setInterval(() => liveUpdateRef.current(), LIVE_UPDATE_INTERVAL_MS);
     return () => window.clearInterval(timer);
-  }, [state.isLoaded]);
+  }, [isEmbedded, state.isLoaded]);
 
   return (
     <div className="min-h-dvh bg-[var(--fld-canvas)] text-[var(--fld-text)]">
@@ -158,7 +160,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
         <Suspense fallback={null}>
           <JobDrawer />
         </Suspense>
-        <ToastStack />
+        {!isEmbedded && <ToastStack />}
         <ShortcutOverlay />
       </div>
     </div>

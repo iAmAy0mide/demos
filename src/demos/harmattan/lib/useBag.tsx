@@ -2,6 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
+import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
+
 import type { BagItem } from "../types";
 
 const STORAGE_KEY = "harmattan-bag";
@@ -38,11 +40,14 @@ function readBag(): BagItem[] {
   }
 }
 export function BagProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<BagItem[]>(readBag);
+  const isEmbedded = useIsEmbedded();
+  const [items, setItems] = useState<BagItem[]>(() => (isEmbedded ? [] : readBag()));
   const [notice, setNotice] = useState<string | null>(null);
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+    if (!isEmbedded) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+  }, [isEmbedded, items]);
   useEffect(() => {
     if (!notice) {
       return;

@@ -12,14 +12,16 @@
     "format:check": "prettier --check .",
     "check:metadata": "node scripts/check-metadata.mjs",
     "report:large-files": "node --experimental-strip-types scripts/report-large-files.ts",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:tokens && npm run check:lagos-time && npm run check:metadata",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:tokens && npm run check:lagos-time && npm run check:metadata && npm run check:contact && npm run check:attribution",
     "check:full": "npm run check && npm run build",
     "prepare": "git config core.hooksPath .githooks",
     "screenshots": "node --experimental-strip-types scripts/screenshots.ts",
     "check:tokens": "node scripts/check-demo-tokens.mjs",
     "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs",
     "check:lagos-time": "node scripts/check-lagos-time.mjs",
-    "check:rentbook-seed": "node --experimental-strip-types scripts/check-rentbook-seed.ts"
+    "check:rentbook-seed": "node --experimental-strip-types scripts/check-rentbook-seed.ts",
+    "check:contact": "node --experimental-strip-types scripts/check-contact.ts",
+    "check:attribution": "node --experimental-strip-types scripts/check-attribution.ts"
   },
   "dependencies": {
     "lucide-react": "^1.52.0",

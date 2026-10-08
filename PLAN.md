@@ -6,8 +6,8 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 
 ## Current stage
 
-> **Phase 5: Rentbook (custom internal tool)**
-> Status: `In progress (stabilized, 5A complete)`
+> **Phase 7: Axmion hub**
+> Status: `In progress (7A complete)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -25,7 +25,7 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | 4   | Harmattan Coffee Co. (business site)                          | Approved    |
 | 5   | Rentbook (second custom tool)                                 | Approved    |
 | 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started |
-| 7   | Axmion hub (built last, covers every demo that exists)        | Not started |
+| 7   | Axmion hub (built last, covers every demo that exists)        | In progress |
 | 8   | Polish: performance, a11y, responsive, motion                 | Not started |
 
 ---
@@ -287,30 +287,41 @@ See **Definition of done** in `AGENTS.md`. In short: distinct design, working fe
 
 Record every notable decision here: new dependencies, font substitutions, deviations from the brief, and the reason.
 
-| Date       | Phase | Decision                                                                                 | Reason                                                                                                                                                                                |
-| ---------- | ----- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-10-07 | 0     | Added `motion`; deferred GSAP.                                                           | Motion is required by the stack; no Phase 0 interaction needs GSAP.                                                                                                                   |
-| 2026-10-07 | 0     | Use Webpack for the production build script and TypeScript API validation.               | The sandbox blocks Turbopack's CSS-loader subprocess port binding; Webpack built all routes successfully.                                                                             |
-| 2026-10-07 | 1     | Command and task overlays render through client portals.                                 | They remain above the app chrome and retain predictable focus handling.                                                                                                               |
-| 2026-10-07 | 1     | Persisted invalid job assignments are discarded or repaired on load.                     | No saved state can advance unassigned work into travel, site, or completion statuses.                                                                                                 |
-| 2026-10-07 | 2     | Use Bricolage Grotesque and DM Sans with the navy/yellow solar system.                   | The pairing and color system make Sunreach deliberately distinct from the dense Fieldhand product UI.                                                                                 |
-| 2026-10-07 | 2     | Replaced the Fieldhand-only token checker with a prefix-aware all-demo check.            | New work cannot introduce undefined scoped tokens without failing the shared verification command.                                                                                    |
-| 2026-10-07 | 3     | Used Archivo and IBM Plex Mono for Meridian’s scoped type system.                        | Archivo’s variable-width grotesk supports the freight-manifest display language; Plex Mono makes operational values legible and deliberately separates Meridian from the other demos. |
-| 2026-10-07 | 3     | Implemented the route map as a single dependency-free SVG.                               | The static, CSS-animated vector stays performant and avoids shipping a map-processing pipeline to visitors.                                                                           |
-| 2026-10-07 | 4     | Used Fraunces and Instrument Sans in Harmattan's route-scoped layout.                    | Their soft editorial contrast supports the café-and-magazine design without borrowing another demo's voice.                                                                           |
-| 2026-10-07 | 4     | Kept Harmattan illustrations in CSS and inline SVG.                                      | This preserves the crafted visual language without network image requests or heavy assets.                                                                                            |
-| 2026-10-07 | 5     | Added Rentbook as the second custom-tool demo and registered `--rbk-*` token validation. | The landlord financial console broadens the showcase without reusing Fieldhand’s product language.                                                                                    |
-| 2026-10-07 | 6     | Reserved Stockroom as an owner-approved optional phase.                                  | A third tool should be built only if Rentbook proves the additional portfolio breadth is needed.                                                                                      |
-| 2026-10-07 | 5     | Used Hanken Grotesk and Spline Sans Mono for Rentbook.                                   | Both are available through `next/font` and give financial values a clear, tabular ledger voice distinct from Fieldhand.                                                               |
-| 2026-10-07 | 5     | Moved the Axmion shell from a CSS Module to a root-loaded shared stylesheet.             | Turbopack emitted the module CSS but exported an empty class map at runtime, leaving the shell’s DOM without class names.                                                             |
-| 2026-10-08 | 5     | Added Playwright as a development-only screenshot harness.                               | It provides a repeatable responsive visual sweep without shipping browser tooling to the demo.                                                                                        |
-| 2026-10-08 | 5     | Added Prettier and `prettier-plugin-tailwindcss` as repository-wide development tooling. | One formatter and deterministic Tailwind class ordering make every source file easier to review.                                                                                      |
+| Date       | Phase | Decision                                                                                   | Reason                                                                                                                                                                                |
+| ---------- | ----- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-10-07 | 0     | Added `motion`; deferred GSAP.                                                             | Motion is required by the stack; no Phase 0 interaction needs GSAP.                                                                                                                   |
+| 2026-10-07 | 0     | Use Webpack for the production build script and TypeScript API validation.                 | The sandbox blocks Turbopack's CSS-loader subprocess port binding; Webpack built all routes successfully.                                                                             |
+| 2026-10-07 | 1     | Command and task overlays render through client portals.                                   | They remain above the app chrome and retain predictable focus handling.                                                                                                               |
+| 2026-10-07 | 1     | Persisted invalid job assignments are discarded or repaired on load.                       | No saved state can advance unassigned work into travel, site, or completion statuses.                                                                                                 |
+| 2026-10-07 | 2     | Use Bricolage Grotesque and DM Sans with the navy/yellow solar system.                     | The pairing and color system make Sunreach deliberately distinct from the dense Fieldhand product UI.                                                                                 |
+| 2026-10-07 | 2     | Replaced the Fieldhand-only token checker with a prefix-aware all-demo check.              | New work cannot introduce undefined scoped tokens without failing the shared verification command.                                                                                    |
+| 2026-10-07 | 3     | Used Archivo and IBM Plex Mono for Meridian’s scoped type system.                          | Archivo’s variable-width grotesk supports the freight-manifest display language; Plex Mono makes operational values legible and deliberately separates Meridian from the other demos. |
+| 2026-10-07 | 3     | Implemented the route map as a single dependency-free SVG.                                 | The static, CSS-animated vector stays performant and avoids shipping a map-processing pipeline to visitors.                                                                           |
+| 2026-10-07 | 4     | Used Fraunces and Instrument Sans in Harmattan's route-scoped layout.                      | Their soft editorial contrast supports the café-and-magazine design without borrowing another demo's voice.                                                                           |
+| 2026-10-07 | 4     | Kept Harmattan illustrations in CSS and inline SVG.                                        | This preserves the crafted visual language without network image requests or heavy assets.                                                                                            |
+| 2026-10-07 | 5     | Added Rentbook as the second custom-tool demo and registered `--rbk-*` token validation.   | The landlord financial console broadens the showcase without reusing Fieldhand’s product language.                                                                                    |
+| 2026-10-07 | 6     | Reserved Stockroom as an owner-approved optional phase.                                    | A third tool should be built only if Rentbook proves the additional portfolio breadth is needed.                                                                                      |
+| 2026-10-07 | 5     | Used Hanken Grotesk and Spline Sans Mono for Rentbook.                                     | Both are available through `next/font` and give financial values a clear, tabular ledger voice distinct from Fieldhand.                                                               |
+| 2026-10-07 | 5     | Moved the Axmion shell from a CSS Module to a root-loaded shared stylesheet.               | Turbopack emitted the module CSS but exported an empty class map at runtime, leaving the shell’s DOM without class names.                                                             |
+| 2026-10-08 | 5     | Added Playwright as a development-only screenshot harness.                                 | It provides a repeatable responsive visual sweep without shipping browser tooling to the demo.                                                                                        |
+| 2026-10-08 | 5     | Added Prettier and `prettier-plugin-tailwindcss` as repository-wide development tooling.   | One formatter and deterministic Tailwind class ordering make every source file easier to review.                                                                                      |
+| 2026-10-08 | 7A    | Added a shared WhatsApp contact source, attribution component and published-work registry. | Every demo attribution and work-navigation context now derives from one typed, tested implementation.                                                                                 |
+| 2026-10-08 | 7A    | Used Schibsted Grotesk, Instrument Serif and Martian Mono for the hub.                     | The three scoped faces give the hub an editorial studio voice distinct from all concept demos.                                                                                        |
+| 2026-10-08 | 7A    | Embed mode resolves client-side after mount.                                               | It avoids a server/client hydration mismatch while suppressing the shell and demo persistence in iframe previews.                                                                     |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-08, Phase 7A hub foundation
+
+- Done: Added the typed contact configuration and message/link builders with an executable check; a shared accessible WhatsApp attribution; a published-work registry powering the demo pill; embed detection that suppresses the pill and blocks Fieldhand, Rentbook and Harmattan local persistence, Fieldhand simulation/toasts, Rentbook toast and Sunreach annotations. Replaced every existing visible demo-credit string with the attribution component. Established the hub’s scoped fonts, black/magenta visual system, metadata, sticky desktop/mobile header, focus-managed mobile overlay, footer and deliberate holding panel. No hero, services, selected work, process or contact form was built.
+- Attribution search before: `DemoShell.tsx:40,48,57`; `app/(hub)/page.tsx:3,8`; `app/layout.tsx:6,7`; `HarmattanSite.tsx:245`; `MeridianFooter.tsx:43`; `SunreachLanding.tsx:517`; plus internal plan, README, metadata and source-name hits. After: visible demo credits are `AxmionAttribution` in DemoShell, Harmattan, Meridian and Sunreach; the only raw visible name is the permitted hub logo. Metadata, config, documentation and internal naming remain unchanged.
+- Verification: `npm run format` completed. `npm run check` exited 0: format, TypeScript, token (including attribution tokens), Lagos time, metadata (29 route pages), contact-link and attribution checks passed; ESLint reported 29 existing size/complexity warnings and 0 errors. `npm run build` and `npx next build --webpack --debug` both failed after “Creating an optimized production build” with only the generic “Build failed because of webpack errors” message. `npm run screenshots` could not bind the local dev server: `listen EPERM` at `0.0.0.0:3100`; consequently no screenshots were generated or viewed, and iframe framing could not be manually exercised in this sandbox. `next.config.ts` has no `X-Frame-Options` or `frame-ancestors` configuration.
+- Commit: not created in this sandbox; `.git` is read-only and needs a normal writable checkout. Run `npm run format`, `npm run check`, then commit as `feat(hub): add shared showcase foundation`.
+- Next session: Phase 7B only—build the hero, services and live work previews from `src/shared/works.ts`; keep the holding panel only until its replacement is ready. First reproduce the webpack diagnostic in a writable local environment and run screenshot/keyboard checks at 1296×640 and 360×740, including both pill states and iframe embeds.
 
 ### Session: 2026-10-08, Phase 5B Rentbook completion
 

@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
 
+import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 import { createSeedRentbookData } from "../data/seedData";
@@ -59,6 +60,7 @@ function isPersistedRentbook(value: unknown): value is PersistedRentbook {
 function useRentbookState() {
   const [state, dispatch] = useReducer(rentbookReducer, initialRentbookState);
   const now = useLagosNow();
+  const isEmbedded = useIsEmbedded();
 
   useEffect(() => {
     if (!now) {
@@ -66,7 +68,9 @@ function useRentbookState() {
     }
     const seed = createSeedRentbookData(now);
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null") as unknown;
+      const saved = isEmbedded
+        ? null
+        : (JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null") as unknown);
       if (!isPersistedRentbook(saved)) {
         dispatch({ type: "hydrate", payload: seed });
         return;
@@ -84,13 +88,13 @@ function useRentbookState() {
       localStorage.removeItem(STORAGE_KEY);
       dispatch({ type: "hydrate", payload: seed });
     }
-  }, [now]);
+  }, [isEmbedded, now]);
 
   useEffect(() => {
-    if (state.isLoaded) {
+    if (state.isLoaded && !isEmbedded) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(persistedData(state)));
     }
-  }, [state]);
+  }, [isEmbedded, state]);
 
   return useMemo(() => ({ state, dispatch }), [state]);
 }

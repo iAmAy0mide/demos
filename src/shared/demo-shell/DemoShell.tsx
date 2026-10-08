@@ -3,12 +3,19 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { demoRoutes, getAdjacentDemo, type DemoRouteId } from "./demoRoutes";
+import { AxmionAttribution } from "@/src/shared/components/AxmionAttribution";
+import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
+import { publishedWorks } from "@/src/shared/works";
+
+import { getCurrentWork, getNextWork, getWorkPosition, type DemoRouteId } from "./demoRoutes";
 
 type DemoShellProps = { currentDemo: DemoRouteId; bottomOffset?: string };
 
 export function DemoShell({ currentDemo, bottomOffset }: DemoShellProps) {
-  const nextDemo = getAdjacentDemo(currentDemo, 1);
+  const isEmbedded = useIsEmbedded();
+  const currentWork = getCurrentWork(currentDemo);
+  const nextWork = getNextWork(currentDemo);
+  const position = getWorkPosition(currentDemo);
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -30,6 +37,10 @@ export function DemoShell({ currentDemo, bottomOffset }: DemoShellProps) {
     };
   }, []);
 
+  if (isEmbedded) {
+    return null;
+  }
+
   return (
     <aside
       ref={containerRef}
@@ -45,16 +56,21 @@ export function DemoShell({ currentDemo, bottomOffset }: DemoShellProps) {
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
+        <span className="axm-shell-mark" aria-hidden="true">
+          A
+        </span>
         Axmion
       </button>
       <nav
         className={`axm-shell-panel ${open ? "axm-shell-panel-open" : ""}`}
         aria-label="Browse concept work"
       >
-        <Link href="/">← Back to showcase</Link>
-        <span>{demoRoutes[currentDemo].name}</span>
-        <Link href={nextDemo.path}>Next work →</Link>
-        <small>Concept work by Axmion</small>
+        <Link href="/">Showcase</Link>
+        <span>
+          {currentWork.name} · {position} / {publishedWorks.length}
+        </span>
+        <Link href={nextWork.route}>Next</Link>
+        <AxmionAttribution demoName={currentWork.name} variant="line" />
       </nav>
     </aside>
   );

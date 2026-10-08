@@ -316,9 +316,9 @@ Codex writes here at the end of each session. Keep the most recent session at th
 
 - Done: Added Prettier, Tailwind class ordering, EditorConfig, an enforced pre-commit hook, `npm run check`/`check:full`, metadata validation and a large-file report. Formatted the repository; fixed 210 lint errors without suppressions, including import ordering, braces, duplicate imports and nested ternaries. Split the Rentbook shell into focused header, mobile-navigation and dialog components without changing behavior.
 - In progress / rough: The warning-only size report still identifies legacy candidates. Prioritize SunreachLanding, Fieldhand DispatchBoard/CommandPalette, Meridian QuotePage, then the Rentbook payment, overview and roll components in a future quality-only session.
-- Known issues: `pnpm` is not installed in this environment, so verification uses npm commands against the repository's npm lockfile. The build process exceeds this sandbox's 30-second foreground window after beginning Webpack compilation; re-run it in a normal local terminal.
+- Known issues: `pnpm` is not installed in this environment, so verification uses npm commands against the repository's npm lockfile. The project owner confirmed the production build completes successfully in a normal local terminal; this sandbox cannot retain the Webpack process long enough to capture its final output.
 - Next session should: Do not start Rentbook 5C. Continue only the prioritized code-quality extractions above, then run the full visual check for any affected UI.
-- Quality gate: pasted output of `npm run check`: Prettier clean; ESLint has 0 errors and 27 non-blocking size/complexity warnings; TypeScript and token/time/metadata checks passed in the completed individual runs.
+- Quality gate: Prettier clean; ESLint has 0 errors and 27 non-blocking size/complexity warnings; TypeScript and token/time/metadata checks passed in the completed individual runs; project owner confirmed `npm run build` succeeds locally.
 
 ### Session: 2026-10-08, Phase 5B continuation
 

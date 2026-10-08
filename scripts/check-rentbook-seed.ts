@@ -50,6 +50,18 @@ assert(
   data.charges.every((charge) => balanceForCharge(charge, data.payments) >= 0),
   "payment over-allocation",
 );
+const portfolioUnitCount = data.properties.reduce(
+  (total, property) => total + property.unitIds.length,
+  0,
+);
+assert(
+  portfolioUnitCount === data.units.length,
+  "property unit counts do not sum to the portfolio",
+);
+assert(
+  data.properties.every((property) => data.units.some((unit) => unit.propertyId === property.id)),
+  "property filter would produce an empty portfolio",
+);
 console.log(
   `Rentbook seed checks passed: ${data.properties.length} properties, ${data.units.length} units, ${data.tenants.length} tenants.`,
 );

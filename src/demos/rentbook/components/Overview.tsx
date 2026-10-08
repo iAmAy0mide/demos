@@ -39,6 +39,7 @@ export function Overview() {
     (charge) => getChargeStatus(charge, payments, today) === "overdue",
   );
   const occupied = visibleUnits.filter((unit) => unit.status === "occupied").length;
+  const occupancy = Math.round((occupied / Math.max(visibleUnits.length, 1)) * 100);
   const paymentFeed = payments.slice(0, 5);
 
   return (
@@ -56,7 +57,7 @@ export function Overview() {
         <Metric
           icon={<Building2 />}
           label="Occupancy"
-          value={`${occupied}/${visibleUnits.length || 1}`}
+          value={`${occupancy}% · ${occupied} of ${visibleUnits.length} units`}
         />
       </section>
       <section className="rbk-ledger-grid">

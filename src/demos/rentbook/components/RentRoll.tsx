@@ -5,15 +5,16 @@ import { useMemo, useState } from "react";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 import { useRentbook } from "./RentbookProvider";
-import { balanceForCharge, getChargeStatus, naira } from "../lib/finance";
+import { balanceForCharge, formatRentbookDate, getChargeStatus, naira } from "../lib/finance";
 
-import type { Charge, ChargeStatus, Tenant, Unit } from "../types";
+import type { Charge, ChargeStatus, Lease, Tenant, Unit } from "../types";
 
 const VIEWS = ["all", "overdue", "due_soon", "partial", "paid"] as const;
 type View = (typeof VIEWS)[number];
 type RentRollRow = {
   balance: number;
   charge: Charge;
+  lease: Lease | undefined;
   status: ChargeStatus;
   tenant: Tenant | undefined;
   unit: Unit | undefined;
@@ -36,6 +37,7 @@ export function RentRoll() {
           const unit = state.units.find((entry) => entry.id === lease?.unitId);
           return {
             charge,
+            lease,
             tenant,
             unit,
             status: now ? getChargeStatus(charge, state.payments, now) : "upcoming",
@@ -47,7 +49,9 @@ export function RentRoll() {
             (state.selectedPropertyId === "all" ||
               row.unit?.propertyId === state.selectedPropertyId) &&
             (view === "all" || row.status === view) &&
-            row.tenant?.name.toLowerCase().includes(query.toLowerCase()),
+            `${row.tenant?.name ?? ""} ${row.unit?.label ?? ""}`
+              .toLowerCase()
+              .includes(query.toLowerCase()),
         )
         .sort((first, second) => compareRentRollRows(first, second, sortBy)),
     [state, now, query, view, sortBy],
@@ -80,7 +84,7 @@ export function RentRoll() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search tenant or unit"
-        />{" "}
+        />
         <select
           aria-label="Sort rent roll"
           value={sortBy}
@@ -110,33 +114,49 @@ export function RentRoll() {
         <table>
           <thead>
             <tr>
-              <th>Tenant</th>
               <th>Unit</th>
+              <th>Tenant</th>
+              <th>Property</th>
+              <th>Rent per period</th>
               <th>Due</th>
               <th>Balance</th>
               <th>Status</th>
+              <th>Last payment</th>
             </tr>
           </thead>
           <tbody>
             {rows.length ? (
-              rows.map(({ charge, tenant, unit, status, balance }) => (
-                <tr key={charge.id} tabIndex={0}>
-                  <td>
-                    <b>{tenant?.name}</b>
-                  </td>
-                  <td>{unit?.label}</td>
-                  <td>{charge.dueDate}</td>
-                  <td>{naira(balance)}</td>
-                  <td>
-                    <span className={`rbk-status rbk-status-${status}`}>
-                      {status.replace("_", " ")}
-                    </span>
-                  </td>
-                </tr>
-              ))
+              rows.map(({ charge, lease, tenant, unit, status, balance }) => {
+                const property = state.properties.find((entry) => entry.id === unit?.propertyId);
+                const lastPayment = state.payments.find(
+                  (payment) => payment.tenantId === tenant?.id,
+                );
+                return (
+                  <tr key={charge.id} tabIndex={0}>
+                    <td>{unit?.label}</td>
+                    <td>
+                      <b>{tenant?.name}</b>
+                    </td>
+                    <td>{property?.name}</td>
+                    <td>
+                      {lease
+                        ? `${naira(lease.rentAmount)} / ${lease.frequency.replace("_", " ")}`
+                        : "—"}
+                    </td>
+                    <td>{formatRentbookDate(charge.dueDate)}</td>
+                    <td>{naira(balance)}</td>
+                    <td>
+                      <span className={`rbk-status rbk-status-${status}`}>
+                        {status.replace("_", " ")}
+                      </span>
+                    </td>
+                    <td>{lastPayment ? formatRentbookDate(lastPayment.date) : "No payment"}</td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
-                <td colSpan={5}>No accounts match this view.</td>
+                <td colSpan={8}>No accounts match this view.</td>
               </tr>
             )}
           </tbody>

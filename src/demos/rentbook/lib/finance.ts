@@ -107,3 +107,12 @@ export function naira(value: number) {
     maximumFractionDigits: 0,
   }).format(value);
 }
+
+export function formatRentbookDate(dateKey: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Africa/Lagos",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(`${dateKey}T12:00:00+01:00`));
+}

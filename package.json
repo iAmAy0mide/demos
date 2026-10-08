@@ -18,7 +18,8 @@
     "screenshots": "node --experimental-strip-types scripts/screenshots.ts",
     "check:tokens": "node scripts/check-demo-tokens.mjs",
     "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs",
-    "check:lagos-time": "node scripts/check-lagos-time.mjs"
+    "check:lagos-time": "node scripts/check-lagos-time.mjs",
+    "check:rentbook-seed": "node --experimental-strip-types scripts/check-rentbook-seed.ts"
   },
   "dependencies": {
     "lucide-react": "^1.52.0",

@@ -7,7 +7,7 @@ export type RentbookState = RentbookData & {
   isLoaded: boolean;
 };
 export type RentbookAction =
-  | { type: "hydrate"; payload: RentbookData }
+  | { type: "hydrate"; payload: RentbookData; selectedPropertyId?: string | "all" }
   | { type: "select_property"; propertyId: string | "all" }
   | { type: "record_payment"; payment: Payment }
   | { type: "reset"; payload: RentbookData };
@@ -26,7 +26,11 @@ export const initialRentbookState: RentbookState = {
 export function rentbookReducer(state: RentbookState, action: RentbookAction): RentbookState {
   switch (action.type) {
     case "hydrate":
-      return { ...action.payload, selectedPropertyId: "all", isLoaded: true };
+      return {
+        ...action.payload,
+        selectedPropertyId: action.selectedPropertyId ?? "all",
+        isLoaded: true,
+      };
     case "select_property":
       return { ...state, selectedPropertyId: action.propertyId };
     case "reset":

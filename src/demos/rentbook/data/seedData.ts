@@ -1,6 +1,16 @@
-import { lagosDateKey } from "@/src/shared/lib/lagos-time";
-
 import type { Charge, Lease, Payment, Property, RentbookData, Tenant, Unit } from "../types";
+
+function lagosDateKey(date: Date) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Africa/Lagos",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((entry) => entry.type === type)?.value ?? "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
 
 const buildings = [
   ["Admiralty Court", "Lekki Phase 1"],
@@ -42,6 +52,11 @@ const names = [
   "Yetunde Cole",
   "Obinna Eze",
   "Sade Thomas",
+  "Temitope Akinyemi",
+  "Ebele Nwachukwu",
+  "Bashir Danladi",
+  "Rasheedat Bello",
+  "Nnamdi Kalu",
 ];
 function shifted(today: Date, months: number, days = 0) {
   const date = new Date(today);
@@ -89,8 +104,9 @@ export function createSeedRentbookData(today: Date): RentbookData {
           id: leaseId,
           tenantId: tenant.id,
           unitId: id,
-          frequency: "monthly",
-          rentAmount: 260000 + (serial % 5) * 45000,
+          frequency: frequencyForSerial(serial),
+          rentAmount:
+            u >= 6 ? 350000 + (serial % 2) * 50000 : [250000, 825000, 2100000, 4200000][serial % 4],
           startDate: shifted(today, -11),
           endDate: serial === 2 ? shifted(today, 0, 22) : shifted(today, 10),
           cautionDeposit: 150000,
@@ -103,17 +119,17 @@ export function createSeedRentbookData(today: Date): RentbookData {
   const payments: Payment[] = [];
   leases.forEach((lease, index) => {
     for (let month = -11; month <= 0; month += 1) {
+      const dueSoon = month === 0 && [1, 4, 8, 18].includes(index);
       const charge = {
         id: `charge-${index}-${month}`,
         leaseId: lease.id,
         type: "rent" as const,
         amount: lease.rentAmount,
-        dueDate: shifted(today, month, 1),
+        dueDate: shifted(today, month, dueDateOffset(month, dueSoon)),
         description: `Rent ${shifted(today, month).slice(0, 7)}`,
       };
       charges.push(charge);
       const unpaid = month === 0 && [3, 6, 9, 12, 15, 18].includes(index);
-      const dueSoon = month === 0 && [1, 4, 8].includes(index);
       if (!unpaid && !dueSoon) {
         const amount =
           month === 0 && [20, 24].includes(index)
@@ -175,4 +191,15 @@ export function createSeedRentbookData(today: Date): RentbookData {
     ],
     activity: [],
   };
+}
+
+function frequencyForSerial(serial: number) {
+  return (["monthly", "quarterly", "half_yearly", "annual"] as const)[serial % 4];
+}
+
+function dueDateOffset(month: number, isDueSoon: boolean) {
+  if (month !== 0) {
+    return 0;
+  }
+  return isDueSoon ? 5 : -6;
 }

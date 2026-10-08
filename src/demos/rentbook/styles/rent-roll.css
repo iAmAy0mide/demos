@@ -78,3 +78,85 @@
   color: var(--rbk-emerald);
   font-size: 0.8rem;
 }
+.rbk-sort-button,
+.rbk-menu-trigger {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.rbk-row-actions {
+  position: relative;
+}
+.rbk-menu-trigger {
+  min-width: 44px;
+  min-height: 44px;
+  font-weight: 700;
+}
+.rbk-row-menu {
+  position: absolute;
+  right: 0.5rem;
+  z-index: 4;
+  display: grid;
+  min-width: 9rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+  box-shadow: 0 0.6rem 1.5rem var(--rbk-shadow);
+}
+.rbk-row-menu a,
+.rbk-row-menu button {
+  min-height: 42px;
+  border: 0;
+  background: transparent;
+  color: var(--rbk-ink);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  font: inherit;
+  text-decoration: none;
+}
+.rbk-row-menu a:hover,
+.rbk-row-menu button:hover {
+  background: var(--rbk-paper);
+}
+@media (max-width: 700px) {
+  .rbk-roll-table {
+    border: 0;
+    background: transparent;
+  }
+  .rbk-roll-table thead {
+    display: none;
+  }
+  .rbk-roll-table table,
+  .rbk-roll-table tbody,
+  .rbk-roll-table tr,
+  .rbk-roll-table td {
+    display: block;
+    width: 100%;
+  }
+  .rbk-roll-table tr {
+    position: relative;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--rbk-line);
+    background: var(--rbk-surface);
+    padding: 0.7rem;
+  }
+  .rbk-roll-table td {
+    border: 0;
+    padding: 0.2rem 0.4rem;
+    white-space: normal;
+  }
+  .rbk-roll-table td:nth-child(1) {
+    font-weight: 700;
+  }
+  .rbk-roll-table td:nth-child(6) {
+    font-family: var(--rbk-font-mono);
+    font-size: 1.05rem;
+  }
+  .rbk-row-actions {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    width: auto !important;
+  }
+}

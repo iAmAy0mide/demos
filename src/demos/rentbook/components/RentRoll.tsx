@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
@@ -26,6 +26,9 @@ export function RentRoll() {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<View>("all");
   const [sortBy, setSortBy] = useState<"tenant" | "due" | "balance">("due");
+  const [frequency, setFrequency] = useState<"all" | Lease["frequency"]>("all");
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const menuRef = useRef<HTMLTableCellElement>(null);
   const [isReminderSent, setIsReminderSent] = useState(false);
 
   const rows = useMemo(
@@ -49,13 +52,43 @@ export function RentRoll() {
             (state.selectedPropertyId === "all" ||
               row.unit?.propertyId === state.selectedPropertyId) &&
             (view === "all" || row.status === view) &&
+            (frequency === "all" || row.lease?.frequency === frequency) &&
             `${row.tenant?.name ?? ""} ${row.unit?.label ?? ""}`
               .toLowerCase()
               .includes(query.toLowerCase()),
         )
         .sort((first, second) => compareRentRollRows(first, second, sortBy)),
-    [state, now, query, view, sortBy],
+    [state, now, query, view, sortBy, frequency],
   );
+  useEffect(() => {
+    const dismiss = (event: PointerEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setOpenMenuId(null);
+      }
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener("pointerdown", dismiss);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", dismiss);
+      document.removeEventListener("keydown", escape);
+    };
+  }, []);
+  const viewCounts = useMemo(() => {
+    const allRows = state.charges.map((charge) =>
+      getChargeStatus(charge, state.payments, now ?? new Date()),
+    );
+    return Object.fromEntries(
+      VIEWS.map((item) => [
+        item,
+        item === "all" ? allRows.length : allRows.filter((status) => status === item).length,
+      ]),
+    ) as Record<View, number>;
+  }, [now, state.charges, state.payments]);
 
   if (!state.isLoaded || !now) {
     return <main className="rbk-page">Preparing rent roll…</main>;
@@ -94,6 +127,17 @@ export function RentRoll() {
           <option value="tenant">Sort by tenant</option>
           <option value="balance">Sort by balance</option>
         </select>
+        <select
+          aria-label="Billing frequency"
+          value={frequency}
+          onChange={(event) => setFrequency(event.target.value as typeof frequency)}
+        >
+          <option value="all">All billing cycles</option>
+          <option value="monthly">Monthly</option>
+          <option value="quarterly">Quarterly</option>
+          <option value="half_yearly">Half yearly</option>
+          <option value="annual">Annual</option>
+        </select>
         {VIEWS.map((item) => (
           <button
             key={item}
@@ -101,7 +145,7 @@ export function RentRoll() {
             aria-pressed={view === item}
             onClick={() => setView(item)}
           >
-            {item.replace("_", " ")}
+            {item.replace("_", " ")} <span>{viewCounts[item]}</span>
           </button>
         ))}
       </section>
@@ -115,13 +159,22 @@ export function RentRoll() {
           <thead>
             <tr>
               <th>Unit</th>
-              <th>Tenant</th>
+              <th aria-sort={sortBy === "tenant" ? "ascending" : "none"}>
+                <SortButton label="Tenant" value="tenant" current={sortBy} onChange={setSortBy} />
+              </th>
               <th>Property</th>
               <th>Rent per period</th>
-              <th>Due</th>
-              <th>Balance</th>
+              <th aria-sort={sortBy === "due" ? "ascending" : "none"}>
+                <SortButton label="Due" value="due" current={sortBy} onChange={setSortBy} />
+              </th>
+              <th aria-sort={sortBy === "balance" ? "descending" : "none"}>
+                <SortButton label="Balance" value="balance" current={sortBy} onChange={setSortBy} />
+              </th>
               <th>Status</th>
               <th>Last payment</th>
+              <th>
+                <span className="rbk-sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -132,7 +185,15 @@ export function RentRoll() {
                   (payment) => payment.tenantId === tenant?.id,
                 );
                 return (
-                  <tr key={charge.id} tabIndex={0}>
+                  <tr
+                    key={charge.id}
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key.toLowerCase() === "p") {
+                        window.dispatchEvent(new Event("rentbook:payment"));
+                      }
+                    }}
+                  >
                     <td>{unit?.label}</td>
                     <td>
                       <b>{tenant?.name}</b>
@@ -151,18 +212,65 @@ export function RentRoll() {
                       </span>
                     </td>
                     <td>{lastPayment ? formatRentbookDate(lastPayment.date) : "No payment"}</td>
+                    <td
+                      className="rbk-row-actions"
+                      ref={openMenuId === charge.id ? menuRef : undefined}
+                    >
+                      <button
+                        aria-expanded={openMenuId === charge.id}
+                        aria-label={`Actions for ${tenant?.name ?? "account"}`}
+                        className="rbk-menu-trigger"
+                        type="button"
+                        onClick={() => setOpenMenuId(openMenuId === charge.id ? null : charge.id)}
+                      >
+                        •••
+                      </button>
+                      {openMenuId === charge.id ? (
+                        <div className="rbk-row-menu" role="menu">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              window.dispatchEvent(new Event("rentbook:payment"));
+                              setOpenMenuId(null);
+                            }}
+                          >
+                            Record payment
+                          </button>
+                          <a href="/work/rentbook/tenants">View tenant</a>
+                        </div>
+                      ) : null}
+                    </td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td colSpan={8}>No accounts match this view.</td>
+                <td colSpan={9}>No accounts match this view.</td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
     </main>
+  );
+}
+
+function SortButton({
+  label,
+  value,
+  current,
+  onChange,
+}: {
+  label: string;
+  value: "tenant" | "due" | "balance";
+  current: string;
+  onChange: (value: "tenant" | "due" | "balance") => void;
+}) {
+  return (
+    <button className="rbk-sort-button" type="button" onClick={() => onChange(value)}>
+      {label}
+      {current === value ? " ↓" : ""}
+    </button>
   );
 }
 

@@ -308,6 +308,7 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-08 | 7A    | Added a shared WhatsApp contact source, attribution component and published-work registry. | Every demo attribution and work-navigation context now derives from one typed, tested implementation.                                                                                 |
 | 2026-10-08 | 7A    | Used Schibsted Grotesk, Instrument Serif and Martian Mono for the hub.                     | The three scoped faces give the hub an editorial studio voice distinct from all concept demos.                                                                                        |
 | 2026-10-08 | 7A    | Embed mode resolves client-side after mount.                                               | It avoids a server/client hydration mismatch while suppressing the shell and demo persistence in iframe previews.                                                                     |
+| 2026-10-08 | 7A    | Run the local development server with Webpack.                                             | Turbopack 16.4.0 intermittently cannot resolve its internal `next/font/google` virtual module; production already uses Webpack.                                                       |
 
 ---
 
@@ -322,6 +323,11 @@ Codex writes here at the end of each session. Keep the most recent session at th
 - Verification: `npm run format` completed. `npm run check` exited 0: format, TypeScript, token (including attribution tokens), Lagos time, metadata (29 route pages), contact-link and attribution checks passed; ESLint reported 29 existing size/complexity warnings and 0 errors. `npm run build` and `npx next build --webpack --debug` both failed after “Creating an optimized production build” with only the generic “Build failed because of webpack errors” message. `npm run screenshots` could not bind the local dev server: `listen EPERM` at `0.0.0.0:3100`; consequently no screenshots were generated or viewed, and iframe framing could not be manually exercised in this sandbox. `next.config.ts` has no `X-Frame-Options` or `frame-ancestors` configuration.
 - Commit: `25d79ef feat(hub): add shared showcase foundation`.
 - Next session: Phase 7B only—build the hero, services and live work previews from `src/shared/works.ts`; keep the holding panel only until its replacement is ready. First reproduce the webpack diagnostic in a writable local environment and run screenshot/keyboard checks at 1296×640 and 360×740, including both pill states and iframe embeds.
+
+### Session: 2026-10-08, Phase 7A Turbopack font repair
+
+- Done: Changed `npm run dev` to run `next dev --webpack`. This avoids Turbopack 16.4.0’s internal `next/font/google` module resolver error while retaining the hub’s self-hosted Martian Mono configuration.
+- Verification: `npm run format` and `npm run check` passed with 0 errors and the pre-existing 29 size/complexity warnings. `npm run dev -- --help` confirms Webpack is an accepted dev-server mode. The sandbox cannot bind a local port, so a live route request remains for the project owner’s local browser.
 
 ### Session: 2026-10-08, Phase 5B Rentbook completion
 

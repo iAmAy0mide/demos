@@ -3,7 +3,7 @@ import { Overview } from "@/src/demos/rentbook/components/Overview";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Rentbook | Okafor & Sons Properties",
+  title: "Overview",
   description: "A calm, precise rent and property management console.",
 };
 

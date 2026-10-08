@@ -3,7 +3,7 @@ import { SunreachLanding } from "@/src/demos/sunreach/components/SunreachLanding
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sunreach Power | Solar and inverter systems in Lagos",
+  title: "Solar and inverter systems in Lagos",
   description:
     "Book a free Sunreach Power site inspection and see an illustrative solar saving estimate for your Lagos home or business.",
   openGraph: {

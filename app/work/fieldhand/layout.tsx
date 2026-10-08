@@ -5,8 +5,21 @@ import { FieldhandShell } from "@/src/demos/fieldhand/components/FieldhandShell"
 import "@/src/demos/fieldhand/styles/tokens.css";
 import { DemoShell } from "@/src/shared/demo-shell/DemoShell";
 
+import type { Metadata } from "next";
+
 const geist = Geist({ subsets: ["latin"], variable: "--fld-font-sans", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--fld-font-mono", display: "swap" });
+export const metadata: Metadata = {
+  title: { default: "Fieldhand · Field operations", template: "%s · Fieldhand" },
+  description: "A focused dispatch console for field-service teams in Lagos.",
+  openGraph: {
+    title: "Fieldhand",
+    description: "A focused dispatch console for field-service teams.",
+  },
+  icons: {
+    icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23121820'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Arial' font-size='38' font-weight='700' fill='%23b4fa4a'%3EF%3C/text%3E%3C/svg%3E",
+  },
+};
 
 type FieldhandLayoutProps = Readonly<{ children: React.ReactNode }>;
 

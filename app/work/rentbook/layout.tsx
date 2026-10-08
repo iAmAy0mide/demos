@@ -10,12 +10,28 @@ import { RentbookProvider } from "@/src/demos/rentbook/components/RentbookProvid
 import { RentbookShell } from "@/src/demos/rentbook/components/RentbookShell";
 import { DemoShell } from "@/src/shared/demo-shell/DemoShell";
 
+import type { Metadata } from "next";
+
 const hanken = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-rbk-sans", display: "swap" });
 const spline = Spline_Sans_Mono({
   subsets: ["latin"],
   variable: "--font-rbk-mono",
   display: "swap",
 });
+
+export const metadata: Metadata = {
+  title: { default: "Rentbook · Rent management for landlords", template: "%s · Rentbook" },
+  description:
+    "A calm financial console for Nigerian landlords managing rent collection and property health.",
+  openGraph: {
+    title: "Rentbook · Rent management for landlords",
+    description:
+      "A calm financial console for Nigerian landlords managing rent collection and property health.",
+  },
+  icons: {
+    icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b6b4d'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Arial' font-size='38' font-weight='700' fill='white'%3ER%3C/text%3E%3C/svg%3E",
+  },
+};
 
 export default function RentbookLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

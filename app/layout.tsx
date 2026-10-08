@@ -3,7 +3,7 @@ import "./globals.css";
 import "@/src/shared/demo-shell/DemoShell.css";
 
 export const metadata: Metadata = {
-  title: { default: "Axmion Showcase", template: "%s | Axmion Showcase" },
+  title: "Axmion Web Innovations",
   description: "Concept websites and tools by Axmion Web Innovations.",
 };
 

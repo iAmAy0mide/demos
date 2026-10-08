@@ -312,6 +312,13 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
 
+### Session: 2026-10-08, Phase 5B route repair
+
+- Done: Repaired the Rentbook route fall-through by adding explicit `page.tsx` files for tenants, properties, payments, reports and maintenance. Each now has an on-brand deferred-workspace screen rather than rendering the overview. Expanded the Rentbook top navigation and its nested-route active-state matching, and registered every Rentbook screen in the Playwright screenshot route list.
+- Verification: Prettier completed; ESLint completed with 0 errors and the pre-existing 27 size/complexity warnings; `tsc --noEmit` exited 0; and `npm run build` completed successfully with all seven Rentbook routes in the route manifest. Screenshot capture could not run because this sandbox denies the dev server local port bind (`listen EPERM` on `0.0.0.0:3100`), so no visual claim was made.
+- Blocker: The workspace grants read-only access to `.git`; `git commit -m "feat(rentbook): add dedicated workspace routes"` fails because Git cannot create `.git/index.lock`. The route changes are uncommitted and must be committed in a normal writable checkout before continuing.
+- Next session should: Commit the route repair, then continue 5B strictly with metadata, persistence/seed validation, property-scoped data, and the rent-roll specification. Do not begin 5C routes or features.
+
 ### Session: 2026-10-08, Phase 5 code quality
 
 - Done: Added Prettier, Tailwind class ordering, EditorConfig, an enforced pre-commit hook, `npm run check`/`check:full`, metadata validation and a large-file report. Formatted the repository; fixed 210 lint errors without suppressions, including import ordering, braces, duplicate imports and nested ternaries. Split the Rentbook shell into focused header, mobile-navigation and dialog components without changing behavior.

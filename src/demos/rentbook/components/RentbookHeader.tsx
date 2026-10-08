@@ -6,6 +6,11 @@ import type { Property } from "../types";
 const links = [
   ["Overview", "/work/rentbook"],
   ["Rent roll", "/work/rentbook/rent-roll"],
+  ["Tenants", "/work/rentbook/tenants"],
+  ["Properties", "/work/rentbook/properties"],
+  ["Payments", "/work/rentbook/payments"],
+  ["Reports", "/work/rentbook/reports"],
+  ["Maintenance", "/work/rentbook/maintenance"],
 ] as const;
 
 type RentbookHeaderProps = {
@@ -38,7 +43,11 @@ export function RentbookHeader({
       </Link>
       <nav className="rbk-nav" aria-label="Rentbook navigation">
         {links.map(([name, href]) => (
-          <Link key={href} className={pathname === href ? "rbk-nav-active" : undefined} href={href}>
+          <Link
+            key={href}
+            className={isCurrentRoute(pathname, href) ? "rbk-nav-active" : undefined}
+            href={href}
+          >
             {name}
           </Link>
         ))}
@@ -79,4 +88,10 @@ export function RentbookHeader({
       </div>
     </header>
   );
+}
+
+function isCurrentRoute(pathname: string, href: string) {
+  return href === "/work/rentbook"
+    ? pathname === href
+    : pathname.startsWith(`${href}/`) || pathname === href;
 }

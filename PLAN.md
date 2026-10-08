@@ -312,6 +312,13 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
 
+### Session: 2026-10-08, Phase 5B routes and metadata
+
+- Done: Committed the dedicated Rentbook workspace routes as `deddcd0` and the scoped per-demo metadata as `f044418`. Every demo now declares its own title template, description, Open Graph copy and inline SVG brand icon; Rentbook’s deferred workspace routes have individual metadata.
+- Verification: `npm run format`, `npm run typecheck`, `npm run check:metadata` and `npm run build` passed. ESLint has 0 errors and retains 27 existing non-blocking size/complexity warnings elsewhere in the repository.
+- In progress: Steps 3–5 remain: versioned Rentbook persistence and seed integrity script; persisted property filtering; and the full rent-roll interaction/visual pass. Screenshot capture remains blocked by the sandbox’s denied localhost bind.
+- Next session should: Continue Step 3 only. Do not mark Phase 5B ready for review until all requested checks, seed checks and a browser screenshot inspection have completed.
+
 ### Session: 2026-10-08, Phase 5B route repair
 
 - Done: Repaired the Rentbook route fall-through by adding explicit `page.tsx` files for tenants, properties, payments, reports and maintenance. Each now has an on-brand deferred-workspace screen rather than rendering the overview. Expanded the Rentbook top navigation and its nested-route active-state matching, and registered every Rentbook screen in the Playwright screenshot route list.

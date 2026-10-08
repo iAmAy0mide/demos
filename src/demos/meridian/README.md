@@ -1,6 +1,7 @@
 # Meridian Freight
 
 Meridian Freight will be a logistics business site built in Phase 3. Tracking numbers, shipment states, and quote-flow data will be typed mock data in this folder.
+
 ## Meridian Freight
 
 Meridian is a multi-page fictional freight-forwarding site built as a controlled shipping manifest: sea, air, road, clearance and warehousing pages share a precise document-led system, not a generic marketing template.

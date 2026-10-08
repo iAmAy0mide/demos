@@ -12,7 +12,10 @@ export function getLineItemTotal(lineItem: QuoteLineItem) {
 }
 
 export function calculateQuoteTotals(quote: Quote): QuoteTotals {
-  const subtotal = quote.lineItems.reduce((total, lineItem) => total + getLineItemTotal(lineItem), 0);
+  const subtotal = quote.lineItems.reduce(
+    (total, lineItem) => total + getLineItemTotal(lineItem),
+    0,
+  );
   const discount = Math.round((subtotal * quote.discountPercent) / 100);
   const taxableAmount = subtotal - discount;
   const vat = Math.round((taxableAmount * quote.vatPercent) / 100);

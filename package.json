@@ -6,8 +6,16 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint . --max-warnings=0",
+    "lint": "eslint app src scripts --cache --cache-location .cache/eslint",
     "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check:metadata": "node scripts/check-metadata.mjs",
+    "report:large-files": "node --experimental-strip-types scripts/report-large-files.ts",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:tokens && npm run check:lagos-time && npm run check:metadata",
+    "check:full": "npm run check && npm run build",
+    "prepare": "git config core.hooksPath .githooks",
+    "screenshots": "node --experimental-strip-types scripts/screenshots.ts",
     "check:tokens": "node scripts/check-demo-tokens.mjs",
     "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs",
     "check:lagos-time": "node scripts/check-lagos-time.mjs"
@@ -26,6 +34,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
+    "playwright": "^1.63.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

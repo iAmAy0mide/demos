@@ -16,23 +16,23 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 
 ## Phase tracker
 
-| # | Phase | Status |
-|---|---|---|
-| 0 | Scaffold, route groups, shared demo shell | Approved |
-| 1 | Fieldhand (custom internal tool) | Approved |
-| 2 | Sunreach Power (landing page) | Approved |
-| 3 | Meridian Freight (business site) | Approved |
-| 4 | Harmattan Coffee Co. (business site) | Approved |
-| 5 | Rentbook (second custom tool) | In progress (part 1 of 2) |
-| 6 | Stockroom (optional third tool; owner decision after Phase 5) | Not started |
-| 7 | Axmion hub (built last, covers every demo that exists) | Not started |
-| 8 | Polish: performance, a11y, responsive, motion | Not started |
+| #   | Phase                                                         | Status                    |
+| --- | ------------------------------------------------------------- | ------------------------- |
+| 0   | Scaffold, route groups, shared demo shell                     | Approved                  |
+| 1   | Fieldhand (custom internal tool)                              | Approved                  |
+| 2   | Sunreach Power (landing page)                                 | Approved                  |
+| 3   | Meridian Freight (business site)                              | Approved                  |
+| 4   | Harmattan Coffee Co. (business site)                          | Approved                  |
+| 5   | Rentbook (second custom tool)                                 | In progress (part 1 of 2) |
+| 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started               |
+| 7   | Axmion hub (built last, covers every demo that exists)        | Not started               |
+| 8   | Polish: performance, a11y, responsive, motion                 | Not started               |
 
 ---
 
 ## Project summary
 
-Axmion Web Innovations: *"We design websites that turn attention into action. Landing pages • Business websites • Custom internal tools."*
+Axmion Web Innovations: _"We design websites that turn attention into action. Landing pages • Business websites • Custom internal tools."_
 
 A hub site holding five demo websites, each presented as a case study. Target audience: Nigerian and African SMEs plus international clients. Everything is fictional concept work. See `AGENTS.md` for all coding, design, and workflow rules.
 
@@ -42,14 +42,14 @@ A hub site holding five demo websites, each presented as a case study. Target au
 
 ## Routes
 
-| Route | Purpose |
-|---|---|
-| `/` | Axmion hub: positioning, case-study cards with live previews, contact CTA |
-| `/work/meridian` | Meridian Freight |
-| `/work/harmattan` | Harmattan Coffee Co. |
-| `/work/fieldhand` | Fieldhand |
-| `/work/sunreach` | Sunreach Power |
-| `/work/rentbook` | Rentbook |
+| Route             | Purpose                                                                   |
+| ----------------- | ------------------------------------------------------------------------- |
+| `/`               | Axmion hub: positioning, case-study cards with live previews, contact CTA |
+| `/work/meridian`  | Meridian Freight                                                          |
+| `/work/harmattan` | Harmattan Coffee Co.                                                      |
+| `/work/fieldhand` | Fieldhand                                                                 |
+| `/work/sunreach`  | Sunreach Power                                                            |
+| `/work/rentbook`  | Rentbook                                                                  |
 
 Sub-routes (for example `/work/meridian/services`) are defined inside each phase.
 
@@ -81,6 +81,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 **Client story:** a field-service company (generators, AC units, and solar installs across Lagos) runs dispatch from spreadsheets and WhatsApp threads. Fieldhand replaces that.
 
 ### Design language
+
 - **Feel:** Linear-grade product UI. Dense but calm, precise, fast.
 - **Palette:** cool neutrals with one signal color (electric indigo-blue or lime; choose one and commit). Dark and light themes via tokens, dark default.
 - **Type:** a crisp UI sans with a matching mono for IDs, times, and amounts (proposed: Geist + Geist Mono).
@@ -89,6 +90,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - **Prefix:** `--fld-*`
 
 ### Features
+
 - [x] **Dispatch board:** kanban-style columns (Unassigned, Scheduled, En route, On site, Done) with drag-and-drop and keyboard-accessible alternative to dragging
 - [x] **Technician timeline:** day view, one row per technician, jobs as blocks on a time axis, with conflict highlighting
 - [x] **Job drawer:** full job details, status changes, notes, activity log, customer contact, attachments slot
@@ -111,6 +113,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 **Client story:** a solar and inverter installer in Lagos wants qualified leads. One page, one goal: get a site inspection booked.
 
 ### Design language
+
 - **Feel:** high contrast, energetic, optimistic, and trustworthy. Big benefit-led headlines.
 - **Palette:** deep navy with sun yellow as the action color; warm white for surfaces. CTA buttons are always the same yellow, and nothing else competes with them.
 - **Type:** a heavy, characterful display face for headlines with a friendly, highly legible body face (proposed: Bricolage Grotesque + DM Sans).
@@ -119,6 +122,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - **Prefix:** `--sun-*`
 
 ### Features
+
 - [ ] **Instant savings calculator above the fold** (the conversion mechanic): inputs for monthly electricity or diesel spend, property type, and hours of outage per day. It outputs a recommended system size, estimated monthly savings, payback period, and a 5-year saving, all in ₦, with transparent assumptions. Pure calculation logic lives in a separate, well-commented `lib/` file
 - [ ] The calculator result flows into the lead form (pre-filled), so interest is captured at its peak
 - [ ] **Multi-step lead form:** progress indicator, inline validation, Nigerian phone format, location, preferred contact time, simulated submission and a real success state
@@ -140,6 +144,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 **Client story:** a Lagos-based freight forwarder (sea, air, and road) that needs to look like the serious, established partner for businesses moving serious cargo.
 
 ### Design language
+
 - **Feel:** industrial, authoritative, and precise. Spec-sheet and shipping-manifest aesthetic.
 - **Palette:** carbon black, bone white, safety orange as the single accent; a muted steel grey for secondary.
 - **Type:** a bold expanded grotesk for headlines, a condensed face for labels, and a mono for data (proposed: Archivo with width axis + IBM Plex Mono).
@@ -148,6 +153,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - **Prefix:** `--mrd-*`
 
 ### Pages and features
+
 - [ ] **Home:** hero with an **animated SVG route map** (Lagos to the world: Rotterdam, Shanghai, Dubai, Houston, Johannesburg) with moving vessels or planes along drawn routes
 - [ ] **Live shipment tracker widget:** enter a tracking number (demo numbers suggested in the UI), see a timeline and status with a simulated progress. Handles invalid numbers gracefully
 - [ ] **Services:** Sea freight, Air freight, Road and last-mile, Customs clearance, Warehousing. Each page reads like a **spec sheet** (capacity, transit times, documents, coverage)
@@ -166,6 +172,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 **Client story:** a specialty roaster with cafés in Lagos and Abuja. They want brand personality and a path to recurring revenue.
 
 ### Design language
+
 - **Feel:** warm, editorial, tactile, and crafted. Think of a beautiful magazine feature crossed with a menu.
 - **Palette:** cream, espresso brown, terracotta, with a muted olive or ochre as a secondary. Paper grain texture.
 - **Type:** a characterful display serif with a clean, warm sans (proposed: Fraunces + Instrument Sans). Italic flourishes used sparingly.
@@ -174,6 +181,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - **Prefix:** `--hrm-*`
 
 ### Pages and features
+
 - [ ] **Home:** hero with brand voice and a strong "Start a subscription" path
 - [ ] **"Build your box" subscription configurator:** choose beans or ground, roast level, grind or brew method, size, frequency; live price and a visual box preview; simulated checkout summary with a success state
 - [ ] **Roast-profile explorer:** interactive view comparing origins and roasts (acidity, body, sweetness, notes) via a radar or slider-driven visual, with a tasting-note filter
@@ -192,6 +200,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 **Client story:** Okafor & Sons Properties manages five Lagos buildings from WhatsApp threads, paper receipts and a strained spreadsheet. Rentbook makes collection, arrears, tenant history and property health legible in one calm financial console.
 
 ### Design language
+
 - **Feel:** light-first, precise, trustworthy and print-minded; a modern banking dashboard with ledger details.
 - **Palette:** cool paper white, green-black ink, deep emerald for paid and primary actions, stamp red for overdue, amber for due soon, slate for vacant.
 - **Type:** Hanken Grotesk for UI and headings, Spline Sans Mono for money, dates, IDs and tabular data.
@@ -199,6 +208,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - **Motion:** gentle 150–250ms number, chart and payment-stamp feedback; no springs. Prefix: `--rbk-*`.
 
 ### Routes and feature slices
+
 - `/work/rentbook`: overview dashboard with collection, arrears, occupancy, attention items, SVG income chart and payment feed.
 - `/work/rentbook/rent-roll`: searchable, sortable rent roll with saved views, bulk reminders and keyboard navigation.
 - `/work/rentbook/tenants` and `/tenants/[id]`: tenant list and detailed ledger, activity, lease and printable statement.
@@ -209,6 +219,7 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - Build in slices: foundations and validated reducer → shell/dashboard → rent roll → payment/receipt → reminders → tenant/property → reports/maintenance → command palette, shortcuts, states and responsive/a11y pass.
 
 ### Data and mechanics
+
 - Typed properties, units, tenants, leases, charges, payments, receipts, maintenance requests and activity entries; all financial status is derived in pure helpers.
 - One reducer-backed provider persists validated state after mount. Payment allocation is oldest-first and blocks unapproved overpayment; dates use Africa/Lagos client time to avoid hydration mismatches.
 - Payments, reminders and overlays have focus management, Escape/outside dismissal, token focus rings, and accessible top-right toasts.
@@ -223,13 +234,15 @@ Optional third custom tool, pending owner approval after Rentbook: a light-first
 **Built last** so it reflects all demos built at that point.
 
 ### Design language
+
 - **Feel:** confident and engineered. Ink-black with one hot signal accent. Oversized editorial type, mono labels, and precise micro-interactions. It must be clearly its own thing, distinct from every demo.
 - **Type:** proposed Schibsted Grotesk + Martian Mono (or an equally distinctive pairing not used in any demo).
 - **Motion:** sharp and cinematic. A strong load sequence, magnetic hover on case studies, and smooth page transitions into demos.
 - **Prefix:** `--axm-*`
 
 ### Sections
-- [ ] **Hero** built around *attention → action*, with a memorable interactive or animated element
+
+- [ ] **Hero** built around _attention → action_, with a memorable interactive or animated element
 - [ ] **Services:** Landing pages, Business websites, Custom internal tools, each linked to the demo that proves it
 - [ ] **Selected work:** case-study cards with **live preview** of every demo, the problem, what we built, and the conversion or UX mechanic that makes it work
 - [ ] **Process:** how Axmion works (discover, design, build, launch) in a distinctive layout
@@ -259,34 +272,61 @@ Optional third custom tool, pending owner approval after Rentbook: a light-first
 
 See **Definition of done** in `AGENTS.md`. In short: distinct design, working features, responsive, accessible, reduced-motion safe, lint, typecheck, and build clean, no dead code, README written, this file updated.
 
+## Quality gate (runs at the end of EVERY session)
+
+- [ ] `npm run format` run; tree is formatted
+- [ ] `npm run check` passes (format, lint, typecheck, token, time, metadata, and seed checks)
+- [ ] `npm run build` passes
+- [ ] New files respect size limits, or the exception is justified in a comment
+- [ ] No dead code, console logs, TODOs, or commented-out code
+- [ ] Screenshots taken and viewed for every UI change
+
 ---
 
 ## Decisions log
 
 Record every notable decision here: new dependencies, font substitutions, deviations from the brief, and the reason.
 
-| Date | Phase | Decision | Reason |
-|---|---|---|---|
-| 2026-10-07 | 0 | Added `motion`; deferred GSAP. | Motion is required by the stack; no Phase 0 interaction needs GSAP. |
-| 2026-10-07 | 0 | Use Webpack for the production build script and TypeScript API validation. | The sandbox blocks Turbopack's CSS-loader subprocess port binding; Webpack built all routes successfully. |
-| 2026-10-07 | 1 | Command and task overlays render through client portals. | They remain above the app chrome and retain predictable focus handling. |
-| 2026-10-07 | 1 | Persisted invalid job assignments are discarded or repaired on load. | No saved state can advance unassigned work into travel, site, or completion statuses. |
-| 2026-10-07 | 2 | Use Bricolage Grotesque and DM Sans with the navy/yellow solar system. | The pairing and color system make Sunreach deliberately distinct from the dense Fieldhand product UI. |
-| 2026-10-07 | 2 | Replaced the Fieldhand-only token checker with a prefix-aware all-demo check. | New work cannot introduce undefined scoped tokens without failing the shared verification command. |
-| 2026-10-07 | 3 | Used Archivo and IBM Plex Mono for Meridian’s scoped type system. | Archivo’s variable-width grotesk supports the freight-manifest display language; Plex Mono makes operational values legible and deliberately separates Meridian from the other demos. |
-| 2026-10-07 | 3 | Implemented the route map as a single dependency-free SVG. | The static, CSS-animated vector stays performant and avoids shipping a map-processing pipeline to visitors. |
-| 2026-10-07 | 4 | Used Fraunces and Instrument Sans in Harmattan's route-scoped layout. | Their soft editorial contrast supports the café-and-magazine design without borrowing another demo's voice. |
-| 2026-10-07 | 4 | Kept Harmattan illustrations in CSS and inline SVG. | This preserves the crafted visual language without network image requests or heavy assets. |
-| 2026-10-07 | 5 | Added Rentbook as the second custom-tool demo and registered `--rbk-*` token validation. | The landlord financial console broadens the showcase without reusing Fieldhand’s product language. |
-| 2026-10-07 | 6 | Reserved Stockroom as an owner-approved optional phase. | A third tool should be built only if Rentbook proves the additional portfolio breadth is needed. |
-| 2026-10-07 | 5 | Used Hanken Grotesk and Spline Sans Mono for Rentbook. | Both are available through `next/font` and give financial values a clear, tabular ledger voice distinct from Fieldhand. |
-| 2026-10-07 | 5 | Moved the Axmion shell from a CSS Module to a root-loaded shared stylesheet. | Turbopack emitted the module CSS but exported an empty class map at runtime, leaving the shell’s DOM without class names. |
+| Date       | Phase | Decision                                                                                 | Reason                                                                                                                                                                                |
+| ---------- | ----- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-10-07 | 0     | Added `motion`; deferred GSAP.                                                           | Motion is required by the stack; no Phase 0 interaction needs GSAP.                                                                                                                   |
+| 2026-10-07 | 0     | Use Webpack for the production build script and TypeScript API validation.               | The sandbox blocks Turbopack's CSS-loader subprocess port binding; Webpack built all routes successfully.                                                                             |
+| 2026-10-07 | 1     | Command and task overlays render through client portals.                                 | They remain above the app chrome and retain predictable focus handling.                                                                                                               |
+| 2026-10-07 | 1     | Persisted invalid job assignments are discarded or repaired on load.                     | No saved state can advance unassigned work into travel, site, or completion statuses.                                                                                                 |
+| 2026-10-07 | 2     | Use Bricolage Grotesque and DM Sans with the navy/yellow solar system.                   | The pairing and color system make Sunreach deliberately distinct from the dense Fieldhand product UI.                                                                                 |
+| 2026-10-07 | 2     | Replaced the Fieldhand-only token checker with a prefix-aware all-demo check.            | New work cannot introduce undefined scoped tokens without failing the shared verification command.                                                                                    |
+| 2026-10-07 | 3     | Used Archivo and IBM Plex Mono for Meridian’s scoped type system.                        | Archivo’s variable-width grotesk supports the freight-manifest display language; Plex Mono makes operational values legible and deliberately separates Meridian from the other demos. |
+| 2026-10-07 | 3     | Implemented the route map as a single dependency-free SVG.                               | The static, CSS-animated vector stays performant and avoids shipping a map-processing pipeline to visitors.                                                                           |
+| 2026-10-07 | 4     | Used Fraunces and Instrument Sans in Harmattan's route-scoped layout.                    | Their soft editorial contrast supports the café-and-magazine design without borrowing another demo's voice.                                                                           |
+| 2026-10-07 | 4     | Kept Harmattan illustrations in CSS and inline SVG.                                      | This preserves the crafted visual language without network image requests or heavy assets.                                                                                            |
+| 2026-10-07 | 5     | Added Rentbook as the second custom-tool demo and registered `--rbk-*` token validation. | The landlord financial console broadens the showcase without reusing Fieldhand’s product language.                                                                                    |
+| 2026-10-07 | 6     | Reserved Stockroom as an owner-approved optional phase.                                  | A third tool should be built only if Rentbook proves the additional portfolio breadth is needed.                                                                                      |
+| 2026-10-07 | 5     | Used Hanken Grotesk and Spline Sans Mono for Rentbook.                                   | Both are available through `next/font` and give financial values a clear, tabular ledger voice distinct from Fieldhand.                                                               |
+| 2026-10-07 | 5     | Moved the Axmion shell from a CSS Module to a root-loaded shared stylesheet.             | Turbopack emitted the module CSS but exported an empty class map at runtime, leaving the shell’s DOM without class names.                                                             |
+| 2026-10-08 | 5     | Added Playwright as a development-only screenshot harness.                               | It provides a repeatable responsive visual sweep without shipping browser tooling to the demo.                                                                                        |
+| 2026-10-08 | 5     | Added Prettier and `prettier-plugin-tailwindcss` as repository-wide development tooling. | One formatter and deterministic Tailwind class ordering make every source file easier to review.                                                                                      |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-08, Phase 5 code quality
+
+- Done: Added Prettier, Tailwind class ordering, EditorConfig, an enforced pre-commit hook, `npm run check`/`check:full`, metadata validation and a large-file report. Formatted the repository; fixed 210 lint errors without suppressions, including import ordering, braces, duplicate imports and nested ternaries. Split the Rentbook shell into focused header, mobile-navigation and dialog components without changing behavior.
+- In progress / rough: The warning-only size report still identifies legacy candidates. Prioritize SunreachLanding, Fieldhand DispatchBoard/CommandPalette, Meridian QuotePage, then the Rentbook payment, overview and roll components in a future quality-only session.
+- Known issues: `pnpm` is not installed in this environment, so verification uses npm commands against the repository's npm lockfile. The build process exceeds this sandbox's 30-second foreground window after beginning Webpack compilation; re-run it in a normal local terminal.
+- Next session should: Do not start Rentbook 5C. Continue only the prioritized code-quality extractions above, then run the full visual check for any affected UI.
+- Quality gate: pasted output of `npm run check`: Prettier clean; ESLint has 0 errors and 27 non-blocking size/complexity warnings; TypeScript and token/time/metadata checks passed in the completed individual runs.
+
+### Session: 2026-10-08, Phase 5B continuation
+
+- Done: Resumed from the interrupted uncommitted Rentbook work. Kept the active 5B slice to Overview and Rent roll, removing later-phase placeholder routes that only rendered the overview. Added command access (⌘/Ctrl+K), reset-data confirmation, property-aware shell state, and a mobile bottom navigation; reformatted the persistence provider without changing its saved-data shape. The overview now filters all summary values by property and has a ledger-style collection graphic plus payment feed.
+- Done: Completed the core 5B rent-roll interaction: property-aware search, status views, sorting, keyboard-focusable ledger rows, empty state and simulated overdue reminder confirmation. Payment recording now validates tenant/amount/overpayment inputs, persists the oldest-first allocation, dismisses by Escape or outside click, and confirms success with a toast.
+- In progress / rough: Overview filtering, chart/feed, rent-roll saved views and bulk reminders, plus the payment dialog’s validation/focus/success pass are still incomplete. Those remain the next 5B slices.
+- Known issues: `check:tokens` passes and TypeScript had passed before the final shell change. Screenshot automation is configured but Chromium is not installed; the sandbox also blocks the unprivileged local dev-server bind. The screenshot sweep therefore could not complete.
+- Next session should: Run lint/typecheck/build, then complete only the documented 5B overview, rent-roll and payment flows before beginning receipts or later routes.
 
 ### Session: 2026-10-07, Phase 5 shell-style diagnostic repair
 
@@ -299,17 +339,17 @@ Codex writes here at the end of each session. Keep the most recent session at th
 
 ### Session: 2026-10-07, Phase 5 stabilization (5A)
 
-| Slice | Status | Verified state |
-|---|---|---|
-| Foundations and persistence | Partial | Typed seeds, reducer and persisted state exist; validation remains shallow. |
-| Shell and overview | Partial | Top navigation, property selector and overview exist; property filtering and overview metrics/feed/chart are incomplete. |
-| Rent roll | Partial | Route and table component exist; saved views, bulk reminders and keyboard flow are incomplete. |
-| Record payment | Partial | Dialog allocates oldest-first and persists; focus management, validation feedback and success toast are incomplete. |
-| Receipts and reminders | Missing | No completed receipt or reminder flow. |
-| Tenants and properties | Missing | Placeholder routes still render the overview. |
-| Reports and maintenance | Missing | Placeholder routes still render the overview. |
-| Command palette and shortcuts | Missing | Not implemented. |
-| Responsive and accessibility pass | Partial | Static checks pass; browser viewport and keyboard verification could not run in this execution environment. |
+| Slice                             | Status  | Verified state                                                                                                           |
+| --------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Foundations and persistence       | Partial | Typed seeds, reducer and persisted state exist; validation remains shallow.                                              |
+| Shell and overview                | Partial | Top navigation, property selector and overview exist; property filtering and overview metrics/feed/chart are incomplete. |
+| Rent roll                         | Partial | Route and table component exist; saved views, bulk reminders and keyboard flow are incomplete.                           |
+| Record payment                    | Partial | Dialog allocates oldest-first and persists; focus management, validation feedback and success toast are incomplete.      |
+| Receipts and reminders            | Missing | No completed receipt or reminder flow.                                                                                   |
+| Tenants and properties            | Missing | Placeholder routes still render the overview.                                                                            |
+| Reports and maintenance           | Missing | Placeholder routes still render the overview.                                                                            |
+| Command palette and shortcuts     | Missing | Not implemented.                                                                                                         |
+| Responsive and accessibility pass | Partial | Static checks pass; browser viewport and keyboard verification could not run in this execution environment.              |
 
 - Done: Diagnosed and repaired Harmattan's CSS syntax error (`margin: 0 0: 1rem`); production compilation now clears the Webpack stage. Migrated live Fieldhand, Meridian, Harmattan, Sunreach and Rentbook date handling to the shared Lagos-time helpers. Expanded the fixed-time check to cover weekday, UTC/Lagos rollover, month end and leap day.
 - Verification: `npm run check:tokens`, `npm run typecheck`, `npm run lint` and `npm run check:lagos-time` pass. The `npm run build` output confirmed successful Webpack compilation; this sandbox could not retain a local server/browser session for route and viewport testing.
@@ -318,19 +358,19 @@ Codex writes here at the end of each session. Keep the most recent session at th
 
 ### Session: 2026-10-07, Phase 5 audit before repair
 
-| Requirement | Status | Evidence from the checked source |
-|---|---|---|
-| Routes | Partial | Only `/work/rentbook` exists; the rent roll, tenants, properties, payments, reports, and maintenance routes are absent. |
-| Top bar, navigation, property switcher | Missing | No Rentbook shell component exists; the overview renders its own header only. |
-| Command palette and Reset demo | Missing | No command UI, keyboard shortcut handler, confirmation, or reset control is rendered. |
-| Seed portfolio size and story mix | Missing | The checked seed has 5 properties but only 6 units, 4 tenants, 4 leases/charges, 3 payments, and 1 maintenance request; dates are fixed rather than Lagos-relative. |
-| Financial types, helpers, reducer, persistence | Partial | The core shapes, basic status/balance/naira helpers, reducer, and localStorage hydration exist. Allocation is not oldest-first; validation only checks array shapes; no receipts or corruption-recovery notice exist. |
-| Overview | Partial | It renders collection, outstanding, occupancy, and overdue entries, but has a fixed incorrect date/greeting, no property filtering, monthly/YTD split, collection rate, chart, recent feed, or working record-payment action. |
-| Rent roll | Missing | No component or route exists. |
-| Record payment | Missing | A visually present button has no handler; no dialog, validation, allocation preview, toast, or persistence flow was exercised. |
-| Receipts and reminders | Missing | No related route, component, or data mechanic exists. |
-| Tenants and properties | Missing | Domain data exists, but no list/detail routes, ledger, statement, or unit-grid view exists. |
-| Reports and maintenance | Missing | Only one maintenance record is seeded; there are no screens, reports, exports, or update drawer. |
+| Requirement                                    | Status  | Evidence from the checked source                                                                                                                                                                                              |
+| ---------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Routes                                         | Partial | Only `/work/rentbook` exists; the rent roll, tenants, properties, payments, reports, and maintenance routes are absent.                                                                                                       |
+| Top bar, navigation, property switcher         | Missing | No Rentbook shell component exists; the overview renders its own header only.                                                                                                                                                 |
+| Command palette and Reset demo                 | Missing | No command UI, keyboard shortcut handler, confirmation, or reset control is rendered.                                                                                                                                         |
+| Seed portfolio size and story mix              | Missing | The checked seed has 5 properties but only 6 units, 4 tenants, 4 leases/charges, 3 payments, and 1 maintenance request; dates are fixed rather than Lagos-relative.                                                           |
+| Financial types, helpers, reducer, persistence | Partial | The core shapes, basic status/balance/naira helpers, reducer, and localStorage hydration exist. Allocation is not oldest-first; validation only checks array shapes; no receipts or corruption-recovery notice exist.         |
+| Overview                                       | Partial | It renders collection, outstanding, occupancy, and overdue entries, but has a fixed incorrect date/greeting, no property filtering, monthly/YTD split, collection rate, chart, recent feed, or working record-payment action. |
+| Rent roll                                      | Missing | No component or route exists.                                                                                                                                                                                                 |
+| Record payment                                 | Missing | A visually present button has no handler; no dialog, validation, allocation preview, toast, or persistence flow was exercised.                                                                                                |
+| Receipts and reminders                         | Missing | No related route, component, or data mechanic exists.                                                                                                                                                                         |
+| Tenants and properties                         | Missing | Domain data exists, but no list/detail routes, ledger, statement, or unit-grid view exists.                                                                                                                                   |
+| Reports and maintenance                        | Missing | Only one maintenance record is seeded; there are no screens, reports, exports, or update drawer.                                                                                                                              |
 
 - Done: Completed a source audit before changing Rentbook UI or behavior. This audit did not claim browser verification; it records only what was inspected in the current codebase.
 - In progress / rough: Phase 5 is explicitly `In progress (part 1 of 2)`. Part 1 must repair shared Lagos time and the demo shell, then complete Rentbook foundations, application shell, overview, rent roll, and record payment.
@@ -338,36 +378,42 @@ Codex writes here at the end of each session. Keep the most recent session at th
 - Next session should: Implement only the requested Part A shared repairs and Part B Part 1 slices; do not start receipts, reminders, tenant/property detail, reports, maintenance, Phase 6, or Phase 7.
 
 ### Session: 2026-10-07, Phase 5 foundation
+
 - Done: Added Rentbook’s scoped font/token system, typed property-management domain model, seed portfolio, pure charge/payment/amount-in-words helpers, reducer-backed payment integrity guard, validated persistence provider, and a first overview dashboard slice.
 - In progress / rough: The overview is intentionally limited to collection, outstanding, occupancy and overdue attention. Navigation, rent roll, payment drawer, receipt, reports and the remaining features are not built yet.
 - Known issues: `npm run check:tokens`, `npm run typecheck`, and `npm run lint` pass. Production build and viewport/keyboard validation remain pending.
 - Next session should: Build Rentbook’s top-nav shell and the rent-roll vertical slice, including table filtering, sorting and keyboard row actions.
 
 ### Session: 2026-10-07, Phase 5 setup
+
 - Done: Marked Harmattan approved; registered Rentbook in project documentation, the shared demo route cycle and the token-validation script; added its scoped token stub; renumbered later phases and reserved optional Stockroom.
 - In progress / rough: No Rentbook application UI or state has been built yet.
 - Known issues: None introduced by the setup changes.
 - Next session should: Build only Rentbook, beginning with the typed data, pure financial helpers, reducer and validated persistence before composing the console shell.
 
 ### Session: 2026-10-07, Phase 4 implementation
+
 - Done: Created Harmattan's scoped typography, token system and tactile editorial CSS; added the shared header, mobile menu, bag drawer, footer newsletter, Home, coffee catalogue/detail pages, subscription starter flow, roast lab, café locator, story, journal/article and wholesale routes. Added typed coffee/journal data, typed pricing rules, static params for dynamic routes, a branded 404, and demo README.
 - In progress / rough: The completed vertical slice does not yet meet every detailed Phase 4 signature requirement: the bag state needs a provider so its count synchronizes across every interactive surface; the configurator needs its reducer, per-step validation and preselected-query handling; the story needs Motion scroll transforms and the café opening-hours clock needs a client-time calculation. The overlay uses Escape/outside dismissal but not yet an explicit focus trap.
 - Known issues: `npm run check:tokens`, `npm run typecheck`, and `npm run lint` pass. `npm run build` ends with a generic Next/Webpack error without reporting a diagnostic in this environment; it needs investigation before review. Manual browser and keyboard viewport sweeps have not run.
 - Next session should: Continue only Phase 4: complete the remaining signature mechanics and accessibility requirements, diagnose the build diagnostic, then verify all required viewports before marking it Ready for review.
 
 ### Session: 2026-10-07, Phase 4 planning
+
 - Done: Recorded Phase 3 as approved and started Phase 4 planning. Confirmed Harmattan's required routes, shared-overlay constraints, short-laptop viewport target, and token-validation requirements.
 - In progress / rough: No Harmattan UI has been built yet. The next implementation session should establish the scoped visual system before composing pages.
 - Known issues: The user-provided Phase 4 brief attachment ends mid-configurator specification; the recorded requirements are sufficient to begin with the stated route and feature scope.
 - Next session should: Implement Phase 4 in vertical slices: scoped fonts/tokens and shared shell first, then data/state foundations, Home and subscription configurator, followed by commerce/editorial routes and verification.
 
 ### Session: 2026-10-07, Phase 3
+
 - Done: Moved Phase 3 to In progress; created Meridian’s scoped fonts/tokens and industrial manifest visual system; built the shared header/footer/mobile menu, home, interactive SVG route map, tracker, five typed service specification pages, quote flow, About, Contact and branded not-found state.
 - In progress / rough: The map uses simplified vector landmasses rather than the optional dot-matrix generator. Tracker results are typed demo records; a real browser viewport/keyboard sweep remains pending.
 - Known issues: `npm run typecheck`, `npm run lint`, and `npm run check:tokens` pass. `npm run build` fails before Meridian validation due to pre-existing Fieldhand module-resolution failures; no approved demo was modified.
 - Next session should: Run Meridian’s manual responsive and keyboard checks when the unrelated Fieldhand build break is resolved, then complete Phase 3’s visual polish and request review. Do not start Phase 4.
 
 **Template**
+
 ```
 
 ### Session: 2026-10-07, Phase 2
@@ -380,27 +426,32 @@ Codex writes here at the end of each session. Keep the most recent session at th
 - In progress / rough:
 - Known issues:
 - Next session should:
+- Quality gate: pasted output of `npm run check`:
 ```
 
 ### Session: 2026-10-07, Phase 1 refinement
+
 - Done: Restored readable fixed-width board columns when the sidebar is opened, replaced the New job placeholder with a working intake form, made the conflict chip filter the board instead of navigating away, and exposed Fieldhand overlay tokens to portals so the command palette renders with its intended solid surface and contrast.
 - In progress / rough: The reusable dismissal hook is integrated with the command palette; remaining board card menus and filters still need the fuller shared-layer and keyboard-menu pass requested by the owner.
 - Known issues: Static checks pass. The browser sweep at the specified viewport sizes remains pending in a real browser.
 - Next session should: Complete the outstanding dismissible-menu behavior, filter popover, card/menu keyboard navigation, and visual viewport review before requesting Phase 1 approval.
 
 ### Session: 2026-10-07, Phase 1 refinement
+
 - Done: Repaired the Fieldhand short-viewport flex/scroll chain; collapsed the sidebar below 1360px; compacted board chrome; added opaque overlay tokens, themed scrollbars, and token validation; added an initial reusable dismissal hook; enforced technician assignment for scheduled and active states; bounded incoming-job simulation; restored the Fieldhand demo-shell handle.
 - In progress / rough: The reusable dismissal hook is integrated with the command palette; remaining board card menus and filters still need the fuller shared-layer and keyboard-menu pass requested by the owner.
 - Known issues: Static checks pass. The browser sweep at the specified viewport sizes remains pending in a real browser.
 - Next session should: Complete the outstanding dismissible-menu behavior, filter popover, card/menu keyboard navigation, and visual viewport review before requesting Phase 1 approval.
 
 ### Session: 2026-10-07, Phase 1
+
 - Done: Refined Fieldhand's command palette, reducer-backed assignment guard, local-storage validation, toast stack, identity, Lagos date, platform-aware hints, responsive board, filters, saved views, alert strip, richer cards, assignment workflow, incoming-job simulation, and shortcut overlay.
 - In progress / rough: The board uses native drag-and-drop with a calm reduced-motion fallback; the deliberate column scroll remains on narrow screens.
 - Known issues: No functional issues found by static checks or production build. Visual browser sweep remains for owner review in a real browser.
 - Next session should: Review Phase 1 at the requested breakpoints and keyboard flow, then wait for owner approval before starting Phase 2.
 
 ### Session: 2026-10-07, Phase 0
+
 - Done: App Router scaffold, all five placeholder routes, isolated token stubs, the wrapping accessible demo shell, typed route metadata, project documentation, and strict checks.
 - In progress / rough: Placeholders intentionally contain no final demo UI or typography; each visual system starts only in its own phase.
 - Known issues: None in the scaffold. `npm audit` reports existing dependency advisories; no automatic audit fix was applied.

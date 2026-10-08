@@ -3,27 +3,160 @@
 import { AlertTriangle, Bolt, Ellipsis, MapPin, Plus, Snowflake, Sun, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
-import { countJobsForStatus, filterJobs, findSchedulingConflicts } from "@/src/demos/fieldhand/lib/jobUtils";
+import {
+  countJobsForStatus,
+  filterJobs,
+  findSchedulingConflicts,
+} from "@/src/demos/fieldhand/lib/jobUtils";
 import type { Job, JobStatus, ServiceCategory } from "@/src/demos/fieldhand/types";
 import { formatLagosLongDate, formatLagosTime } from "@/src/shared/lib/lagos-time";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
-const boardColumns: { status: JobStatus; label: string }[] = [{ status: "unassigned", label: "Unassigned" }, { status: "scheduled", label: "Scheduled" }, { status: "en_route", label: "En route" }, { status: "on_site", label: "On site" }, { status: "done", label: "Done" }];
+const boardColumns: { status: JobStatus; label: string }[] = [
+  { status: "unassigned", label: "Unassigned" },
+  { status: "scheduled", label: "Scheduled" },
+  { status: "en_route", label: "En route" },
+  { status: "on_site", label: "On site" },
+  { status: "done", label: "Done" },
+];
 const TECHNICIAN_REQUIRED: JobStatus[] = ["scheduled", "en_route", "on_site", "done"];
-const categoryIcons: Record<ServiceCategory, typeof Bolt> = { generator: Wrench, ac: Snowflake, solar: Sun, electrical: Bolt };
-const technicianHues: Record<string, string> = { "tech-ade": "bg-sky-700", "tech-ngozi": "bg-violet-700", "tech-tobi": "bg-amber-700", "tech-sade": "bg-emerald-700", "tech-ibrahim": "bg-rose-700", "tech-chioma": "bg-cyan-700" };
+const categoryIcons: Record<ServiceCategory, typeof Bolt> = {
+  generator: Wrench,
+  ac: Snowflake,
+  solar: Sun,
+  electrical: Bolt,
+};
+const technicianHues: Record<string, string> = {
+  "tech-ade": "bg-sky-700",
+  "tech-ngozi": "bg-violet-700",
+  "tech-tobi": "bg-amber-700",
+  "tech-sade": "bg-emerald-700",
+  "tech-ibrahim": "bg-rose-700",
+  "tech-chioma": "bg-cyan-700",
+};
 
-function formatTime(value: string | null) { return value ? formatLagosTime(new Date(value)) : "Unscheduled"; }
-function requiresTechnician(status: JobStatus) { return TECHNICIAN_REQUIRED.includes(status); }
+function formatTime(value: string | null) {
+  return value ? formatLagosTime(new Date(value)) : "Unscheduled";
+}
+function requiresTechnician(status: JobStatus) {
+  return TECHNICIAN_REQUIRED.includes(status);
+}
 
 function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStatus) => void }) {
   const { state } = useFieldhand();
   const [menuOpen, setMenuOpen] = useState(false);
   const technician = state.technicians.find((item) => item.id === job.technicianId);
   const Icon = categoryIcons[job.category];
-  const priorityTone = job.priority === "urgent" ? "bg-red-500" : job.priority === "high" ? "bg-amber-500" : "bg-transparent";
-  return <article draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", job.id)} className="group relative border border-[var(--fld-line)] bg-[var(--fld-raised)] p-3 shadow-[0_1px_0_rgba(0,0,0,.16)]"><span className={`absolute inset-y-0 left-0 w-1 ${priorityTone}`} aria-hidden="true" /><div className="flex items-start justify-between gap-2 pl-1"><span className="font-mono text-[11px] text-[var(--fld-muted)]">{job.id}</span><div className="ml-auto flex items-center gap-1">{(job.priority === "urgent" || job.priority === "high") && <AlertTriangle size={15} className={job.priority === "urgent" ? "text-red-400" : "text-amber-400"} aria-label={`${job.priority} priority`} />}<div className="relative"><button className="grid size-8 place-items-center rounded hover:bg-[var(--fld-hover)]" type="button" onClick={() => setMenuOpen((open) => !open)} aria-label={`Actions for ${job.id}`} aria-haspopup="menu" aria-expanded={menuOpen}><Ellipsis size={16} /></button>{menuOpen && <div className="absolute right-0 top-8 z-20 w-36 border border-[var(--fld-line)] bg-[var(--fld-panel)] py-1 shadow-xl" role="menu"><Link href={`/work/fieldhand?job=${job.id}`} className="block px-3 py-2 text-sm hover:bg-[var(--fld-hover)]" role="menuitem">Open</Link>{boardColumns.filter((column) => column.status !== job.status).map((column) => <button key={column.status} type="button" className="block w-full px-3 py-2 text-left text-sm hover:bg-[var(--fld-hover)]" role="menuitem" onClick={() => { onMove(job, column.status); setMenuOpen(false); }}>Move to {column.label}</button>)}</div>}</div></div></div><h3 className="mt-1 pl-1 text-sm font-medium leading-5"><Link href={`/work/fieldhand?job=${job.id}`} className="hover:text-[var(--fld-signal)]">{job.title}</Link></h3><div className="mt-2 flex items-center gap-2 pl-1 text-xs text-[var(--fld-muted)]"><Icon size={14} aria-hidden="true" /><MapPin size={13} aria-hidden="true" /><span>{job.area}</span><span className="ml-auto font-mono">{formatTime(job.scheduledStart)}</span></div><div className="mt-3 flex items-center justify-between pl-1 text-xs">{technician ? <span className="flex items-center gap-2"><span className={`grid size-7 place-items-center rounded-full text-[10px] font-semibold text-white ${technicianHues[technician.id]}`}>{technician.initials}</span>{technician.name.split(" ")[0]}</span> : <button type="button" className="flex items-center gap-2 text-[var(--fld-signal)] hover:underline" onClick={() => onMove(job, "scheduled")}><span className="grid size-7 place-items-center rounded-full border border-dashed border-[var(--fld-signal)]">+</span>Assign</button>}</div></article>;
+  const priorityTone = getPriorityTone(job.priority);
+  return (
+    <article
+      draggable
+      onDragStart={(event) => event.dataTransfer.setData("text/plain", job.id)}
+      className="group relative border border-[var(--fld-line)] bg-[var(--fld-raised)] p-3 shadow-[0_1px_0_rgba(0,0,0,.16)]"
+    >
+      <span className={`absolute inset-y-0 left-0 w-1 ${priorityTone}`} aria-hidden="true" />
+      <div className="flex items-start justify-between gap-2 pl-1">
+        <span className="font-mono text-[11px] text-[var(--fld-muted)]">{job.id}</span>
+        <div className="ml-auto flex items-center gap-1">
+          {(job.priority === "urgent" || job.priority === "high") && (
+            <AlertTriangle
+              size={15}
+              className={job.priority === "urgent" ? "text-red-400" : "text-amber-400"}
+              aria-label={`${job.priority} priority`}
+            />
+          )}
+          <div className="relative">
+            <button
+              className="grid size-8 place-items-center rounded hover:bg-[var(--fld-hover)]"
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-label={`Actions for ${job.id}`}
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+            >
+              <Ellipsis size={16} />
+            </button>
+            {menuOpen && (
+              <div
+                className="absolute top-8 right-0 z-20 w-36 border border-[var(--fld-line)] bg-[var(--fld-panel)] py-1 shadow-xl"
+                role="menu"
+              >
+                <Link
+                  href={`/work/fieldhand?job=${job.id}`}
+                  className="block px-3 py-2 text-sm hover:bg-[var(--fld-hover)]"
+                  role="menuitem"
+                >
+                  Open
+                </Link>
+                {boardColumns
+                  .filter((column) => column.status !== job.status)
+                  .map((column) => (
+                    <button
+                      key={column.status}
+                      type="button"
+                      className="block w-full px-3 py-2 text-left text-sm hover:bg-[var(--fld-hover)]"
+                      role="menuitem"
+                      onClick={() => {
+                        onMove(job, column.status);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      Move to {column.label}
+                    </button>
+                  ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      <h3 className="mt-1 pl-1 text-sm leading-5 font-medium">
+        <Link href={`/work/fieldhand?job=${job.id}`} className="hover:text-[var(--fld-signal)]">
+          {job.title}
+        </Link>
+      </h3>
+      <div className="mt-2 flex items-center gap-2 pl-1 text-xs text-[var(--fld-muted)]">
+        <Icon size={14} aria-hidden="true" />
+        <MapPin size={13} aria-hidden="true" />
+        <span>{job.area}</span>
+        <span className="ml-auto font-mono">{formatTime(job.scheduledStart)}</span>
+      </div>
+      <div className="mt-3 flex items-center justify-between pl-1 text-xs">
+        {technician ? (
+          <span className="flex items-center gap-2">
+            <span
+              className={`grid size-7 place-items-center rounded-full text-[10px] font-semibold text-white ${technicianHues[technician.id]}`}
+            >
+              {technician.initials}
+            </span>
+            {technician.name.split(" ")[0]}
+          </span>
+        ) : (
+          <button
+            type="button"
+            className="flex items-center gap-2 text-[var(--fld-signal)] hover:underline"
+            onClick={() => onMove(job, "scheduled")}
+          >
+            <span className="grid size-7 place-items-center rounded-full border border-dashed border-[var(--fld-signal)]">
+              +
+            </span>
+            Assign
+          </button>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function getPriorityTone(priority: Job["priority"]) {
+  if (priority === "urgent") {
+    return "bg-red-500";
+  }
+  if (priority === "high") {
+    return "bg-amber-500";
+  }
+  return "bg-transparent";
 }
 
 function CreateJobDialog({ onClose }: { onClose: () => void }) {
@@ -33,7 +166,9 @@ function CreateJobDialog({ onClose }: { onClose: () => void }) {
   const [category, setCategory] = useState<ServiceCategory>("electrical");
   const canCreate = title.trim().length >= 4;
   const create = () => {
-    if (!canCreate) return;
+    if (!canCreate) {
+      return;
+    }
     createJob({
       id: `VL-${1050 + state.jobs.length}`,
       title: title.trim(),
@@ -52,7 +187,78 @@ function CreateJobDialog({ onClose }: { onClose: () => void }) {
     });
     onClose();
   };
-  return <div className="fixed inset-0 z-[70] grid place-items-center bg-[var(--fld-backdrop)] p-4 backdrop-blur-sm" role="presentation"><form className="w-full max-w-md border border-[var(--fld-border-strong)] bg-[var(--fld-surface-overlay)] p-5 shadow-[var(--fld-shadow-overlay)]" onSubmit={(event) => { event.preventDefault(); create(); }}><h2 className="text-lg font-semibold">Create job</h2><p className="mt-1 text-sm text-[var(--fld-muted)]">Log an intake for dispatch. It will start unassigned.</p><label className="mt-5 block text-sm" htmlFor="job-title">What needs attention?</label><input id="job-title" autoFocus value={title} onChange={(event) => setTitle(event.target.value)} className="mt-2 h-11 w-full border border-[var(--fld-line)] bg-[var(--fld-raised)] px-3 text-sm focus:outline-none" placeholder="e.g. Inverter fault investigation" /><div className="mt-4 grid grid-cols-2 gap-3"><label className="text-sm">Area<select value={area} onChange={(event) => setArea(event.target.value as Job["area"])} className="mt-1 h-10 w-full border border-[var(--fld-line)] bg-[var(--fld-raised)] px-2 text-sm"><option>Lekki</option><option>Ikeja</option><option>Yaba</option><option>Surulere</option><option>Victoria Island</option><option>Ajah</option></select></label><label className="text-sm">Service<select value={category} onChange={(event) => setCategory(event.target.value as ServiceCategory)} className="mt-1 h-10 w-full border border-[var(--fld-line)] bg-[var(--fld-raised)] px-2 text-sm"><option value="electrical">Electrical</option><option value="generator">Generator</option><option value="ac">Air conditioning</option><option value="solar">Solar</option></select></label></div><div className="mt-5 flex justify-end gap-2"><button className="min-h-10 px-3 text-sm" type="button" onClick={onClose}>Cancel</button><button className="min-h-10 bg-[var(--fld-signal)] px-3 text-sm font-medium text-white disabled:opacity-50" type="submit" disabled={!canCreate}>Create job</button></div></form></div>;
+  return (
+    <div
+      className="fixed inset-0 z-[70] grid place-items-center bg-[var(--fld-backdrop)] p-4 backdrop-blur-sm"
+      role="presentation"
+    >
+      <form
+        className="w-full max-w-md border border-[var(--fld-border-strong)] bg-[var(--fld-surface-overlay)] p-5 shadow-[var(--fld-shadow-overlay)]"
+        onSubmit={(event) => {
+          event.preventDefault();
+          create();
+        }}
+      >
+        <h2 className="text-lg font-semibold">Create job</h2>
+        <p className="mt-1 text-sm text-[var(--fld-muted)]">
+          Log an intake for dispatch. It will start unassigned.
+        </p>
+        <label className="mt-5 block text-sm" htmlFor="job-title">
+          What needs attention?
+        </label>
+        <input
+          id="job-title"
+          autoFocus
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          className="mt-2 h-11 w-full border border-[var(--fld-line)] bg-[var(--fld-raised)] px-3 text-sm focus:outline-none"
+          placeholder="e.g. Inverter fault investigation"
+        />
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <label className="text-sm">
+            Area
+            <select
+              value={area}
+              onChange={(event) => setArea(event.target.value as Job["area"])}
+              className="mt-1 h-10 w-full border border-[var(--fld-line)] bg-[var(--fld-raised)] px-2 text-sm"
+            >
+              <option>Lekki</option>
+              <option>Ikeja</option>
+              <option>Yaba</option>
+              <option>Surulere</option>
+              <option>Victoria Island</option>
+              <option>Ajah</option>
+            </select>
+          </label>
+          <label className="text-sm">
+            Service
+            <select
+              value={category}
+              onChange={(event) => setCategory(event.target.value as ServiceCategory)}
+              className="mt-1 h-10 w-full border border-[var(--fld-line)] bg-[var(--fld-raised)] px-2 text-sm"
+            >
+              <option value="electrical">Electrical</option>
+              <option value="generator">Generator</option>
+              <option value="ac">Air conditioning</option>
+              <option value="solar">Solar</option>
+            </select>
+          </label>
+        </div>
+        <div className="mt-5 flex justify-end gap-2">
+          <button className="min-h-10 px-3 text-sm" type="button" onClick={onClose}>
+            Cancel
+          </button>
+          <button
+            className="min-h-10 bg-[var(--fld-signal)] px-3 text-sm font-medium text-white disabled:opacity-50"
+            type="submit"
+            disabled={!canCreate}
+          >
+            Create job
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export function DispatchBoard() {
@@ -60,17 +266,174 @@ export function DispatchBoard() {
   const now = useLagosNow();
   const [isCreating, setIsCreating] = useState(false);
   const dateLabel = now ? formatLagosLongDate(now) : "Lagos operations";
-  useEffect(() => { const openCreate = () => setIsCreating(true); window.addEventListener("fieldhand:create-job", openCreate); return () => window.removeEventListener("fieldhand:create-job", openCreate); }, []);
-  if (!state.isLoaded) return <main className="grid h-full place-items-center text-sm text-[var(--fld-muted)]">Loading dispatch board…</main>;
+  useEffect(() => {
+    const openCreate = () => setIsCreating(true);
+    window.addEventListener("fieldhand:create-job", openCreate);
+    return () => window.removeEventListener("fieldhand:create-job", openCreate);
+  }, []);
+  if (!state.isLoaded) {
+    return (
+      <main className="grid h-full place-items-center text-sm text-[var(--fld-muted)]">
+        Loading dispatch board…
+      </main>
+    );
+  }
   const filteredJobs = filterJobs(state.jobs, state.filters);
   const conflicts = findSchedulingConflicts(state.jobs, "tech-ade");
-  const move = (job: Job, status: JobStatus) => { if (requiresTechnician(status) && !job.technicianId) return; moveJob(job.id, status); };
-  const savedViews = [{ label: "All", filters: {} }, { label: "Urgent", filters: { priority: "urgent" as const } }, { label: "Unassigned", filters: { status: "unassigned" as const } }, { label: "Lekki", filters: { area: "Lekki" as const } }];
-  return <main className="grid h-full min-h-0 min-w-0 grid-rows-[auto_auto_auto_minmax(0,1fr)] overflow-hidden max-[560px]:h-auto max-[560px]:overflow-visible">
-    <header className="flex min-h-14 items-center justify-between gap-3 px-4 pt-2 md:px-6"><div className="min-w-0"><h1 className="text-xl font-semibold tracking-[-.04em]">Dispatch board <span className="ml-2 font-mono text-xs font-normal text-[var(--fld-muted)]">{dateLabel}</span></h1></div><div className="flex items-center gap-2"><button type="button" className="inline-flex items-center gap-1 border border-red-500/50 bg-red-500/10 px-2 py-1 text-xs" onClick={() => setFilters({ status: "unassigned", priority: "urgent" })}><AlertTriangle size={13} />Urgent</button><button type="button" className="inline-flex items-center gap-1 border border-amber-500/50 bg-amber-500/10 px-2 py-1 text-xs" onClick={() => setFilters({ technicianId: "tech-ade" })}><AlertTriangle size={13} />{conflicts.length} conflict</button><button type="button" className="inline-flex min-h-9 items-center gap-2 bg-[var(--fld-signal)] px-3 text-sm font-medium text-white" onClick={() => setIsCreating(true)}><Plus size={16} />New job</button></div></header>
-    <section className="mx-4 grid grid-cols-2 border-y border-[var(--fld-line)] text-sm md:mx-6 md:grid-cols-4" aria-label="Today’s operations">{[["Jobs today", state.jobs.length], ["On-time rate", "94%"], ["Unassigned", countJobsForStatus(state.jobs, "unassigned")], ["Revenue today", "₦418k"]].map(([label, value]) => <div key={String(label)} className="flex items-baseline gap-2 border-r border-[var(--fld-line)] px-2 py-1.5 last:border-r-0"><span className="text-xs text-[var(--fld-muted)]">{label}</span><span className="font-mono text-sm tabular-nums">{value}</span></div>)}</section>
-    <div className="flex min-w-0 items-center gap-1 overflow-x-auto px-4 py-2 md:px-6" aria-label="Saved views and filters">{savedViews.map((view) => <button key={view.label} type="button" className="min-h-8 shrink-0 border-b-2 border-transparent px-2 text-sm hover:border-[var(--fld-signal)] hover:text-[var(--fld-signal)]" onClick={() => setFilters({ technicianId: "all", priority: "all", status: "all", area: "all", category: "all", ...view.filters })}>{view.label}</button>)}<button type="button" className="ml-2 min-h-8 shrink-0 border border-[var(--fld-line)] px-2 text-sm" onClick={() => setFilters({ technicianId: "all", priority: "all", status: "all", area: "all", category: "all" })}>Filters</button></div>
-    <section className="min-h-0 overflow-x-auto px-4 pb-4 md:px-6 max-[560px]:min-h-[28rem]" aria-label="Job status board"><p className="mb-1 text-xs text-[var(--fld-muted)]">Scroll sideways to see every status</p><div className="grid h-full min-w-[1160px] grid-cols-5 gap-3 snap-x">{boardColumns.map(({ status, label }) => <section key={status} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { const job = state.jobs.find((item) => item.id === event.dataTransfer.getData("text/plain")); if (job) move(job, status); }} className="flex min-h-0 min-w-[232px] snap-start flex-col border-t border-[var(--fld-line)]"><header className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-[var(--fld-line)] bg-[var(--fld-canvas)] py-2"><h2 className="flex items-center gap-2 text-sm font-medium"><span className="size-2 rounded-full bg-[var(--fld-signal)]" />{label}</h2><span className="font-mono text-xs text-[var(--fld-muted)]">{countJobsForStatus(filteredJobs, status)}</span></header><div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain py-2 pr-1 [scrollbar-color:var(--fld-line)_transparent] [scrollbar-width:thin]">{filteredJobs.filter((job) => job.status === status).map((job) => <JobCard key={job.id} job={job} onMove={move} />)}{!filteredJobs.some((job) => job.status === status) && <p className="border border-dashed border-[var(--fld-line)] p-4 text-center text-xs text-[var(--fld-muted)]">Nothing here yet.</p>}</div></section>)}</div></section>
-    {isCreating && <CreateJobDialog onClose={() => setIsCreating(false)} />}
-  </main>;
+  const move = (job: Job, status: JobStatus) => {
+    if (requiresTechnician(status) && !job.technicianId) {
+      return;
+    }
+    moveJob(job.id, status);
+  };
+  const savedViews = [
+    { label: "All", filters: {} },
+    { label: "Urgent", filters: { priority: "urgent" as const } },
+    { label: "Unassigned", filters: { status: "unassigned" as const } },
+    { label: "Lekki", filters: { area: "Lekki" as const } },
+  ];
+  return (
+    <main className="grid h-full min-h-0 min-w-0 grid-rows-[auto_auto_auto_minmax(0,1fr)] overflow-hidden max-[560px]:h-auto max-[560px]:overflow-visible">
+      <header className="flex min-h-14 items-center justify-between gap-3 px-4 pt-2 md:px-6">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold tracking-[-.04em]">
+            Dispatch board{" "}
+            <span className="ml-2 font-mono text-xs font-normal text-[var(--fld-muted)]">
+              {dateLabel}
+            </span>
+          </h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 border border-red-500/50 bg-red-500/10 px-2 py-1 text-xs"
+            onClick={() => setFilters({ status: "unassigned", priority: "urgent" })}
+          >
+            <AlertTriangle size={13} />
+            Urgent
+          </button>
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 border border-amber-500/50 bg-amber-500/10 px-2 py-1 text-xs"
+            onClick={() => setFilters({ technicianId: "tech-ade" })}
+          >
+            <AlertTriangle size={13} />
+            {conflicts.length} conflict
+          </button>
+          <button
+            type="button"
+            className="inline-flex min-h-9 items-center gap-2 bg-[var(--fld-signal)] px-3 text-sm font-medium text-white"
+            onClick={() => setIsCreating(true)}
+          >
+            <Plus size={16} />
+            New job
+          </button>
+        </div>
+      </header>
+      <section
+        className="mx-4 grid grid-cols-2 border-y border-[var(--fld-line)] text-sm md:mx-6 md:grid-cols-4"
+        aria-label="Today’s operations"
+      >
+        {[
+          ["Jobs today", state.jobs.length],
+          ["On-time rate", "94%"],
+          ["Unassigned", countJobsForStatus(state.jobs, "unassigned")],
+          ["Revenue today", "₦418k"],
+        ].map(([label, value]) => (
+          <div
+            key={String(label)}
+            className="flex items-baseline gap-2 border-r border-[var(--fld-line)] px-2 py-1.5 last:border-r-0"
+          >
+            <span className="text-xs text-[var(--fld-muted)]">{label}</span>
+            <span className="font-mono text-sm tabular-nums">{value}</span>
+          </div>
+        ))}
+      </section>
+      <div
+        className="flex min-w-0 items-center gap-1 overflow-x-auto px-4 py-2 md:px-6"
+        aria-label="Saved views and filters"
+      >
+        {savedViews.map((view) => (
+          <button
+            key={view.label}
+            type="button"
+            className="min-h-8 shrink-0 border-b-2 border-transparent px-2 text-sm hover:border-[var(--fld-signal)] hover:text-[var(--fld-signal)]"
+            onClick={() =>
+              setFilters({
+                technicianId: "all",
+                priority: "all",
+                status: "all",
+                area: "all",
+                category: "all",
+                ...view.filters,
+              })
+            }
+          >
+            {view.label}
+          </button>
+        ))}
+        <button
+          type="button"
+          className="ml-2 min-h-8 shrink-0 border border-[var(--fld-line)] px-2 text-sm"
+          onClick={() =>
+            setFilters({
+              technicianId: "all",
+              priority: "all",
+              status: "all",
+              area: "all",
+              category: "all",
+            })
+          }
+        >
+          Filters
+        </button>
+      </div>
+      <section
+        className="min-h-0 overflow-x-auto px-4 pb-4 max-[560px]:min-h-[28rem] md:px-6"
+        aria-label="Job status board"
+      >
+        <p className="mb-1 text-xs text-[var(--fld-muted)]">Scroll sideways to see every status</p>
+        <div className="grid h-full min-w-[1160px] snap-x grid-cols-5 gap-3">
+          {boardColumns.map(({ status, label }) => (
+            <section
+              key={status}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => {
+                const job = state.jobs.find(
+                  (item) => item.id === event.dataTransfer.getData("text/plain"),
+                );
+                if (job) {
+                  move(job, status);
+                }
+              }}
+              className="flex min-h-0 min-w-[232px] snap-start flex-col border-t border-[var(--fld-line)]"
+            >
+              <header className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-[var(--fld-line)] bg-[var(--fld-canvas)] py-2">
+                <h2 className="flex items-center gap-2 text-sm font-medium">
+                  <span className="size-2 rounded-full bg-[var(--fld-signal)]" />
+                  {label}
+                </h2>
+                <span className="font-mono text-xs text-[var(--fld-muted)]">
+                  {countJobsForStatus(filteredJobs, status)}
+                </span>
+              </header>
+              <div className="min-h-0 flex-1 [scrollbar-width:thin] [scrollbar-color:var(--fld-line)_transparent] space-y-2 overflow-y-auto overscroll-contain py-2 pr-1">
+                {filteredJobs
+                  .filter((job) => job.status === status)
+                  .map((job) => (
+                    <JobCard key={job.id} job={job} onMove={move} />
+                  ))}
+                {!filteredJobs.some((job) => job.status === status) && (
+                  <p className="border border-dashed border-[var(--fld-line)] p-4 text-center text-xs text-[var(--fld-muted)]">
+                    Nothing here yet.
+                  </p>
+                )}
+              </div>
+            </section>
+          ))}
+        </div>
+      </section>
+      {isCreating && <CreateJobDialog onClose={() => setIsCreating(false)} />}
+    </main>
+  );
 }

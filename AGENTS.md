@@ -8,7 +8,6 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-
 # AGENTS.md
 
 Project rules for Codex. Read this file completely at the start of every session, then read `PLAN.md`.
@@ -23,14 +22,14 @@ Project rules for Codex. Read this file completely at the start of every session
 
 The project is a **hub site** that contains **five fully working demo websites**, each presented as a case study:
 
-| Route | Demo | Type |
-|---|---|---|
-| `/` | Axmion hub | The showcase itself |
-| `/work/meridian` | Meridian Freight | Business website (logistics, B2B) |
-| `/work/harmattan` | Harmattan Coffee Co. | Business website (specialty coffee) |
-| `/work/fieldhand` | Fieldhand | Custom internal tool (dispatch console) |
-| `/work/sunreach` | Sunreach Power | High-converting landing page (solar) |
-| `/work/rentbook` | Rentbook | Custom internal tool (property management) |
+| Route             | Demo                 | Type                                       |
+| ----------------- | -------------------- | ------------------------------------------ |
+| `/`               | Axmion hub           | The showcase itself                        |
+| `/work/meridian`  | Meridian Freight     | Business website (logistics, B2B)          |
+| `/work/harmattan` | Harmattan Coffee Co. | Business website (specialty coffee)        |
+| `/work/fieldhand` | Fieldhand            | Custom internal tool (dispatch console)    |
+| `/work/sunreach`  | Sunreach Power       | High-converting landing page (solar)       |
+| `/work/rentbook`  | Rentbook             | Custom internal tool (property management) |
 
 The purpose of everything here is to **close clients**. Every screen must look like a finished, paid-for product. If something looks like a template, a tutorial, or a placeholder, it is not done.
 
@@ -176,6 +175,7 @@ Write code that a new developer can read and understand without asking questions
 These are non-negotiable for every demo.
 
 **Visual**
+
 - A clear, committed aesthetic direction per the brief in `PLAN.md`. Bold, not timid.
 - Real typographic hierarchy, deliberate spacing rhythm, and a considered grid. Use asymmetry and overlap where it serves the design.
 - Atmosphere and depth: gradients, textures, grain, patterns, layered shapes, all generated with SVG, CSS, or canvas.
@@ -183,6 +183,7 @@ These are non-negotiable for every demo.
 - No emoji as UI icons. No lorem ipsum anywhere. All copy is written, specific, and persuasive, using realistic names, prices, and data (Nigerian context: ₦, Lagos, Abuja, Port Harcourt, local names and phone formats).
 
 **Motion**
+
 - Motion has a job: guide attention, confirm an action, or tell a story. No gratuitous animation.
 - One well-orchestrated page-load sequence beats scattered effects.
 - Each demo has its own motion personality (see `PLAN.md`).
@@ -190,6 +191,7 @@ These are non-negotiable for every demo.
 - Animate `transform` and `opacity`. Avoid animating layout properties.
 
 **UX**
+
 - Every interactive element has hover, focus-visible, active, and disabled states.
 - Forms have inline validation, clear error messages, and a real success state.
 - Include empty, loading, and error states wherever data appears.
@@ -197,16 +199,19 @@ These are non-negotiable for every demo.
 - Touch targets are at least 44×44px on mobile.
 
 **Accessibility (WCAG AA)**
+
 - Text contrast of at least 4.5:1 (3:1 for large text and UI components). Verify the palette, not just the hero.
 - Semantic HTML: correct landmarks, heading order, and `button` vs `a` usage.
 - Full keyboard navigation with visible focus rings; focus is managed in dialogs, drawers, and command palettes (trap and restore).
 - Meaningful `alt` text or `aria-hidden` on decorative SVG; labels on all inputs; `aria-live` for dynamic status updates.
 
 **Responsive**
+
 - Designed for 360px to 1920px. Mobile is a real design, not a squeezed desktop. The Fieldhand tool must remain usable on tablet and degrade gracefully on phone.
 - No horizontal scrolling at any width (except deliberate, labeled scroll areas).
 
 **Performance**
+
 - Target Lighthouse 90+ across Performance, Accessibility, Best Practices, and SEO.
 - Use `next/font` with `display: swap` and subset fonts; load only the weights and axes used.
 - Lazy-load heavy client components (maps, canvas, charts) below the fold. No layout shift.
@@ -231,7 +236,18 @@ These are non-negotiable for every demo.
 
 ---
 
-## 9. Things to avoid
+## 9. Formatting and the quality gate
+
+- Formatting is automatic: Prettier with the repo config. Never hand-format and never fight the formatter. Run `npm run format` before every commit.
+- Use 2-space indentation, no tabs, LF line endings, and a final newline.
+- Code must read top to bottom: imports, constants, types, the main function or component, then small helpers. Use one blank line between logical blocks; never use more than one blank line in a row.
+- New code must meet the lint limits: functions under 80 lines (aim for 40), files under 300 lines, nesting depth 3, complexity 12, and at most 4 parameters (use an options object otherwise).
+- Names say what things are. Do not abbreviate except for widely known terms such as `id`, `url`, and `ui`. Booleans read as questions, such as `isOpen` and `hasError`.
+- `npm run check` MUST pass, with its real output reported, before every commit and before any phase is marked `Ready for review`. If the pre-commit hook blocks a commit, fix the cause; never bypass it with `--no-verify`.
+
+---
+
+## 10. Things to avoid
 
 - Generic AI-looking output: centered hero + three feature cards + gradient button, repeated across demos.
 - Overused fonts (Inter, Roboto, Arial, Space Grotesk) and cliché palettes (purple-on-white gradients).
@@ -244,14 +260,14 @@ These are non-negotiable for every demo.
 
 ---
 
-## 10. Definition of done (for any phase)
+## 11. Definition of done (for any phase)
 
 - [ ] Matches the design brief in `PLAN.md` and feels distinct from the other demos
 - [ ] All interactive features work, including edge, empty, and error states
 - [ ] Responsive at 360 / 768 / 1440 with no horizontal scroll
 - [ ] Keyboard-navigable with visible focus; AA contrast verified
 - [ ] `prefers-reduced-motion` handled
-- [ ] Lint, typecheck, and build pass cleanly
+- [ ] `npm run check` and `npm run build` pass, with output pasted in the handoff
 - [ ] No dead code, stray logs, TODOs, or lorem ipsum
 - [ ] Demo `README.md` written
 - [ ] `PLAN.md` updated with status and handoff notes

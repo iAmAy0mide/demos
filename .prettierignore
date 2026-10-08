@@ -1,0 +1,7 @@
+.next
+build
+node_modules
+.screenshots
+pnpm-lock.yaml
+src/demos/meridian/data/generated-map-data.ts
+src/demos/meridian/data/generated-map-data.tsx

@@ -11,7 +11,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 const ASSIGNMENT_REQUIRED_STATUSES: JobStatus[] = ["scheduled", "en_route", "on_site", "done"];
 
 function isPersistedFieldhandState(value: unknown): value is PersistedFieldhandState {
-  if (!isRecord(value)) return false;
+  if (!isRecord(value)) {
+    return false;
+  }
   return (
     Array.isArray(value.customers) &&
     Array.isArray(value.technicians) &&
@@ -22,7 +24,9 @@ function isPersistedFieldhandState(value: unknown): value is PersistedFieldhandS
 }
 
 function isValidJob(job: unknown): job is Job {
-  if (!isRecord(job) || typeof job.status !== "string") return false;
+  if (!isRecord(job) || typeof job.status !== "string") {
+    return false;
+  }
   const status = job.status as JobStatus;
   return !ASSIGNMENT_REQUIRED_STATUSES.includes(status) || typeof job.technicianId === "string";
 }
@@ -40,7 +44,9 @@ function repairPersistedState(state: PersistedFieldhandState): PersistedFieldhan
 
 export function readPersistedFieldhandState() {
   const rawState = window.localStorage.getItem(FIELDHAND_STORAGE_KEY);
-  if (!rawState) return null;
+  if (!rawState) {
+    return null;
+  }
 
   try {
     const parsedState: unknown = JSON.parse(rawState);

@@ -1,9 +1,4 @@
-export type JobStatus =
-  | "unassigned"
-  | "scheduled"
-  | "en_route"
-  | "on_site"
-  | "done";
+export type JobStatus = "unassigned" | "scheduled" | "en_route" | "on_site" | "done";
 
 export type Priority = "low" | "normal" | "high" | "urgent";
 export type ThemeMode = "system" | "dark" | "light";

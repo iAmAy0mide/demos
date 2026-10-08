@@ -1,0 +1,20 @@
+.rbk-form-error {
+  margin: 0;
+  color: var(--rbk-red);
+  font-size: 0.78rem;
+}
+.rbk-toast {
+  position: fixed;
+  z-index: 60;
+  right: 1rem;
+  top: 1rem;
+  max-width: 22rem;
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--rbk-emerald);
+  border-radius: 4px;
+  background: var(--rbk-surface);
+  color: var(--rbk-emerald);
+  box-shadow: 0 0.7rem 2rem var(--rbk-shadow);
+  font-size: 0.8rem;
+}

@@ -1,4 +1,11 @@
-import type { FieldhandData, FieldhandFilters, Job, JobStatus, ThemeMode, Toast } from "@/src/demos/fieldhand/types";
+import type {
+  FieldhandData,
+  FieldhandFilters,
+  Job,
+  JobStatus,
+  ThemeMode,
+  Toast,
+} from "@/src/demos/fieldhand/types";
 
 export type FieldhandState = FieldhandData & {
   filters: FieldhandFilters;
@@ -56,26 +63,60 @@ export function fieldhandReducer(state: FieldhandState, action: FieldhandAction)
       return {
         ...state,
         jobs: state.jobs.map((job) =>
-          job.id !== action.jobId ? job : (() => {
-            const technicianId = action.technicianId ?? job.technicianId;
-            // Dispatch rule: travel, site work, and completion always have an accountable technician.
-            if (requiresTechnician(action.status) && !technicianId) return job;
-            return { ...job, status: action.status, technicianId };
-          })(),
+          job.id !== action.jobId
+            ? job
+            : (() => {
+                const technicianId = action.technicianId ?? job.technicianId;
+                // Dispatch rule: travel, site work, and completion always have an accountable technician.
+                if (requiresTechnician(action.status) && !technicianId) {
+                  return job;
+                }
+                return { ...job, status: action.status, technicianId };
+              })(),
         ),
       };
     case "create_job":
-      return addToast({ ...state, jobs: [action.job, ...state.jobs] }, `${action.job.id} created and ready to dispatch.`);
+      return addToast(
+        { ...state, jobs: [action.job, ...state.jobs] },
+        `${action.job.id} created and ready to dispatch.`,
+      );
     case "set_filters":
       return { ...state, filters: { ...state.filters, ...action.filters } };
     case "update_notes":
-      return { ...state, jobs: state.jobs.map((job) => job.id === action.jobId ? { ...job, notes: action.notes } : job) };
+      return {
+        ...state,
+        jobs: state.jobs.map((job) =>
+          job.id === action.jobId ? { ...job, notes: action.notes } : job,
+        ),
+      };
     case "set_theme":
       return { ...state, themeMode: action.themeMode };
     case "reset":
-      return addToast({ ...action.payload, filters: defaultFilters, themeMode: state.themeMode, isLoaded: true, toasts: [] }, "Demo data restored.");
+      return addToast(
+        {
+          ...action.payload,
+          filters: defaultFilters,
+          themeMode: state.themeMode,
+          isLoaded: true,
+          toasts: [],
+        },
+        "Demo data restored.",
+      );
     case "live_update":
-      return addToast({ ...state, jobs: [action.incomingJob, ...state.jobs.map((job) => job.id === "VL-1039" && job.technicianId ? { ...job, status: "on_site" as const } : job)] }, `${action.incomingJob.id} received from service desk.`);
+      return addToast(
+        {
+          ...state,
+          jobs: [
+            action.incomingJob,
+            ...state.jobs.map((job) =>
+              job.id === "VL-1039" && job.technicianId
+                ? { ...job, status: "on_site" as const }
+                : job,
+            ),
+          ],
+        },
+        `${action.incomingJob.id} received from service desk.`,
+      );
     case "dismiss_toast":
       return { ...state, toasts: state.toasts.filter((toast) => toast.id !== action.toastId) };
   }

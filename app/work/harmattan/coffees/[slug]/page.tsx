@@ -1,2 +1,24 @@
-import type { Metadata } from "next"; import { notFound } from "next/navigation"; import { CoffeeDetail } from "@/src/demos/harmattan/components/MorePages"; import { coffees,getCoffee } from "@/src/demos/harmattan/data/coffees";
-export function generateStaticParams(){return coffees.map(({slug})=>({slug}));} export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const coffee=getCoffee((await params).slug);return{title:coffee?`${coffee.name} | Harmattan Coffee Co.`:"Coffee not found"};} export default async function Page({params}:{params:Promise<{slug:string}>}){const coffee=getCoffee((await params).slug);if(!coffee)notFound();return <CoffeeDetail coffee={coffee}/>;}
+import { notFound } from "next/navigation";
+
+import { CoffeeDetail } from "@/src/demos/harmattan/components/MorePages";
+import { coffees, getCoffee } from "@/src/demos/harmattan/data/coffees";
+
+import type { Metadata } from "next";
+export function generateStaticParams() {
+  return coffees.map(({ slug }) => ({ slug }));
+}
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const coffee = getCoffee((await params).slug);
+  return { title: coffee ? `${coffee.name} | Harmattan Coffee Co.` : "Coffee not found" };
+}
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const coffee = getCoffee((await params).slug);
+  if (!coffee) {
+    notFound();
+  }
+  return <CoffeeDetail coffee={coffee} />;
+}

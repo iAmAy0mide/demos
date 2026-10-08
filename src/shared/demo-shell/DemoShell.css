@@ -4,21 +4,23 @@
   --axm-shell-line: #bdc8c1;
   --axm-shell-focus: #157450;
   --axm-shell-hover: #dfe8e2;
-  --axm-shell-bottom: max(.75rem, env(safe-area-inset-bottom));
+  --axm-shell-bottom: max(0.75rem, env(safe-area-inset-bottom));
   position: fixed;
   z-index: 80;
   left: 50%;
   bottom: var(--axm-shell-bottom);
   transform: translateX(-50%);
   color: var(--axm-shell-ink);
-  font: 500 12px/1.2 ui-sans-serif, sans-serif;
+  font:
+    500 12px/1.2 ui-sans-serif,
+    sans-serif;
 }
 
 .axm-shell-handle,
 .axm-shell-panel {
   border: 1px solid var(--axm-shell-line);
   background: var(--axm-shell-bg);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
 }
 
 .axm-shell-handle {

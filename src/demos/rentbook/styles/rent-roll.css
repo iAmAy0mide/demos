@@ -1,0 +1,80 @@
+.rbk-roll-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  padding: 1rem 0;
+}
+.rbk-roll-controls input,
+.rbk-roll-controls select {
+  min-height: 42px;
+  border: 1px solid var(--rbk-line);
+  border-radius: 4px;
+  background: var(--rbk-surface);
+  color: var(--rbk-ink);
+  padding: 0 0.7rem;
+  font: inherit;
+}
+.rbk-roll-controls input {
+  min-width: min(100%, 16rem);
+}
+.rbk-roll-controls button {
+  min-height: 42px;
+  border: 1px solid var(--rbk-line);
+  border-radius: 4px;
+  background: var(--rbk-surface);
+  color: var(--rbk-muted);
+  padding: 0 0.65rem;
+  font: 0.72rem var(--rbk-font-sans);
+}
+.rbk-roll-controls button[aria-pressed="true"] {
+  border-color: var(--rbk-emerald);
+  color: var(--rbk-emerald);
+}
+.rbk-roll-table {
+  overflow-x: auto;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+}
+.rbk-roll-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.rbk-roll-table th,
+.rbk-roll-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--rbk-line);
+  text-align: left;
+  white-space: nowrap;
+}
+.rbk-roll-table th {
+  color: var(--rbk-muted);
+  font-size: 0.65rem;
+}
+.rbk-roll-table td:nth-child(3),
+.rbk-roll-table td:nth-child(4) {
+  font-family: var(--rbk-font-mono);
+}
+.rbk-status {
+  border-radius: 999px;
+  padding: 0.25rem 0.45rem;
+  font-size: 0.65rem;
+}
+.rbk-status-overdue {
+  color: var(--rbk-red);
+  background: color-mix(in srgb, var(--rbk-red) 10%, transparent);
+}
+.rbk-status-paid {
+  color: var(--rbk-emerald);
+  background: color-mix(in srgb, var(--rbk-emerald) 10%, transparent);
+}
+.rbk-status-due_soon,
+.rbk-status-partial {
+  color: var(--rbk-amber);
+  background: color-mix(in srgb, var(--rbk-amber) 12%, transparent);
+}
+.rbk-inline-success {
+  margin: 0.5rem 0 1rem;
+  color: var(--rbk-emerald);
+  font-size: 0.8rem;
+}

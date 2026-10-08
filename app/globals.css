@@ -1,13 +1,28 @@
 @import "tailwindcss";
 
-* { box-sizing: border-box; }
-html, body { min-height: 100%; }
-body { margin: 0; }
-button, a { -webkit-tap-highlight-color: transparent; }
-:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  min-height: 100%;
+}
+body {
+  margin: 0;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;

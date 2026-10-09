@@ -50,6 +50,7 @@ function requiresTechnician(status: JobStatus) {
 
 type JobCardProps = {
   job: Job;
+  menuId: string;
   isMenuOpen: boolean;
   onAssign: (job: Job) => void;
   onCloseMenu: () => void;
@@ -57,7 +58,15 @@ type JobCardProps = {
   onToggleMenu: (jobId: string) => void;
 };
 
-function JobCard({ job, isMenuOpen, onAssign, onCloseMenu, onMove, onToggleMenu }: JobCardProps) {
+function JobCard({
+  job,
+  menuId,
+  isMenuOpen,
+  onAssign,
+  onCloseMenu,
+  onMove,
+  onToggleMenu,
+}: JobCardProps) {
   const { state } = useFieldhand();
   const menuRef = useRef<HTMLDivElement>(null);
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
@@ -97,7 +106,7 @@ function JobCard({ job, isMenuOpen, onAssign, onCloseMenu, onMove, onToggleMenu 
               data-testid={`job-card-menu-${job.id}`}
               className="grid size-8 place-items-center rounded hover:bg-[var(--fld-hover)]"
               type="button"
-              onClick={() => onToggleMenu(job.id)}
+              onClick={() => onToggleMenu(menuId)}
               aria-label={`Actions for ${job.id}`}
               aria-haspopup="menu"
               aria-expanded={isMenuOpen}
@@ -487,12 +496,13 @@ export function DispatchBoard() {
               <JobCard
                 key={job.id}
                 job={job}
-                isMenuOpen={openMenuJobId === job.id}
+                menuId={`phone:${job.id}`}
+                isMenuOpen={openMenuJobId === `phone:${job.id}`}
                 onAssign={openAssignmentPicker}
                 onCloseMenu={closeMenu}
                 onMove={move}
-                onToggleMenu={(jobId) =>
-                  setOpenMenuJobId((current) => (current === jobId ? null : jobId))
+                onToggleMenu={(menuId) =>
+                  setOpenMenuJobId((current) => (current === menuId ? null : menuId))
                 }
               />
             ))}
@@ -543,12 +553,13 @@ export function DispatchBoard() {
                     <JobCard
                       key={job.id}
                       job={job}
-                      isMenuOpen={openMenuJobId === job.id}
+                      menuId={`desktop:${job.id}`}
+                      isMenuOpen={openMenuJobId === `desktop:${job.id}`}
                       onAssign={openAssignmentPicker}
                       onCloseMenu={closeMenu}
                       onMove={move}
-                      onToggleMenu={(jobId) =>
-                        setOpenMenuJobId((current) => (current === jobId ? null : jobId))
+                      onToggleMenu={(menuId) =>
+                        setOpenMenuJobId((current) => (current === menuId ? null : menuId))
                       }
                     />
                   ))}

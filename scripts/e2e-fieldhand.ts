@@ -218,6 +218,8 @@ const bugs: Test[] = [
   },
 ];
 
+const resolvedBugs = new Set(["B1", "B2", "B3", "B5", "B7"]);
+
 process.on("SIGINT", () => void shutdown(130));
 process.on("SIGTERM", () => void shutdown(143));
 try {
@@ -236,7 +238,16 @@ try {
   const browser = await launchBrowser();
   try {
     await run(browser, protectedTests, true);
-    await run(browser, bugs, false);
+    await run(
+      browser,
+      bugs.filter((test) => resolvedBugs.has(test.id)),
+      true,
+    );
+    await run(
+      browser,
+      bugs.filter((test) => !resolvedBugs.has(test.id)),
+      false,
+    );
   } finally {
     await browser.close();
   }

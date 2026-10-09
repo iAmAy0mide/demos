@@ -36,7 +36,7 @@ export function useDismissibleLayer({
       triggerRef?.current?.focus();
     };
     const dismissOnFocusLeave = (event: FocusEvent) => {
-      const nextTarget = event.relatedTarget as Node | null;
+      const nextTarget = event.target as Node | null;
       if (
         !nextTarget ||
         layerRef.current?.contains(nextTarget) ||

@@ -49,7 +49,7 @@ const eslintConfig = defineConfig([
       ],
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "error",
-      "max-lines-per-function": ["warn", { max: 80, skipBlankLines: true, skipComments: true }],
+      "max-lines-per-function": ["warn", { max: 120, skipBlankLines: true, skipComments: true }],
       "max-lines": ["warn", { max: 300, skipBlankLines: true, skipComments: true }],
       complexity: ["warn", 12],
       "max-depth": ["warn", 3],
@@ -72,6 +72,15 @@ const eslintConfig = defineConfig([
     files: ["scripts/**"],
     rules: {
       "no-console": "off",
+      "max-lines-per-function": "off",
+      "max-lines": "off",
+    },
+  },
+  {
+    files: ["src/demos/*/data/**", "src/demos/**/seed*.{ts,tsx}", "*.config.{js,mjs,cjs,ts}"],
+    rules: {
+      "max-lines-per-function": "off",
+      "max-lines": "off",
     },
   },
 ]);

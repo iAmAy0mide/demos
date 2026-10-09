@@ -242,7 +242,7 @@ These are non-negotiable for every demo.
 - Formatting is automatic: Prettier with the repo config. Never hand-format and never fight the formatter. Run `npm run format` before every commit.
 - Use 2-space indentation, no tabs, LF line endings, and a final newline.
 - Code must read top to bottom: imports, constants, types, the main function or component, then small helpers. Use one blank line between logical blocks; never use more than one blank line in a row.
-- New code must meet the lint limits: functions under 80 lines (aim for 40), files under 300 lines, nesting depth 3, complexity 12, and at most 4 parameters (use an options object otherwise).
+- Size limits are a smell test, not the goal. A unit of code has one responsibility. Split by responsibility, never by arbitrary line count, and never refactor inside a bug-fix session. The lint limits are functions under 120 lines and files under 300 lines (excluding blank lines and comments), nesting depth 3, complexity 12, and at most 4 parameters (use an options object otherwise).
 - Names say what things are. Do not abbreviate except for widely known terms such as `id`, `url`, and `ui`. Booleans read as questions, such as `isOpen` and `hasError`.
 - `npm run check` MUST pass, with its real output reported, before every commit and before any phase is marked `Ready for review`. If the pre-commit hook blocks a commit, fix the cause; never bypass it with `--no-verify`.
 

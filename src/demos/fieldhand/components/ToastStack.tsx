@@ -19,6 +19,7 @@ function ToastItem({ id, message }: { id: string; message: string }) {
   }, [dismissToast, id, paused]);
   return (
     <div
+      data-testid="toast"
       className="flex items-center gap-3 border border-[var(--fld-line)] bg-[var(--fld-panel)] px-3 py-2.5 text-sm shadow-xl"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}

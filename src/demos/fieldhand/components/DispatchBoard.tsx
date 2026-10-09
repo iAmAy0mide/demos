@@ -55,6 +55,7 @@ function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStat
   return (
     <article
       draggable
+      data-testid={`job-card-${job.id}`}
       onDragStart={(event) => event.dataTransfer.setData("text/plain", job.id)}
       className="group relative border border-[var(--fld-line)] bg-[var(--fld-raised)] p-3 shadow-[0_1px_0_rgba(0,0,0,.16)]"
     >
@@ -71,6 +72,7 @@ function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStat
           )}
           <div className="relative">
             <button
+              data-testid={`job-card-menu-${job.id}`}
               className="grid size-8 place-items-center rounded hover:bg-[var(--fld-hover)]"
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
@@ -82,10 +84,12 @@ function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStat
             </button>
             {menuOpen && (
               <div
+                data-testid="job-menu"
                 className="absolute top-8 right-0 z-20 w-36 border border-[var(--fld-line)] bg-[var(--fld-panel)] py-1 shadow-xl"
                 role="menu"
               >
                 <Link
+                  data-testid="job-menu-item-open"
                   href={`/work/fieldhand?job=${job.id}`}
                   className="block px-3 py-2 text-sm hover:bg-[var(--fld-hover)]"
                   role="menuitem"
@@ -96,6 +100,7 @@ function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStat
                   .filter((column) => column.status !== job.status)
                   .map((column) => (
                     <button
+                      data-testid={`job-menu-item-move-to-${column.status}`}
                       key={column.status}
                       type="button"
                       className="block w-full px-3 py-2 text-left text-sm hover:bg-[var(--fld-hover)]"
@@ -136,6 +141,7 @@ function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStat
           </span>
         ) : (
           <button
+            data-testid={`job-card-assign-${job.id}`}
             type="button"
             className="flex items-center gap-2 text-[var(--fld-signal)] hover:underline"
             onClick={() => onMove(job, "scheduled")}
@@ -191,6 +197,7 @@ function CreateJobDialog({ onClose }: { onClose: () => void }) {
   };
   return (
     <div
+      data-testid="create-job-dialog"
       className="fixed inset-0 z-[70] grid place-items-center bg-[var(--fld-backdrop)] p-4 backdrop-blur-sm max-md:p-0"
       role="presentation"
     >
@@ -299,7 +306,10 @@ export function DispatchBoard() {
     { label: "Lekki", filters: { area: "Lekki" as const } },
   ];
   return (
-    <main className="grid h-full min-h-0 min-w-0 grid-rows-[auto_auto_auto_minmax(0,1fr)] overflow-hidden max-[560px]:h-auto max-[560px]:overflow-visible">
+    <main
+      className="grid h-full min-h-0 min-w-0 grid-rows-[auto_auto_auto_minmax(0,1fr)] overflow-hidden max-[560px]:h-auto max-[560px]:overflow-visible"
+      data-testid="board"
+    >
       <header className="flex min-h-14 min-w-0 items-center justify-between gap-2 px-3 pt-2 md:gap-3 md:px-6">
         <div className="min-w-0">
           <p className="font-mono text-xs text-[var(--fld-muted)] md:hidden">Thu 8 Oct</p>
@@ -321,6 +331,7 @@ export function DispatchBoard() {
             <span className="hidden md:inline">Urgent</span>
           </button>
           <button
+            data-testid="new-job-button"
             type="button"
             className="hidden items-center gap-1 border border-amber-500/50 bg-amber-500/10 px-2 py-1 text-xs md:inline-flex"
             onClick={() => setFilters({ technicianId: "tech-ade" })}
@@ -350,6 +361,7 @@ export function DispatchBoard() {
         ].map(([label, value]) => (
           <div
             key={String(label)}
+            data-testid={`stat-${String(label).toLowerCase().replaceAll(" ", "-").replace("on-time-rate", "on-time").replace("revenue-today", "revenue")}`}
             className="flex shrink-0 snap-start items-baseline gap-2 border-r border-[var(--fld-line)] px-2 py-1.5 last:border-r-0 md:shrink"
           >
             <span className="text-xs text-[var(--fld-muted)]">{label}</span>
@@ -381,6 +393,7 @@ export function DispatchBoard() {
           </button>
         ))}
         <button
+          data-testid="filters-button"
           type="button"
           className="ml-2 min-h-8 shrink-0 border border-[var(--fld-line)] px-2 text-sm"
           onClick={() => setIsFiltersOpen(true)}
@@ -400,6 +413,7 @@ export function DispatchBoard() {
           {boardColumns.map(({ status, label }) => (
             <button
               key={status}
+              data-testid={`status-tab-${status}`}
               role="tab"
               aria-selected={phoneStatus === status}
               onClick={() => setPhoneStatus(status)}
@@ -431,6 +445,7 @@ export function DispatchBoard() {
           {boardColumns.map(({ status, label }) => (
             <section
               key={status}
+              data-testid={`board-column-${status}`}
               onDragOver={(event) => event.preventDefault()}
               onDrop={(event) => {
                 const job = state.jobs.find(
@@ -447,7 +462,10 @@ export function DispatchBoard() {
                   <span className="size-2 rounded-full bg-[var(--fld-signal)]" />
                   {label}
                 </h2>
-                <span className="font-mono text-xs text-[var(--fld-muted)]">
+                <span
+                  className="font-mono text-xs text-[var(--fld-muted)]"
+                  data-testid={`board-column-count-${status}`}
+                >
                   {countJobsForStatus(filteredJobs, status)}
                 </span>
               </header>

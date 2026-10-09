@@ -160,6 +160,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
             <RotateCcw size={16} />
           </button>
           <button
+            data-testid="search-trigger"
             aria-label="Open command palette"
             className="ml-auto grid size-11 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)] md:ml-0 md:size-10 md:bg-[var(--fld-signal)] md:text-white"
             type="button"
@@ -182,6 +183,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
           {navigationItems.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
+              data-testid={`bottom-tab-${label.toLowerCase()}`}
               href={href}
               className={`grid min-h-11 min-w-0 place-items-center gap-0.5 text-[11px] ${pathname === href ? "text-[var(--fld-signal)]" : "text-[var(--fld-muted)]"}`}
             >
@@ -190,6 +192,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
             </Link>
           ))}
           <button
+            data-testid="bottom-tab-new-job"
             type="button"
             onClick={() => window.dispatchEvent(new Event("fieldhand:create-job"))}
             className="grid min-h-11 min-w-0 place-items-center gap-0.5 text-[11px] text-[var(--fld-signal)]"

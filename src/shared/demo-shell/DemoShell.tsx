@@ -46,6 +46,7 @@ export function DemoShell({ currentDemo, bottomOffset }: DemoShellProps) {
   return (
     <aside
       ref={containerRef}
+      data-testid="axmion-pill"
       className="axm-shell"
       style={
         bottomOffset

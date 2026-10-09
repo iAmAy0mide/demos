@@ -188,6 +188,7 @@ export function CommandPalette() {
   return (
     <>
       <button
+        data-testid="search-trigger"
         type="button"
         className="flex min-h-10 min-w-44 flex-1 items-center gap-2 rounded-md border border-[var(--fld-line)] px-3 text-left text-sm text-[var(--fld-muted)] hover:border-[var(--fld-signal)] focus-visible:ring-2 focus-visible:ring-[var(--fld-signal)]/40 focus-visible:outline-none"
         onClick={open}
@@ -205,6 +206,7 @@ export function CommandPalette() {
           >
             <div
               ref={dialogRef}
+              data-testid="command-palette"
               role="dialog"
               aria-modal="true"
               aria-label="Command palette"

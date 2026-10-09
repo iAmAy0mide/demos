@@ -23,7 +23,10 @@ export function ScheduleTimeline() {
     (job) => job.technicianId === selectedTechnician.id && job.scheduledStart,
   );
   return (
-    <main className="min-h-full min-w-0 overflow-x-clip overflow-y-visible p-3 pb-[var(--axm-shell-clearance)] md:h-full md:min-h-0 md:overflow-auto md:p-6">
+    <main
+      className="min-h-full min-w-0 overflow-x-clip overflow-y-visible p-3 pb-[var(--axm-shell-clearance)] md:h-full md:min-h-0 md:overflow-auto md:p-6"
+      data-testid="schedule-timeline"
+    >
       <header className="min-w-0">
         <p className="font-mono text-xs text-[var(--fld-muted)]">{scheduleDay} · Lagos</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-[-.04em]">Technician timeline</h1>
@@ -33,6 +36,7 @@ export function ScheduleTimeline() {
           {state.technicians.map((technician) => (
             <button
               key={technician.id}
+              data-testid={`technician-chip-${technician.id}`}
               type="button"
               onClick={() => setSelectedTechnicianId(technician.id)}
               className={`min-h-11 shrink-0 rounded-full border px-3 text-sm ${selectedTechnician.id === technician.id ? "border-[var(--fld-signal)] text-[var(--fld-signal)]" : "border-[var(--fld-line)]"}`}
@@ -53,6 +57,7 @@ export function ScheduleTimeline() {
                 .map((job) => (
                   <div
                     key={job.id}
+                    data-testid={`schedule-block-${job.id}`}
                     className="min-w-0 border border-[var(--fld-line)] bg-[var(--fld-raised)] p-2 text-sm"
                   >
                     <span className="font-mono text-xs text-[var(--fld-signal)]">{job.id}</span>
@@ -101,6 +106,7 @@ export function ScheduleTimeline() {
                       .map((job) => (
                         <div
                           key={job.id}
+                          data-testid={`schedule-block-${job.id}`}
                           className={`absolute inset-x-1 top-2 overflow-hidden border px-2 py-1 text-xs ${conflicts.has(job.id) ? "border-[var(--fld-signal)] bg-[var(--fld-selected)]" : "border-[var(--fld-line)] bg-[var(--fld-raised)]"}`}
                         >
                           <span className="font-mono">{job.id}</span>

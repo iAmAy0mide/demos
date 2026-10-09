@@ -53,6 +53,7 @@ export function PhoneDispatchSheets({
       onMouseDown={onClose}
     >
       <section
+        data-testid={isFiltersOpen ? "filters-sheet" : undefined}
         className="absolute right-0 bottom-0 left-0 max-h-[82dvh] overflow-y-auto border-t border-[var(--fld-border-strong)] bg-[var(--fld-surface-overlay)] p-4 shadow-[var(--fld-shadow-overlay)]"
         role="dialog"
         aria-modal="true"

@@ -29,6 +29,7 @@ export function JobDrawer() {
 
   return (
     <aside
+      data-testid="job-drawer"
       className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-[var(--fld-line)] bg-[var(--fld-panel)] shadow-2xl"
       aria-label={`Job details for ${job.id}`}
     >

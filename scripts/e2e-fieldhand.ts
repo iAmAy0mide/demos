@@ -101,7 +101,7 @@ const protectedTests: Test[] = [
     viewport: desktop,
     run: async (page) => {
       await board(page);
-      await page.getByTestId("search-trigger").click();
+      await page.getByTestId("search-trigger").filter({ hasText: "Search jobs" }).click();
       await visible(page.getByTestId("command-palette"), "palette");
       await page.keyboard.press("Escape");
       await hidden(page.getByTestId("command-palette"), "palette");

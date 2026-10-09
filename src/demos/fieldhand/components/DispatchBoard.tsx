@@ -3,7 +3,7 @@
 import { AlertTriangle, Bolt, Ellipsis, MapPin, Plus, Snowflake, Sun, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
 import { PhoneDispatchSheets } from "@/src/demos/fieldhand/components/PhoneDispatchSheets";
@@ -14,6 +14,7 @@ import {
 } from "@/src/demos/fieldhand/lib/jobUtils";
 import type { Job, JobStatus, ServiceCategory } from "@/src/demos/fieldhand/types";
 import { formatLagosLongDate, formatLagosTime } from "@/src/shared/lib/lagos-time";
+import { useDismissibleLayer } from "@/src/shared/lib/useDismissibleLayer";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 const boardColumns: { status: JobStatus; label: string }[] = [
@@ -46,17 +47,36 @@ function requiresTechnician(status: JobStatus) {
   return TECHNICIAN_REQUIRED.includes(status);
 }
 
-function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStatus) => void }) {
+type JobCardProps = {
+  job: Job;
+  isMenuOpen: boolean;
+  onAssign: (job: Job) => void;
+  onCloseMenu: () => void;
+  onMove: (job: Job, status: JobStatus) => void;
+  onToggleMenu: (jobId: string) => void;
+};
+
+function JobCard({ job, isMenuOpen, onAssign, onCloseMenu, onMove, onToggleMenu }: JobCardProps) {
   const { state } = useFieldhand();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
   const technician = state.technicians.find((item) => item.id === job.technicianId);
   const Icon = categoryIcons[job.category];
   const priorityTone = getPriorityTone(job.priority);
+  useDismissibleLayer({
+    isOpen: isMenuOpen,
+    onDismiss: onCloseMenu,
+    layerRef: menuRef,
+    triggerRef: menuTriggerRef,
+  });
   return (
     <article
       draggable
       data-testid={`job-card-${job.id}`}
-      onDragStart={(event) => event.dataTransfer.setData("text/plain", job.id)}
+      onDragStart={(event) => {
+        onCloseMenu();
+        event.dataTransfer.setData("text/plain", job.id);
+      }}
       className="group relative border border-[var(--fld-line)] bg-[var(--fld-raised)] p-3 shadow-[0_1px_0_rgba(0,0,0,.16)]"
     >
       <span className={`absolute inset-y-0 left-0 w-1 ${priorityTone}`} aria-hidden="true" />
@@ -72,30 +92,58 @@ function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStat
           )}
           <div className="relative">
             <button
+              ref={menuTriggerRef}
               data-testid={`job-card-menu-${job.id}`}
               className="grid size-8 place-items-center rounded hover:bg-[var(--fld-hover)]"
               type="button"
-              onClick={() => setMenuOpen((open) => !open)}
+              onClick={() => onToggleMenu(job.id)}
               aria-label={`Actions for ${job.id}`}
               aria-haspopup="menu"
-              aria-expanded={menuOpen}
+              aria-expanded={isMenuOpen}
             >
               <Ellipsis size={16} />
             </button>
-            {menuOpen && (
+            {isMenuOpen && (
               <div
+                ref={menuRef}
                 data-testid="job-menu"
                 className="absolute top-8 right-0 z-20 w-36 border border-[var(--fld-line)] bg-[var(--fld-panel)] py-1 shadow-xl"
                 role="menu"
+                onKeyDown={(event) => {
+                  const items = Array.from(
+                    event.currentTarget.querySelectorAll<HTMLElement>('[role="menuitem"]'),
+                  );
+                  const currentIndex = items.indexOf(document.activeElement as HTMLElement);
+                  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+                    event.preventDefault();
+                    const offset = event.key === "ArrowDown" ? 1 : -1;
+                    items[(currentIndex + offset + items.length) % items.length]?.focus();
+                  }
+                }}
               >
                 <Link
                   data-testid="job-menu-item-open"
                   href={`/work/fieldhand?job=${job.id}`}
                   className="block px-3 py-2 text-sm hover:bg-[var(--fld-hover)]"
                   role="menuitem"
+                  onClick={onCloseMenu}
                 >
                   Open
                 </Link>
+                {(!job.technicianId || job.status !== "done") && (
+                  <button
+                    data-testid="job-menu-item-assign"
+                    type="button"
+                    className="block w-full px-3 py-2 text-left text-sm hover:bg-[var(--fld-hover)]"
+                    role="menuitem"
+                    onClick={() => {
+                      onCloseMenu();
+                      onAssign(job);
+                    }}
+                  >
+                    Assign to...
+                  </button>
+                )}
                 {boardColumns
                   .filter((column) => column.status !== job.status)
                   .map((column) => (
@@ -107,7 +155,7 @@ function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStat
                       role="menuitem"
                       onClick={() => {
                         onMove(job, column.status);
-                        setMenuOpen(false);
+                        onCloseMenu();
                       }}
                     >
                       Move to {column.label}
@@ -144,7 +192,7 @@ function JobCard({ job, onMove }: { job: Job; onMove: (job: Job, status: JobStat
             data-testid={`job-card-assign-${job.id}`}
             type="button"
             className="flex items-center gap-2 text-[var(--fld-signal)] hover:underline"
-            onClick={() => onMove(job, "scheduled")}
+            onClick={() => onAssign(job)}
           >
             <span className="grid size-7 place-items-center rounded-full border border-dashed border-[var(--fld-signal)]">
               +
@@ -277,6 +325,7 @@ export function DispatchBoard() {
   const [isCreating, setIsCreating] = useState(false);
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [openMenuJobId, setOpenMenuJobId] = useState<string | null>(null);
   const [phoneStatus, setPhoneStatus] = useState<JobStatus>("unassigned");
   const dateLabel = now ? formatLagosLongDate(now) : "Lagos operations";
   useEffect(() => {
@@ -299,6 +348,8 @@ export function DispatchBoard() {
     }
     moveJob(job.id, status);
   };
+  const openAssignmentPicker = (_job: Job) => {};
+  const closeMenu = () => setOpenMenuJobId(null);
   const savedViews = [
     { label: "All", filters: {} },
     { label: "Urgent", filters: { priority: "urgent" as const } },
@@ -427,7 +478,17 @@ export function DispatchBoard() {
           {filteredJobs
             .filter((job) => job.status === phoneStatus)
             .map((job) => (
-              <JobCard key={job.id} job={job} onMove={move} />
+              <JobCard
+                key={job.id}
+                job={job}
+                isMenuOpen={openMenuJobId === job.id}
+                onAssign={openAssignmentPicker}
+                onCloseMenu={closeMenu}
+                onMove={move}
+                onToggleMenu={(jobId) =>
+                  setOpenMenuJobId((current) => (current === jobId ? null : jobId))
+                }
+              />
             ))}
           {!filteredJobs.some((job) => job.status === phoneStatus) && (
             <p className="border border-dashed border-[var(--fld-line)] p-4 text-center text-sm text-[var(--fld-muted)]">
@@ -473,7 +534,17 @@ export function DispatchBoard() {
                 {filteredJobs
                   .filter((job) => job.status === status)
                   .map((job) => (
-                    <JobCard key={job.id} job={job} onMove={move} />
+                    <JobCard
+                      key={job.id}
+                      job={job}
+                      isMenuOpen={openMenuJobId === job.id}
+                      onAssign={openAssignmentPicker}
+                      onCloseMenu={closeMenu}
+                      onMove={move}
+                      onToggleMenu={(jobId) =>
+                        setOpenMenuJobId((current) => (current === jobId ? null : jobId))
+                      }
+                    />
                   ))}
                 {!filteredJobs.some((job) => job.status === status) && (
                   <p className="border border-dashed border-[var(--fld-line)] p-4 text-center text-xs text-[var(--fld-muted)]">

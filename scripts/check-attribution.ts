@@ -4,6 +4,7 @@ import { join } from "node:path";
 const sourceRoot = join(process.cwd(), "src");
 const allowedPlainTextFiles = new Set([
   join(sourceRoot, "shared", "components", "AxmionAttribution", "AxmionAttribution.tsx"),
+  join(sourceRoot, "shared", "demo-shell", "DemoShell.tsx"),
   join(sourceRoot, "demos", "hub", "components", "HubHeader.tsx"),
 ]);
 

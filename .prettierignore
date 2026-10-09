@@ -2,6 +2,6 @@
 build
 node_modules
 .screenshots
-pnpm-lock.yaml
+package-lock.json
 src/demos/meridian/data/generated-map-data.ts
 src/demos/meridian/data/generated-map-data.tsx

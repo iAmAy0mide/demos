@@ -21,6 +21,16 @@ npm run start
 npm run logo
 ```
 
+## Testing
+
+One-time browser setup: `npm install`, then `npx playwright install chromium`.
+
+```bash
+npm run e2e:fieldhand
+npm run screenshots
+npm run previews
+```
+
 `npm run logo` creates the Axmion mark derivatives and Apple touch icon from `public/images/Logo.png`. Keep that transparent source PNG in place; generated derivatives are ignored and can be recreated at any time.
 
 ## Structure

@@ -23,6 +23,12 @@ import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 type FieldhandContextValue = {
   state: FieldhandState;
   moveJob: (jobId: string, status: JobStatus, technicianId?: string | null) => void;
+  assignJob: (
+    jobId: string,
+    technicianId: string,
+    status?: JobStatus,
+    scheduledStart?: string | null,
+  ) => void;
   createJob: (job: Job) => void;
   updateNotes: (jobId: string, notes: string) => void;
   setFilters: (filters: Partial<FieldhandFilters>) => void;
@@ -73,6 +79,14 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
       state,
       moveJob: (jobId, status, technicianId) =>
         dispatch({ type: "move_job", jobId, status, technicianId: technicianId ?? null }),
+      assignJob: (jobId, technicianId, status, scheduledStart) =>
+        dispatch({
+          type: "assign_job",
+          jobId,
+          technicianId,
+          status,
+          scheduledStart: scheduledStart ?? null,
+        }),
       createJob: (job) => dispatch({ type: "create_job", job }),
       updateNotes: (jobId, notes) => dispatch({ type: "update_notes", jobId, notes }),
       setFilters: (filters) => dispatch({ type: "set_filters", filters }),

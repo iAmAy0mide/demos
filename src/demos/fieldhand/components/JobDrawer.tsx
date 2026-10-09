@@ -4,6 +4,7 @@ import { ArrowLeft, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+import { AssignPicker } from "@/src/demos/fieldhand/components/AssignPicker";
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
 import type { JobStatus } from "@/src/demos/fieldhand/types";
 
@@ -20,6 +21,7 @@ export function JobDrawer() {
   const params = useSearchParams();
   const job = state.jobs.find((item) => item.id === params.get("job"));
   const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const [isAssigning, setIsAssigning] = useState(false);
 
   if (!job) {
     return null;
@@ -115,7 +117,16 @@ export function JobDrawer() {
           </ol>
         </section>
         <section className="border-t border-[var(--fld-line)] pt-5">
-          <h3 className="text-sm font-medium">Assignment</h3>
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-sm font-medium">Assignment</h3>
+            <button
+              type="button"
+              className="min-h-10 px-2 text-sm text-[var(--fld-signal)] hover:underline"
+              onClick={() => setIsAssigning(true)}
+            >
+              {technician ? "Reassign" : "Assign"}
+            </button>
+          </div>
           <p className="mt-2 text-sm text-[var(--fld-muted)]">
             {technician
               ? `${technician.name} · ${technician.phone}`
@@ -147,6 +158,7 @@ export function JobDrawer() {
           Close
         </button>
       </footer>
+      {isAssigning && <AssignPicker job={job} onClose={() => setIsAssigning(false)} />}
     </aside>
   );
 }

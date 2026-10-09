@@ -36,6 +36,13 @@ export const initialFieldhandState: FieldhandState = {
 export type FieldhandAction =
   | { type: "hydrate"; payload: FieldhandData & { themeMode: ThemeMode } }
   | { type: "move_job"; jobId: string; status: JobStatus; technicianId: string | null }
+  | {
+      type: "assign_job";
+      jobId: string;
+      technicianId: string;
+      status?: JobStatus;
+      scheduledStart: string | null;
+    }
   | { type: "create_job"; job: Job }
   | { type: "update_notes"; jobId: string; notes: string }
   | { type: "set_filters"; filters: Partial<FieldhandFilters> }
@@ -75,6 +82,43 @@ export function fieldhandReducer(state: FieldhandState, action: FieldhandAction)
               })(),
         ),
       };
+    case "assign_job": {
+      const technician = state.technicians.find((item) => item.id === action.technicianId);
+      const job = state.jobs.find((item) => item.id === action.jobId);
+      if (!technician || !job) {
+        return addToast(state, "Assignment could not be completed.");
+      }
+      const status = action.status ?? (job.status === "unassigned" ? "scheduled" : job.status);
+      const scheduledStart = job.scheduledStart ?? action.scheduledStart;
+      if (!scheduledStart) {
+        return addToast(state, "No conflict-free slot is available for this technician.");
+      }
+      return addToast(
+        {
+          ...state,
+          jobs: state.jobs.map((item) =>
+            item.id !== job.id
+              ? item
+              : {
+                  ...item,
+                  technicianId: technician.id,
+                  status,
+                  scheduledStart,
+                  activity: [
+                    ...item.activity,
+                    {
+                      id: crypto.randomUUID(),
+                      timestamp: new Date().toISOString(),
+                      actor: "Dispatch",
+                      message: `Assigned to ${technician.name.split(" ")[0]}`,
+                    },
+                  ],
+                },
+          ),
+        },
+        `${job.id} assigned to ${technician.name}.`,
+      );
+    }
     case "create_job":
       return addToast(
         { ...state, jobs: [action.job, ...state.jobs] },

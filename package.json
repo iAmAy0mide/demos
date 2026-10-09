@@ -22,6 +22,7 @@
     "check:tokens": "node scripts/check-demo-tokens.mjs",
     "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs",
     "check:lagos-time": "node scripts/check-lagos-time.mjs",
+    "check:fieldhand-slots": "node --experimental-strip-types scripts/check-fieldhand-slots.ts",
     "check:rentbook-seed": "node --experimental-strip-types scripts/check-rentbook-seed.ts",
     "check:contact": "node --experimental-strip-types scripts/check-contact.ts",
     "check:attribution": "node --experimental-strip-types scripts/check-attribution.ts",

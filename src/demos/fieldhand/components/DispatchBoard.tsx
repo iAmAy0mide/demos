@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { AssignPicker } from "@/src/demos/fieldhand/components/AssignPicker";
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
 import { PhoneDispatchSheets } from "@/src/demos/fieldhand/components/PhoneDispatchSheets";
 import {
@@ -326,6 +327,10 @@ export function DispatchBoard() {
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [openMenuJobId, setOpenMenuJobId] = useState<string | null>(null);
+  const [assignmentRequest, setAssignmentRequest] = useState<{
+    job: Job;
+    status?: JobStatus;
+  } | null>(null);
   const [phoneStatus, setPhoneStatus] = useState<JobStatus>("unassigned");
   const dateLabel = now ? formatLagosLongDate(now) : "Lagos operations";
   useEffect(() => {
@@ -344,11 +349,12 @@ export function DispatchBoard() {
   const conflicts = findSchedulingConflicts(state.jobs, "tech-ade");
   const move = (job: Job, status: JobStatus) => {
     if (requiresTechnician(status) && !job.technicianId) {
+      setAssignmentRequest({ job, status });
       return;
     }
     moveJob(job.id, status);
   };
-  const openAssignmentPicker = (_job: Job) => {};
+  const openAssignmentPicker = (job: Job) => setAssignmentRequest({ job });
   const closeMenu = () => setOpenMenuJobId(null);
   const savedViews = [
     { label: "All", filters: {} },
@@ -557,6 +563,13 @@ export function DispatchBoard() {
         </div>
       </section>
       {isCreating && <CreateJobDialog onClose={() => setIsCreating(false)} />}
+      {assignmentRequest && (
+        <AssignPicker
+          job={assignmentRequest.job}
+          targetStatus={assignmentRequest.status}
+          onClose={() => setAssignmentRequest(null)}
+        />
+      )}
       <PhoneDispatchSheets
         filters={state.filters}
         isAlertsOpen={isAlertsOpen}

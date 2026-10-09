@@ -39,7 +39,10 @@ export default function RentbookLayout({ children }: Readonly<{ children: React.
       <RentbookProvider>
         <RentbookShell>{children}</RentbookShell>
       </RentbookProvider>
-      <DemoShell currentDemo="rentbook" />
+      <DemoShell
+        currentDemo="rentbook"
+        bottomOffset="calc(3.25rem + 0.5rem + env(safe-area-inset-bottom))"
+      />
     </div>
   );
 }

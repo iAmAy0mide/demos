@@ -100,3 +100,12 @@ if (missingAttributionTokens.length) {
   console.error(`Undefined Axmion attribution tokens: ${missingAttributionTokens.join(", ")}`);
   process.exitCode = 1;
 }
+
+const shellCss = await readFile(new URL("src/shared/demo-shell/DemoShell.css", root), "utf8");
+const shellTokens = [...shellCss.matchAll(/--axm-shell-([a-z-]+):/g)].map((match) => match[1]);
+const shellRefs = [...shellCss.matchAll(/var\(--axm-shell-([a-z-]+)/g)].map((match) => match[1]);
+const missingShellTokens = [...new Set(shellRefs.filter((token) => !shellTokens.includes(token)))];
+if (missingShellTokens.length) {
+  console.error(`Undefined Axmion shell tokens: ${missingShellTokens.join(", ")}`);
+  process.exitCode = 1;
+}

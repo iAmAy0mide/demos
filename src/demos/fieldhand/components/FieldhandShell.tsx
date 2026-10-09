@@ -8,6 +8,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   RotateCcw,
+  Search,
   SunMoon,
 } from "lucide-react";
 import Link from "next/link";
@@ -84,7 +85,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
   }, [isEmbedded, state.isLoaded]);
 
   return (
-    <div className="min-h-dvh bg-[var(--fld-canvas)] text-[var(--fld-text)]">
+    <div className="min-h-dvh bg-[var(--fld-canvas)] text-[var(--fld-text)] [--axm-shell-clearance:calc(8.5rem+env(safe-area-inset-bottom))]">
       <aside
         className={`fixed inset-y-0 left-0 z-40 hidden overflow-hidden border-r border-[var(--fld-line)] bg-[var(--fld-panel)] p-2 transition-[width] duration-150 md:block ${isSidebarCollapsed ? "w-16" : "w-56"}`}
       >
@@ -129,7 +130,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
       <div
         className={`grid min-h-dvh min-w-0 grid-rows-[3.5rem_minmax(0,1fr)] pb-[calc(4.5rem+env(safe-area-inset-bottom))] transition-[margin] duration-150 md:pb-0 ${isSidebarCollapsed ? "md:ml-16" : "md:ml-56"}`}
       >
-        <header className="flex items-center gap-3 border-b border-[var(--fld-line)] bg-[var(--fld-canvas)] px-4">
+        <header className="flex h-14 min-w-0 items-center gap-2 border-b border-[var(--fld-line)] bg-[var(--fld-canvas)] px-3 md:px-4">
           <div className="flex min-w-0 items-center gap-2 md:hidden">
             <FieldhandMark />
             <div className="min-w-0">
@@ -137,10 +138,12 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
               <p className="truncate text-[11px] text-[var(--fld-muted)]">Voltline Services</p>
             </div>
           </div>
-          <CommandPalette />
+          <div className="hidden min-w-0 flex-1 md:block">
+            <CommandPalette />
+          </div>
           <button
             aria-label="Toggle color theme"
-            className="grid size-10 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)]"
+            className="hidden size-10 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)] md:grid"
             onClick={() => setThemeMode(state.themeMode === "dark" ? "light" : "dark")}
             type="button"
           >
@@ -148,7 +151,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
           </button>
           <button
             aria-label="Reset demo"
-            className="grid size-10 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)]"
+            className="hidden size-10 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)] md:grid"
             onClick={resetDemo}
             type="button"
           >
@@ -156,11 +159,12 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
           </button>
           <button
             aria-label="Open command palette"
-            className="grid size-10 place-items-center rounded-md bg-[var(--fld-signal)] text-white hover:brightness-110"
+            className="ml-auto grid size-11 place-items-center rounded-md border border-[var(--fld-line)] text-[var(--fld-muted)] hover:text-[var(--fld-text)] md:ml-0 md:size-10 md:bg-[var(--fld-signal)] md:text-white"
             type="button"
             onClick={() => window.dispatchEvent(new Event("fieldhand:open-command"))}
           >
-            <Command size={17} />
+            <Search size={17} className="md:hidden" />
+            <Command size={17} className="hidden md:block" />
           </button>
         </header>
         <div className="min-h-0">{children}</div>
@@ -170,14 +174,14 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
         {!isEmbedded && <ToastStack />}
         <ShortcutOverlay />
         <nav
-          className="fixed inset-x-0 bottom-0 z-40 grid h-[calc(4.5rem+env(safe-area-inset-bottom))] grid-cols-4 border-t border-[var(--fld-line)] bg-[var(--fld-panel)] px-2 pb-[env(safe-area-inset-bottom)] md:hidden"
+          className="fixed inset-x-0 bottom-0 z-40 grid h-[calc(4.5rem+env(safe-area-inset-bottom))] grid-cols-4 border-t border-[var(--fld-line)] bg-[var(--fld-panel)] pb-[env(safe-area-inset-bottom)] md:hidden"
           aria-label="Phone navigation"
         >
           {navigationItems.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}
-              className={`grid min-h-11 place-items-center gap-0.5 text-[11px] ${pathname === href ? "text-[var(--fld-signal)]" : "text-[var(--fld-muted)]"}`}
+              className={`grid min-h-11 min-w-0 place-items-center gap-0.5 text-[11px] ${pathname === href ? "text-[var(--fld-signal)]" : "text-[var(--fld-muted)]"}`}
             >
               <Icon size={18} aria-hidden="true" />
               {label}
@@ -186,7 +190,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("fieldhand:create-job"))}
-            className="grid min-h-11 place-items-center gap-0.5 text-[11px] text-[var(--fld-signal)]"
+            className="grid min-h-11 min-w-0 place-items-center gap-0.5 text-[11px] text-[var(--fld-signal)]"
           >
             <span className="grid size-7 place-items-center rounded-full bg-[var(--fld-signal)] text-white">
               <Command size={15} />

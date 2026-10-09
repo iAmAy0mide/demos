@@ -23,13 +23,13 @@ export function ScheduleTimeline() {
     (job) => job.technicianId === selectedTechnician.id && job.scheduledStart,
   );
   return (
-    <main className="h-full min-h-0 overflow-auto p-4 md:p-6">
-      <header>
+    <main className="min-h-full min-w-0 overflow-x-clip overflow-y-visible p-3 pb-[var(--axm-shell-clearance)] md:h-full md:min-h-0 md:overflow-auto md:p-6">
+      <header className="min-w-0">
         <p className="font-mono text-xs text-[var(--fld-muted)]">{scheduleDay} · Lagos</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-[-.04em]">Technician timeline</h1>
       </header>
       <section className="mt-4 md:hidden" aria-label="Technician day timeline">
-        <div className="flex gap-2 overflow-x-auto pb-3">
+        <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-3">
           {state.technicians.map((technician) => (
             <button
               key={technician.id}
@@ -47,17 +47,17 @@ export function ScheduleTimeline() {
             className="grid min-h-16 grid-cols-[3rem_1fr] border-t border-[var(--fld-line)] py-2"
           >
             <span className="font-mono text-xs text-[var(--fld-muted)]">{hour}:00</span>
-            <div className="space-y-1">
+            <div className="min-w-0 space-y-1">
               {scheduledJobs
                 .filter((job) => lagosHour(new Date(job.scheduledStart as string)) === hour)
                 .map((job) => (
                   <div
                     key={job.id}
-                    className="border border-[var(--fld-line)] bg-[var(--fld-raised)] p-2 text-sm"
+                    className="min-w-0 border border-[var(--fld-line)] bg-[var(--fld-raised)] p-2 text-sm"
                   >
                     <span className="font-mono text-xs text-[var(--fld-signal)]">{job.id}</span>
                     <br />
-                    {job.title}
+                    <span className="mt-0.5 block break-words">{job.title}</span>
                   </div>
                 ))}
             </div>

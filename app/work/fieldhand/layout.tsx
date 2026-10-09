@@ -29,7 +29,10 @@ export default function FieldhandLayout({ children }: FieldhandLayoutProps) {
       <FieldhandProvider>
         <FieldhandShell>{children}</FieldhandShell>
       </FieldhandProvider>
-      <DemoShell currentDemo="fieldhand" />
+      <DemoShell
+        currentDemo="fieldhand"
+        bottomOffset="calc(4.5rem + 0.5rem + env(safe-area-inset-bottom))"
+      />
     </div>
   );
 }

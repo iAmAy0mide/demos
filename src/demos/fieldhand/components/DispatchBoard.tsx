@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
+import { PhoneDispatchSheets } from "@/src/demos/fieldhand/components/PhoneDispatchSheets";
 import {
   countJobsForStatus,
   filterJobs,
@@ -265,6 +266,8 @@ export function DispatchBoard() {
   const { state, moveJob, setFilters } = useFieldhand();
   const now = useLagosNow();
   const [isCreating, setIsCreating] = useState(false);
+  const [isAlertsOpen, setIsAlertsOpen] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [phoneStatus, setPhoneStatus] = useState<JobStatus>("unassigned");
   const dateLabel = now ? formatLagosLongDate(now) : "Lagos operations";
   useEffect(() => {
@@ -295,27 +298,29 @@ export function DispatchBoard() {
   ];
   return (
     <main className="grid h-full min-h-0 min-w-0 grid-rows-[auto_auto_auto_minmax(0,1fr)] overflow-hidden max-[560px]:h-auto max-[560px]:overflow-visible">
-      <header className="flex min-h-14 items-center justify-between gap-3 px-4 pt-2 md:px-6">
+      <header className="flex min-h-14 min-w-0 items-center justify-between gap-2 px-3 pt-2 md:gap-3 md:px-6">
         <div className="min-w-0">
+          <p className="font-mono text-xs text-[var(--fld-muted)] md:hidden">Thu 8 Oct</p>
           <h1 className="text-xl font-semibold tracking-[-.04em]">
-            Dispatch board{" "}
-            <span className="ml-2 font-mono text-xs font-normal text-[var(--fld-muted)]">
+            Dispatch board
+            <span className="ml-2 hidden font-mono text-xs font-normal text-[var(--fld-muted)] md:inline">
               {dateLabel}
             </span>
           </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
-            className="inline-flex items-center gap-1 border border-red-500/50 bg-red-500/10 px-2 py-1 text-xs"
-            onClick={() => setFilters({ status: "unassigned", priority: "urgent" })}
+            className="inline-flex min-h-11 items-center gap-1 border border-red-500/50 bg-red-500/10 px-2 text-xs md:min-h-0 md:py-1"
+            onClick={() => setIsAlertsOpen(true)}
           >
             <AlertTriangle size={13} />
-            Urgent
+            <span className="md:hidden">2 need attention</span>
+            <span className="hidden md:inline">Urgent</span>
           </button>
           <button
             type="button"
-            className="inline-flex items-center gap-1 border border-amber-500/50 bg-amber-500/10 px-2 py-1 text-xs"
+            className="hidden items-center gap-1 border border-amber-500/50 bg-amber-500/10 px-2 py-1 text-xs md:inline-flex"
             onClick={() => setFilters({ technicianId: "tech-ade" })}
           >
             <AlertTriangle size={13} />
@@ -323,7 +328,7 @@ export function DispatchBoard() {
           </button>
           <button
             type="button"
-            className="inline-flex min-h-9 items-center gap-2 bg-[var(--fld-signal)] px-3 text-sm font-medium text-white"
+            className="hidden min-h-9 items-center gap-2 bg-[var(--fld-signal)] px-3 text-sm font-medium text-white md:inline-flex"
             onClick={() => setIsCreating(true)}
           >
             <Plus size={16} />
@@ -332,7 +337,7 @@ export function DispatchBoard() {
         </div>
       </header>
       <section
-        className="mx-4 grid grid-cols-2 border-y border-[var(--fld-line)] text-sm md:mx-6 md:grid-cols-4"
+        className="mx-3 flex min-w-0 snap-x gap-0 overflow-x-auto border-y border-[var(--fld-line)] text-sm md:mx-6 md:grid md:grid-cols-4"
         aria-label="Today’s operations"
       >
         {[
@@ -343,7 +348,7 @@ export function DispatchBoard() {
         ].map(([label, value]) => (
           <div
             key={String(label)}
-            className="flex items-baseline gap-2 border-r border-[var(--fld-line)] px-2 py-1.5 last:border-r-0"
+            className="flex shrink-0 snap-start items-baseline gap-2 border-r border-[var(--fld-line)] px-2 py-1.5 last:border-r-0 md:shrink"
           >
             <span className="text-xs text-[var(--fld-muted)]">{label}</span>
             <span className="font-mono text-sm tabular-nums">{value}</span>
@@ -351,7 +356,7 @@ export function DispatchBoard() {
         ))}
       </section>
       <div
-        className="flex min-w-0 items-center gap-1 overflow-x-auto px-4 py-2 md:px-6"
+        className="flex min-w-0 items-center gap-1 overflow-x-auto px-3 py-2 md:px-6"
         aria-label="Saved views and filters"
       >
         {savedViews.map((view) => (
@@ -376,31 +381,27 @@ export function DispatchBoard() {
         <button
           type="button"
           className="ml-2 min-h-8 shrink-0 border border-[var(--fld-line)] px-2 text-sm"
-          onClick={() =>
-            setFilters({
-              technicianId: "all",
-              priority: "all",
-              status: "all",
-              area: "all",
-              category: "all",
-            })
-          }
+          onClick={() => setIsFiltersOpen(true)}
         >
           Filters
         </button>
       </div>
       <section
-        className="min-h-0 overflow-y-auto px-4 pb-4 md:hidden"
+        className="min-h-0 overflow-y-auto px-3 pb-[var(--axm-shell-clearance)] md:hidden"
         aria-label="Phone job status board"
       >
-        <div className="flex gap-2 overflow-x-auto py-2" role="tablist" aria-label="Job status">
+        <div
+          className="sticky top-0 z-20 -mx-3 flex h-11 gap-2 overflow-x-auto border-y border-[var(--fld-line)] bg-[var(--fld-canvas)] px-3"
+          role="tablist"
+          aria-label="Job status"
+        >
           {boardColumns.map(({ status, label }) => (
             <button
               key={status}
               role="tab"
               aria-selected={phoneStatus === status}
               onClick={() => setPhoneStatus(status)}
-              className={`min-h-11 shrink-0 border-b-2 px-2 text-sm ${phoneStatus === status ? "border-[var(--fld-signal)] text-[var(--fld-signal)]" : "border-transparent"}`}
+              className={`min-h-11 shrink-0 border-b-2 px-2 text-sm whitespace-nowrap ${phoneStatus === status ? "border-[var(--fld-signal)] text-[var(--fld-signal)]" : "border-transparent"}`}
             >
               {label} {countJobsForStatus(filteredJobs, status)}
             </button>
@@ -465,6 +466,23 @@ export function DispatchBoard() {
         </div>
       </section>
       {isCreating && <CreateJobDialog onClose={() => setIsCreating(false)} />}
+      <PhoneDispatchSheets
+        filters={state.filters}
+        isAlertsOpen={isAlertsOpen}
+        isFiltersOpen={isFiltersOpen}
+        onClose={() => {
+          setIsAlertsOpen(false);
+          setIsFiltersOpen(false);
+        }}
+        onFiltersChange={setFilters}
+        urgentJob={state.jobs.find(
+          (job) => job.priority === "urgent" && job.status === "unassigned",
+        )}
+        conflictJob={conflicts[0]}
+        onOpenJob={(job) => {
+          window.location.assign(`/work/fieldhand?job=${job.id}`);
+        }}
+      />
     </main>
   );
 }

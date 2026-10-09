@@ -1,19 +1,21 @@
 .axm-shell {
-  --axm-shell-bg: #f8faf9;
-  --axm-shell-ink: #17201c;
-  --axm-shell-line: #bdc8c1;
-  --axm-shell-focus: #157450;
-  --axm-shell-hover: #dfe8e2;
-  --axm-shell-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  --axm-shell-bg: #0b0e14;
+  --axm-shell-ink: #ffffff;
+  --axm-shell-line: rgba(255, 255, 255, 0.18);
+  --axm-shell-focus: #9baaff;
+  --axm-shell-hover: #202a39;
+  --axm-shell-offset-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  --axm-shell-clearance: calc(var(--axm-shell-offset-bottom) + 3.5rem);
   position: fixed;
   z-index: 80;
   left: 50%;
-  bottom: var(--axm-shell-bottom);
+  bottom: var(--axm-shell-offset-bottom);
   transform: translateX(-50%);
   color: var(--axm-shell-ink);
   font:
     500 12px/1.2 ui-sans-serif,
     sans-serif;
+  pointer-events: none;
 }
 
 .axm-shell-handle,
@@ -24,12 +26,16 @@
 }
 
 .axm-shell-handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   min-width: 44px;
   min-height: 44px;
-  padding: 0 14px;
+  padding: 0 12px;
   color: inherit;
-  border-radius: 7px;
+  border-radius: 999px;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .axm-shell-mark {
@@ -37,6 +43,14 @@
   height: 1.1rem;
   margin-right: 0.3rem;
   object-fit: contain;
+  flex: none;
+}
+
+.axm-shell-chevron {
+  transition: transform 160ms ease;
+}
+.axm-shell-handle[aria-expanded="true"] .axm-shell-chevron {
+  transform: rotate(180deg);
 }
 
 .axm-shell-panel {
@@ -49,14 +63,19 @@
   max-width: calc(100vw - 24px);
   padding: 6px;
   transform: translateX(-50%);
-  border-radius: 7px;
+  border-radius: 12px;
+  pointer-events: auto;
 }
 
-.axm-shell:hover .axm-shell-panel,
-.axm-shell:focus-within .axm-shell-panel,
 .axm-shell-panel-open {
   display: grid;
   gap: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .axm-shell-chevron {
+    transition: none;
+  }
 }
 
 .axm-shell-panel a,

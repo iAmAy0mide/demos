@@ -13,7 +13,7 @@
     "check:metadata": "node scripts/check-metadata.mjs",
     "report:large-files": "node --experimental-strip-types scripts/report-large-files.ts",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:tokens && npm run check:lagos-time && npm run check:metadata && npm run check:contact && npm run check:attribution",
-    "check:full": "npm run check && npm run build && npm run smoke:routes",
+    "check:full": "npm run check && npm run check:overflow && npm run check:pill-clearance && npm run build && npm run smoke:routes",
     "prepare": "git config core.hooksPath .githooks",
     "screenshots": "node --experimental-strip-types scripts/screenshots.ts",
     "logo": "node --experimental-strip-types scripts/generate-logo-assets.ts",
@@ -24,7 +24,9 @@
     "check:lagos-time": "node scripts/check-lagos-time.mjs",
     "check:rentbook-seed": "node --experimental-strip-types scripts/check-rentbook-seed.ts",
     "check:contact": "node --experimental-strip-types scripts/check-contact.ts",
-    "check:attribution": "node --experimental-strip-types scripts/check-attribution.ts"
+    "check:attribution": "node --experimental-strip-types scripts/check-attribution.ts",
+    "check:overflow": "node --experimental-strip-types scripts/check-overflow.ts",
+    "check:pill-clearance": "node --experimental-strip-types scripts/check-pill-clearance.ts"
   },
   "dependencies": {
     "@fontsource/instrument-serif": "^5.3.0",

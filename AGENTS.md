@@ -228,6 +228,7 @@ These are non-negotiable for every demo.
    - `npm run lint` and `npm run typecheck` (or the repo equivalents) with zero errors and zero warnings
    - `npm run build` successfully
    - A manual pass in the browser at 360px, 768px, and 1440px widths
+   - Phone check: any UI change must pass `check-overflow` and `check-pill-clearance` at 320px, 360px, 390px, and 412px
    - A keyboard-only pass through the main flow
 5. **Update `PLAN.md` at the end of every session.** Tick completed items, set the **Current stage**, add to the **Decisions log**, and write **Handoff notes** (what is done, what is known to be rough, what the next session should know).
 6. **Do not mark a phase complete yourself.** Mark it **Ready for review**. Only the project owner marks a phase **Approved**.

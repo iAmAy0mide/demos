@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -47,7 +48,9 @@ export function DemoShell({ currentDemo, bottomOffset }: DemoShellProps) {
       ref={containerRef}
       className="axm-shell"
       style={
-        bottomOffset ? ({ "--axm-shell-bottom": bottomOffset } as React.CSSProperties) : undefined
+        bottomOffset
+          ? ({ "--axm-shell-offset-bottom": bottomOffset } as React.CSSProperties)
+          : undefined
       }
       aria-label="Axmion concept navigation"
     >
@@ -59,12 +62,13 @@ export function DemoShell({ currentDemo, bottomOffset }: DemoShellProps) {
       >
         <Image
           className="axm-shell-mark"
-          src="/images/logo-mark-64.png"
+          src="/images/logo-mark-128.png"
           alt=""
           width={20}
           height={20}
         />
-        Axmion
+        <span>Axmion</span>
+        <ChevronUp className="axm-shell-chevron" size={14} aria-hidden="true" />
       </button>
       <nav
         className={`axm-shell-panel ${open ? "axm-shell-panel-open" : ""}`}

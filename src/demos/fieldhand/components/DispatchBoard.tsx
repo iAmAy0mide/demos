@@ -2,6 +2,7 @@
 
 import { AlertTriangle, Bolt, Ellipsis, MapPin, Plus, Snowflake, Sun, Wrench } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
@@ -264,6 +265,7 @@ function CreateJobDialog({ onClose }: { onClose: () => void }) {
 
 export function DispatchBoard() {
   const { state, moveJob, setFilters } = useFieldhand();
+  const router = useRouter();
   const now = useLagosNow();
   const [isCreating, setIsCreating] = useState(false);
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
@@ -480,7 +482,7 @@ export function DispatchBoard() {
         )}
         conflictJob={conflicts[0]}
         onOpenJob={(job) => {
-          window.location.assign(`/work/fieldhand?job=${job.id}`);
+          router.push(`/work/fieldhand?job=${job.id}`);
         }}
       />
     </main>

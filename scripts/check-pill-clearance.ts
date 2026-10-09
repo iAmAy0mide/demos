@@ -1,4 +1,4 @@
-import { chromium, type Page } from "playwright";
+import { chromium, type Browser, type Page } from "playwright";
 
 const baseUrl = process.env.CHECK_BASE_URL ?? "http://127.0.0.1:3000";
 const routes = [
@@ -56,28 +56,11 @@ const browser = await chromium.launch();
 let failed = false;
 try {
   for (const [width, height] of phones) {
-    const page = await browser.newPage({
-      viewport: { width, height },
-      isMobile: true,
-      hasTouch: true,
-      deviceScaleFactor: 2,
-    });
-    for (const route of routes) {
-      await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
-      for (const position of ["top", "bottom"] as const) {
-        await page.evaluate(
-          (target) => window.scrollTo(0, target === "bottom" ? document.body.scrollHeight : 0),
-          position,
-        );
-        const covered = await inspect(page);
-        console.log(
-          `pill ${route} ${width}x${height} ${position}: ${covered.length ? covered.join(" | ") : "clear"}`,
-        );
-        if (covered.length) {
-          failed = true;
-        }
-      }
-    }
+    const page = await createPhonePage(browser, width, height);
+    const results = await Promise.all(
+      routes.map((route) => checkRoute(page, route, width, height)),
+    );
+    failed ||= results.some(Boolean);
     await page.close();
   }
 } finally {
@@ -85,4 +68,41 @@ try {
 }
 if (failed) {
   process.exitCode = 1;
+}
+
+async function createPhonePage(browser: Browser, width: number, height: number) {
+  return browser.newPage({
+    viewport: { width, height },
+    isMobile: true,
+    hasTouch: true,
+    deviceScaleFactor: 2,
+  });
+}
+
+async function checkRoute(page: Page, route: string, width: number, height: number) {
+  await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
+  const covered = await Promise.all(
+    (["top", "bottom"] as const).map((position) =>
+      checkPosition(page, route, width, height, position),
+    ),
+  );
+  return covered.some(Boolean);
+}
+
+async function checkPosition(
+  page: Page,
+  route: string,
+  width: number,
+  height: number,
+  position: "top" | "bottom",
+) {
+  await page.evaluate(
+    (target) => window.scrollTo(0, target === "bottom" ? document.body.scrollHeight : 0),
+    position,
+  );
+  const covered = await inspect(page);
+  console.log(
+    `pill ${route} ${width}x${height} ${position}: ${covered.length ? covered.join(" | ") : "clear"}`,
+  );
+  return covered.length > 0;
 }

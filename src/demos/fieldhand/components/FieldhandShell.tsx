@@ -42,6 +42,8 @@ function FieldhandMark() {
     <svg
       className="size-6 shrink-0 text-[var(--fld-signal)]"
       viewBox="0 0 24 24"
+      width="24"
+      height="24"
       fill="none"
       aria-hidden="true"
     >

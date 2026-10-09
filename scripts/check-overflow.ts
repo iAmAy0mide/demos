@@ -1,4 +1,4 @@
-import { chromium, type Page } from "playwright";
+import { chromium, type Browser, type Page } from "playwright";
 
 const baseUrl = process.env.CHECK_BASE_URL ?? "http://127.0.0.1:3000";
 const routes = [
@@ -59,25 +59,11 @@ const browser = await chromium.launch();
 let failed = false;
 try {
   for (const [width, height] of phones) {
-    const page = await browser.newPage({
-      viewport: { width, height },
-      isMobile: true,
-      hasTouch: true,
-      deviceScaleFactor: 2,
-    });
-    for (const route of routes) {
-      await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
-      const [scrollWidth, offenders] = await Promise.all([
-        page.evaluate(() => document.scrollingElement?.scrollWidth ?? 0),
-        visibleOverflow(page),
-      ]);
-      const result = `overflow ${route} ${width}x${height}: scrollWidth=${scrollWidth} viewport=${width} offenders=${offenders.length}`;
-      console.log(result);
-      if (scrollWidth > width || offenders.length) {
-        failed = true;
-        console.log(JSON.stringify(offenders));
-      }
-    }
+    const page = await createPhonePage(browser, width, height);
+    const results = await Promise.all(
+      routes.map((route) => checkRoute(page, route, width, height)),
+    );
+    failed ||= results.some(Boolean);
     await page.close();
   }
 } finally {
@@ -85,4 +71,29 @@ try {
 }
 if (failed) {
   process.exitCode = 1;
+}
+
+async function createPhonePage(browser: Browser, width: number, height: number) {
+  return browser.newPage({
+    viewport: { width, height },
+    isMobile: true,
+    hasTouch: true,
+    deviceScaleFactor: 2,
+  });
+}
+
+async function checkRoute(page: Page, route: string, width: number, height: number) {
+  await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
+  const [scrollWidth, offenders] = await Promise.all([
+    page.evaluate(() => document.scrollingElement?.scrollWidth ?? 0),
+    visibleOverflow(page),
+  ]);
+  console.log(
+    `overflow ${route} ${width}x${height}: scrollWidth=${scrollWidth} viewport=${width} offenders=${offenders.length}`,
+  );
+  if (scrollWidth <= width && !offenders.length) {
+    return false;
+  }
+  console.log(JSON.stringify(offenders));
+  return true;
 }

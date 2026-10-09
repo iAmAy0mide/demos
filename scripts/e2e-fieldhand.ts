@@ -42,7 +42,7 @@ const protectedTests: Test[] = [
     viewport: desktop,
     run: async (page) => {
       await board(page);
-      const assign = page.getByTestId(/job-card-assign-/).first();
+      const assign = page.locator('[data-testid^="job-card-assign-"]:visible').first();
       await visible(assign, "assign control");
       await assign.click();
     },
@@ -78,7 +78,7 @@ const protectedTests: Test[] = [
     viewport: desktop,
     run: async (page) => {
       await board(page);
-      const card = page.getByTestId(/job-card-/).first();
+      const card = page.locator('[data-testid^="job-card-"]:visible').first();
       await card.getByTestId(/job-card-menu-/).click();
       const menu = page.getByTestId("job-menu");
       await visible(menu, "menu");

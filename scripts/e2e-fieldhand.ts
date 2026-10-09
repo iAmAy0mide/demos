@@ -78,8 +78,7 @@ const protectedTests: Test[] = [
     viewport: desktop,
     run: async (page) => {
       await board(page);
-      const card = page.locator('[data-testid^="job-card-"]:visible').first();
-      await card.getByTestId(/job-card-menu-/).click();
+      await visibleMenuTrigger(page).click();
       const menu = page.getByTestId("job-menu");
       await visible(menu, "menu");
       await visible(menu.getByTestId("job-menu-item-open"), "Open");
@@ -134,10 +133,7 @@ const bugs: Test[] = [
     viewport: desktop,
     run: async (p) => {
       await board(p);
-      await p
-        .getByTestId(/job-card-assign-/)
-        .first()
-        .click();
+      await visibleAssignControl(p).click();
       await visible(p.getByTestId("assign-picker"), "assignment picker");
     },
   },
@@ -146,11 +142,10 @@ const bugs: Test[] = [
     viewport: desktop,
     run: async (p) => {
       await board(p);
-      const c = p
-        .getByTestId(/job-card-/)
-        .filter({ has: p.getByTestId(/job-card-assign-/) })
-        .first();
-      await c.getByTestId(/job-card-menu-/).click();
+      await visibleAssignControl(p)
+        .locator("xpath=ancestor::article")
+        .getByTestId(/job-card-menu-/)
+        .click();
       await visible(p.getByTestId("job-menu-item-assign"), "menu assignment");
     },
   },
@@ -209,23 +204,13 @@ const bugs: Test[] = [
     viewport: desktop,
     run: async (p) => {
       await board(p);
-      const cards = p.getByTestId(/job-card-/);
-      await cards
-        .first()
-        .getByTestId(/job-card-menu-/)
-        .click();
+      await visibleMenuTrigger(p).click();
       await p.mouse.click(5, 5);
       await hidden(p.getByTestId("job-menu"), "outside dismissal");
-      await cards
-        .first()
-        .getByTestId(/job-card-menu-/)
-        .click();
+      await visibleMenuTrigger(p).click();
       await p.keyboard.press("Escape");
       await hidden(p.getByTestId("job-menu"), "Escape dismissal");
-      await cards
-        .nth(1)
-        .getByTestId(/job-card-menu-/)
-        .click();
+      await p.locator('[data-testid^="job-card-menu-"]:visible').nth(1).click();
       if ((await p.getByTestId("job-menu").count()) > 1) {
         throw new Error("More than one menu is open.");
       }
@@ -262,6 +247,12 @@ try {
 async function board(page: Page) {
   await page.goto(boardUrl, { waitUntil: "domcontentloaded" });
   await visible(page.getByTestId("board"), "board");
+}
+function visibleAssignControl(page: Page) {
+  return page.locator('[data-testid^="job-card-assign-"]:visible').first();
+}
+function visibleMenuTrigger(page: Page) {
+  return page.locator('[data-testid^="job-card-menu-"]:visible').first();
 }
 async function ensureBrowser() {
   const browser = await launchBrowser();

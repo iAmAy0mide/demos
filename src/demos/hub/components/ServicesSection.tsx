@@ -2,10 +2,10 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 
 import { services } from "@/src/demos/hub/data/services";
+import { DemoLink } from "@/src/shared/components/DemoLink";
 import { buildWhatsAppLink } from "@/src/shared/config/contact";
 import { publishedWorks } from "@/src/shared/works";
 
@@ -74,7 +74,11 @@ export function ServicesSection() {
                         <p className="axm-panel-label">See it working</p>
                         <div className="axm-service-work-links">
                           {serviceWorks.map((work) => (
-                            <Link key={work.id} href={work.route} className="axm-service-work-link">
+                            <DemoLink
+                              key={work.id}
+                              href={work.route}
+                              className="axm-service-work-link"
+                            >
                               <Image
                                 src={`/previews/${work.id}-desktop.webp`}
                                 alt=""
@@ -82,7 +86,7 @@ export function ServicesSection() {
                                 height={90}
                               />
                               <span>{work.name}</span>
-                            </Link>
+                            </DemoLink>
                           ))}
                         </div>
                         <a

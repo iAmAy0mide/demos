@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AxmionAttribution } from "@/src/shared/components/AxmionAttribution";
+import { DemoLink } from "@/src/shared/components/DemoLink";
 import {
   AXMION_DISPLAY_NUMBER,
   buildContextMessage,
@@ -27,9 +28,9 @@ export function HubFooter() {
       </nav>
       <nav aria-label="Published work">
         {publishedWorks.map((work) => (
-          <Link key={work.id} href={work.route}>
+          <DemoLink key={work.id} href={work.route}>
             {work.name}
-          </Link>
+          </DemoLink>
         ))}
       </nav>
       <div className="axm-footer-contact">

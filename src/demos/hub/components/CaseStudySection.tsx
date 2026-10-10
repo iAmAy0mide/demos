@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import { PreviewFrame } from "@/src/demos/hub/components/PreviewFrame";
 import { caseStudies } from "@/src/demos/hub/data/case-studies";
+import { DemoLink } from "@/src/shared/components/DemoLink";
 import { buildContextMessage, buildWhatsAppLink } from "@/src/shared/config/contact";
 import type { Work } from "@/src/shared/works";
 
@@ -47,9 +46,9 @@ export function CaseStudySection({ work, index, isActive, onActivate }: CaseStud
         </div>
         <p className="axm-case-reason">{study.whyItConverts}</p>
         <div className="axm-case-actions">
-          <Link className="axm-button" href={work.route}>
+          <DemoLink className="axm-button" href={work.route}>
             Open live demo
-          </Link>
+          </DemoLink>
           <a
             href={buildWhatsAppLink(buildContextMessage(work.name))}
             target="_blank"
@@ -58,7 +57,7 @@ export function CaseStudySection({ work, index, isActive, onActivate }: CaseStud
             Get one like this
           </a>
           {work.id === "sunreach" && (
-            <Link href="/work/sunreach?annotations=1">See why it converts</Link>
+            <DemoLink href="/work/sunreach?annotations=1">See why it converts</DemoLink>
           )}
         </div>
       </div>

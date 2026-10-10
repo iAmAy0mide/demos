@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 
 import { PrincipleWireframe } from "@/src/demos/hub/components/PrincipleWireframe";
 import { principles, type WireframeRegion } from "@/src/demos/hub/data/principles";
+import { DemoLink } from "@/src/shared/components/DemoLink";
 import { publishedWorks } from "@/src/shared/works";
 
 const INITIAL_REGION: WireframeRegion = "goal";
@@ -28,9 +28,9 @@ export function PrinciplesSection() {
             <p>{principle.description[0]}</p>
             <p>{principle.description[1]}</p>
             {isPublished && (
-              <Link className="axm-button" href={principle.href}>
+              <DemoLink className="axm-button" href={principle.href}>
                 {principle.linkLabel}
-              </Link>
+              </DemoLink>
             )}
           </aside>
         </div>

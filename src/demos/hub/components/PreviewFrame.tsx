@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import { DeviceToggle } from "@/src/demos/hub/components/DeviceToggle";
+import { DemoLink } from "@/src/shared/components/DemoLink";
 import type { Work } from "@/src/shared/works";
 
 const DESKTOP_SIZE = { width: 1440, height: 900 };
@@ -109,9 +110,9 @@ export function PreviewFrame({ work, isActive, onActivate }: PreviewFrameProps) 
           )}
         </div>
       </div>
-      <a className="axm-mobile-preview-link" href={work.route}>
+      <DemoLink className="axm-mobile-preview-link" href={work.route}>
         Open live demo
-      </a>
+      </DemoLink>
     </div>
   );
 }

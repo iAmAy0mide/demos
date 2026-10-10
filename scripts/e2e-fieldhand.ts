@@ -16,7 +16,7 @@ const defaultTimeout = 15_000;
 const navigationTimeout = 30_000;
 const testTimeout = 60_000;
 const overallTimeout = 8 * 60_000;
-const desktop = { name: "desktop", width: 1440, height: 900, isMobile: false };
+const desktop = { name: "desktop", width: 1296, height: 640, isMobile: false };
 const phone = { name: "phone", width: 390, height: 844, isMobile: true };
 type Viewport = { name: string; width: number; height: number; isMobile: boolean };
 type Test = { id: string; viewport: Viewport; run: (page: Page) => Promise<void> };
@@ -169,10 +169,22 @@ const bugs: Test[] = [
     id: "B4",
     viewport: desktop,
     run: async (p) => {
+      await createJobFromButton(p);
+      await createJobFromShortcut(p);
+      await createJobFromPalette(p);
+    },
+  },
+  {
+    id: "B4",
+    viewport: phone,
+    run: async (p) => {
       for (const route of ["", "/schedule", "/quotes"]) {
+        await board(p);
+        const unassignedBefore = await count(p.getByTestId("stat-unassigned"));
+        const columnBefore = await count(p.getByTestId("board-column-count-unassigned"));
         await p.goto(`${boardUrl}${route}`, { waitUntil: "domcontentloaded" });
         await p.getByTestId("bottom-tab-new-job").click();
-        await visible(p.getByTestId("create-job-dialog"), `new job on ${route || "board"}`);
+        await submitAndViewBoard(p, `phone ${route || "board"}`, unassignedBefore, columnBefore);
       }
     },
   },
@@ -196,7 +208,7 @@ const bugs: Test[] = [
         .getByTestId(/schedule-block-/)
         .first()
         .click();
-      await visible(p.getByTestId("job-drawer"), "job drawer");
+      await p.getByTestId("job-drawer").waitFor({ state: "visible", timeout: 1_000 });
     },
   },
   {
@@ -221,7 +233,7 @@ const bugs: Test[] = [
   },
 ];
 
-const resolvedBugs = new Set(["B1", "B2", "B3", "B5", "B7"]);
+const resolvedBugs = new Set(["B1", "B2", "B3", "B4", "B5", "B7"]);
 
 process.on("SIGINT", () => void shutdown(130));
 process.on("SIGTERM", () => void shutdown(143));
@@ -261,6 +273,74 @@ try {
 async function board(page: Page) {
   await page.goto(boardUrl, { waitUntil: "domcontentloaded" });
   await visible(page.getByTestId("board"), "board");
+}
+async function createJobFromButton(page: Page) {
+  await board(page);
+  const unassignedBefore = await count(page.getByTestId("stat-unassigned"));
+  const columnBefore = await count(page.getByTestId("board-column-count-unassigned"));
+  await page.getByTestId("new-job-button").click();
+  await submitAndViewBoard(page, "desktop button", unassignedBefore, columnBefore);
+}
+async function createJobFromShortcut(page: Page) {
+  await board(page);
+  const unassignedBefore = await count(page.getByTestId("stat-unassigned"));
+  const columnBefore = await count(page.getByTestId("board-column-count-unassigned"));
+  await page.goto(`${boardUrl}/schedule`, { waitUntil: "domcontentloaded" });
+  await page.waitForTimeout(150);
+  await page.keyboard.press("c");
+  await submitAndViewBoard(page, "desktop shortcut", unassignedBefore, columnBefore);
+}
+async function createJobFromPalette(page: Page) {
+  await board(page);
+  const unassignedBefore = await count(page.getByTestId("stat-unassigned"));
+  const columnBefore = await count(page.getByTestId("board-column-count-unassigned"));
+  await page.goto(`${boardUrl}/quotes`, { waitUntil: "domcontentloaded" });
+  await page.getByTestId("search-trigger").filter({ hasText: "Search jobs" }).click();
+  await visible(page.getByTestId("command-palette"), "command palette");
+  await page.getByRole("button", { name: "Create job" }).click();
+  await submitAndViewBoard(page, "command palette", unassignedBefore, columnBefore);
+}
+async function submitAndViewBoard(
+  page: Page,
+  source: string,
+  unassignedBefore: number,
+  columnBefore: number,
+) {
+  await visible(page.getByTestId("create-job-dialog"), `new job from ${source}`);
+  await visible(page.getByTestId("create-job-title"), "create job title");
+  if (source === "desktop shortcut" || source === "phone /quotes") {
+    await page.screenshot({
+      path: `.screenshots/e2e/create-job-${source.replaceAll(" ", "-").replaceAll("/", "")}.png`,
+    });
+  }
+  const title = `E2E ${source} ${Date.now()}`;
+  await page.locator("#job-title").fill(title);
+  await page.getByTestId("create-job-submit").click();
+  await hidden(page.getByTestId("create-job-dialog"), "create job dialog");
+  const toast = page.getByTestId("toast").filter({ hasText: /Job VL-\d+ created/ });
+  await visible(toast, "job created toast");
+  await toast.getByRole("link", { name: "View on board" }).click();
+  await visible(page.getByTestId("board"), "board after job creation");
+  const unassignedAfter = await count(page.getByTestId("stat-unassigned"));
+  if (unassignedAfter !== unassignedBefore + 1) {
+    throw new Error(
+      `Unassigned stat did not rise from ${unassignedBefore} to ${unassignedBefore + 1}.`,
+    );
+  }
+  const columnAfter = await count(page.getByTestId("board-column-count-unassigned"));
+  if (columnAfter !== columnBefore + 1) {
+    throw new Error(`Unassigned column did not rise from ${columnBefore} to ${columnBefore + 1}.`);
+  }
+  const job = page.locator('[data-testid^="job-card-"]:visible').filter({ hasText: title });
+  await visible(job, "created unassigned card");
+}
+async function count(locator: Locator) {
+  const value = await locator.textContent();
+  const match = value?.match(/\d+/);
+  if (!match) {
+    throw new Error("Count was not available.");
+  }
+  return Number(match[0]);
 }
 function visibleAssignControl(page: Page) {
   return page.locator('[data-testid^="job-card-assign-"]:visible').first();
@@ -314,22 +394,12 @@ async function run(browser: Browser, tests: Test[], protectedTest: boolean) {
   }
 }
 async function drag(page: Page, source: Locator, target: Locator) {
+  void page;
   const until = Date.now() + 3_000;
   let failure: unknown;
   while (Date.now() < until) {
     try {
-      const a = await source.boundingBox(),
-        b = await target.boundingBox();
-      if (!a || !b) {
-        throw new Error("Drag endpoint is not visible.");
-      }
-      const x = a.x + a.width / 2,
-        y = a.y + a.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x + 16, y + 16, { steps: 10 });
-      await page.mouse.move(b.x + b.width / 2, b.y + Math.min(80, b.height / 2), { steps: 10 });
-      await page.mouse.up();
+      await source.dragTo(target, { timeout: 3_000 });
       return;
     } catch (error) {
       failure = error;

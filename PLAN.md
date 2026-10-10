@@ -322,6 +322,12 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
 
+### Session: 2026-10-10, Fieldhand B4 create-job repair
+
+- Done: Lifted the create-job open state and its sole dialog mount to the Fieldhand shell, so the board button, phone tab, `c` shortcut, and command-palette action use one instance on every Fieldhand route. New jobs persist, enter Unassigned, show a “Job VL-xxxx created” toast with a board action, and receive a board highlight.
+- Done: The existing phone sheet now follows the visual viewport and `100dvh`, keeping the primary action available with an on-screen keyboard. B4 now covers the required desktop and phone create paths; the drag helper uses Playwright’s native drag action to keep B3 reliable.
+- Verification: `npm run e2e:fieldhand` passed P1–P8 and B1–B5/B7; B6 remains the expected failure. `npm run format` and `npm run check` passed with 0 errors; ESLint retains 25 existing size/complexity warnings. Reviewed the captured schedule desktop dialog and quotes phone sheet.
+
 ### Session: 2026-10-08, Phase 7B-fix-2 partial phone repair
 
 - Done after the initial handoff: corrected the shell-offset ownership so Fieldhand and Rentbook pass offsets directly to their sibling DemoShell instances; Fieldhand retains local scroll clearance. Added Fieldhand’s phone attention sheet and filters sheet, with urgent/conflict job entry points and priority/area/category apply/clear controls.

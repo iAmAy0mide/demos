@@ -1,13 +1,22 @@
 "use client";
 
 import { X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
 
 const TOAST_DURATION_MS = 4000;
 
-function ToastItem({ id, message }: { id: string; message: string }) {
+function ToastItem({
+  id,
+  message,
+  actionJobId,
+}: {
+  id: string;
+  message: string;
+  actionJobId?: string;
+}) {
   const { dismissToast } = useFieldhand();
   const [paused, setPaused] = useState(false);
   useEffect(() => {
@@ -25,6 +34,14 @@ function ToastItem({ id, message }: { id: string; message: string }) {
       onMouseLeave={() => setPaused(false)}
     >
       <span className="min-w-0 flex-1">{message}</span>
+      {actionJobId && (
+        <Link
+          href={`/work/fieldhand?created=${actionJobId}`}
+          className="shrink-0 text-xs font-medium text-[var(--fld-signal)] hover:underline"
+        >
+          View on board
+        </Link>
+      )}
       <button
         type="button"
         className="grid size-8 place-items-center rounded hover:bg-[var(--fld-hover)]"

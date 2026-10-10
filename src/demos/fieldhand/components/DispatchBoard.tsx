@@ -2,7 +2,7 @@
 
 import { AlertTriangle, Bolt, Ellipsis, MapPin, Plus, Snowflake, Sun, Wrench } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { AssignPicker } from "@/src/demos/fieldhand/components/AssignPicker";
@@ -68,6 +68,7 @@ function JobCard({
   onToggleMenu,
 }: JobCardProps) {
   const { state } = useFieldhand();
+  const searchParams = useSearchParams();
   const menuRef = useRef<HTMLDivElement>(null);
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
   const technician = state.technicians.find((item) => item.id === job.technicianId);
@@ -87,7 +88,7 @@ function JobCard({
         onCloseMenu();
         event.dataTransfer.setData("text/plain", job.id);
       }}
-      className="group relative border border-[var(--fld-line)] bg-[var(--fld-raised)] p-3 shadow-[0_1px_0_rgba(0,0,0,.16)]"
+      className={`group relative border bg-[var(--fld-raised)] p-3 shadow-[0_1px_0_rgba(0,0,0,.16)] ${searchParams.get("created") === job.id ? "border-[var(--fld-signal)] ring-1 ring-[var(--fld-signal)]" : "border-[var(--fld-line)]"}`}
     >
       <span className={`absolute inset-y-0 left-0 w-1 ${priorityTone}`} aria-hidden="true" />
       <div className="flex items-start justify-between gap-2 pl-1">
@@ -225,12 +226,35 @@ function getPriorityTone(priority: Job["priority"]) {
   return "bg-transparent";
 }
 
-function CreateJobDialog({ onClose }: { onClose: () => void }) {
+export function CreateJobDialog({ onClose }: { onClose: () => void }) {
   const { state, createJob } = useFieldhand();
   const [title, setTitle] = useState("");
   const [area, setArea] = useState<Job["area"]>("Lekki");
   const [category, setCategory] = useState<ServiceCategory>("electrical");
   const canCreate = title.trim().length >= 4;
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [onClose]);
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) {
+      return;
+    }
+    const setViewportHeight = () =>
+      document.documentElement.style.setProperty("--fld-dialog-height", `${viewport.height}px`);
+    setViewportHeight();
+    viewport.addEventListener("resize", setViewportHeight);
+    return () => {
+      viewport.removeEventListener("resize", setViewportHeight);
+      document.documentElement.style.removeProperty("--fld-dialog-height");
+    };
+  }, []);
   const create = () => {
     if (!canCreate) {
       return;
@@ -258,15 +282,22 @@ function CreateJobDialog({ onClose }: { onClose: () => void }) {
       data-testid="create-job-dialog"
       className="fixed inset-0 z-[70] grid place-items-center bg-[var(--fld-backdrop)] p-4 backdrop-blur-sm max-md:p-0"
       role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
+      }}
     >
       <form
-        className="w-full max-w-md border border-[var(--fld-border-strong)] bg-[var(--fld-surface-overlay)] p-5 shadow-[var(--fld-shadow-overlay)] max-md:max-w-none max-md:self-stretch max-md:overflow-y-auto max-md:pt-10"
+        className="w-full max-w-md border border-[var(--fld-border-strong)] bg-[var(--fld-surface-overlay)] p-5 shadow-[var(--fld-shadow-overlay)] max-md:h-[var(--fld-dialog-height,100dvh)] max-md:max-w-none max-md:self-stretch max-md:overflow-y-auto max-md:pt-10"
         onSubmit={(event) => {
           event.preventDefault();
           create();
         }}
       >
-        <h2 className="text-lg font-semibold">Create job</h2>
+        <h2 data-testid="create-job-title" className="text-lg font-semibold">
+          Create job
+        </h2>
         <p className="mt-1 text-sm text-[var(--fld-muted)]">
           Log an intake for dispatch. It will start unassigned.
         </p>
@@ -317,6 +348,7 @@ function CreateJobDialog({ onClose }: { onClose: () => void }) {
           </button>
           <button
             className="min-h-10 bg-[var(--fld-signal)] px-3 text-sm font-medium text-white disabled:opacity-50"
+            data-testid="create-job-submit"
             type="submit"
             disabled={!canCreate}
           >
@@ -329,10 +361,9 @@ function CreateJobDialog({ onClose }: { onClose: () => void }) {
 }
 
 export function DispatchBoard() {
-  const { state, moveJob, setFilters } = useFieldhand();
+  const { state, moveJob, setFilters, openCreateJob } = useFieldhand();
   const router = useRouter();
   const now = useLagosNow();
-  const [isCreating, setIsCreating] = useState(false);
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [openMenuJobId, setOpenMenuJobId] = useState<string | null>(null);
@@ -342,11 +373,6 @@ export function DispatchBoard() {
   } | null>(null);
   const [phoneStatus, setPhoneStatus] = useState<JobStatus>("unassigned");
   const dateLabel = now ? formatLagosLongDate(now) : "Lagos operations";
-  useEffect(() => {
-    const openCreate = () => setIsCreating(true);
-    window.addEventListener("fieldhand:create-job", openCreate);
-    return () => window.removeEventListener("fieldhand:create-job", openCreate);
-  }, []);
   if (!state.isLoaded) {
     return (
       <main className="grid h-full place-items-center text-sm text-[var(--fld-muted)]">
@@ -397,7 +423,6 @@ export function DispatchBoard() {
             <span className="hidden md:inline">Urgent</span>
           </button>
           <button
-            data-testid="new-job-button"
             type="button"
             className="hidden items-center gap-1 border border-amber-500/50 bg-amber-500/10 px-2 py-1 text-xs md:inline-flex"
             onClick={() => setFilters({ technicianId: "tech-ade" })}
@@ -406,9 +431,10 @@ export function DispatchBoard() {
             {conflicts.length} conflict
           </button>
           <button
+            data-testid="new-job-button"
             type="button"
             className="hidden min-h-9 items-center gap-2 bg-[var(--fld-signal)] px-3 text-sm font-medium text-white md:inline-flex"
-            onClick={() => setIsCreating(true)}
+            onClick={(event) => openCreateJob(event.currentTarget)}
           >
             <Plus size={16} />
             New job
@@ -573,7 +599,6 @@ export function DispatchBoard() {
           ))}
         </div>
       </section>
-      {isCreating && <CreateJobDialog onClose={() => setIsCreating(false)} />}
       {assignmentRequest && (
         <AssignPicker
           job={assignmentRequest.job}

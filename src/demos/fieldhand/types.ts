@@ -81,4 +81,4 @@ export type FieldhandFilters = {
   category: ServiceCategory | "all";
 };
 
-export type Toast = { id: string; message: string };
+export type Toast = { id: string; message: string; actionJobId?: string };

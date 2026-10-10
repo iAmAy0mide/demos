@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 
 import { CommandPalette } from "@/src/demos/fieldhand/components/CommandPalette";
+import { CreateJobDialog } from "@/src/demos/fieldhand/components/DispatchBoard";
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
 import { JobDrawer } from "@/src/demos/fieldhand/components/JobDrawer";
 import { ShortcutOverlay } from "@/src/demos/fieldhand/components/ShortcutOverlay";
@@ -60,7 +61,15 @@ function FieldhandMark() {
 }
 
 export function FieldhandShell({ children }: FieldhandShellProps) {
-  const { state, setThemeMode, resetDemo, simulateLiveUpdate } = useFieldhand();
+  const {
+    state,
+    setThemeMode,
+    resetDemo,
+    simulateLiveUpdate,
+    isCreateJobOpen,
+    openCreateJob,
+    closeCreateJob,
+  } = useFieldhand();
   const isEmbedded = useIsEmbedded();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const liveUpdateRef = useRef(simulateLiveUpdate);
@@ -85,6 +94,32 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
     const timer = window.setInterval(() => liveUpdateRef.current(), LIVE_UPDATE_INTERVAL_MS);
     return () => window.clearInterval(timer);
   }, [isEmbedded, state.isLoaded]);
+  useEffect(() => {
+    const openCreate = () => openCreateJob();
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target;
+      if (
+        event.key.toLowerCase() !== "c" ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey ||
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        (target instanceof HTMLElement && target.isContentEditable)
+      ) {
+        return;
+      }
+      event.preventDefault();
+      openCreateJob();
+    };
+    window.addEventListener("fieldhand:create-job", openCreate);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("fieldhand:create-job", openCreate);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [openCreateJob]);
 
   return (
     <div className="min-h-dvh bg-[var(--fld-canvas)] text-[var(--fld-text)] [--axm-shell-clearance:calc(8.5rem+env(safe-area-inset-bottom))]">
@@ -176,6 +211,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
         </Suspense>
         {!isEmbedded && <ToastStack />}
         <ShortcutOverlay />
+        {isCreateJobOpen && <CreateJobDialog onClose={closeCreateJob} />}
         <nav
           className="fixed inset-x-0 bottom-0 z-40 grid h-[calc(4.5rem+env(safe-area-inset-bottom))] grid-cols-4 border-t border-[var(--fld-line)] bg-[var(--fld-panel)] pb-[env(safe-area-inset-bottom)] md:hidden"
           aria-label="Phone navigation"
@@ -194,7 +230,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
           <button
             data-testid="bottom-tab-new-job"
             type="button"
-            onClick={() => window.dispatchEvent(new Event("fieldhand:create-job"))}
+            onClick={(event) => openCreateJob(event.currentTarget)}
             className="grid min-h-11 min-w-0 place-items-center gap-0.5 text-[11px] text-[var(--fld-signal)]"
           >
             <span className="grid size-7 place-items-center rounded-full bg-[var(--fld-signal)] text-white">

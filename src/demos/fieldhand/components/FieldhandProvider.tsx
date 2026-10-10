@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
+import { createContext, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 import {
   createIncomingJob,
@@ -36,6 +36,9 @@ type FieldhandContextValue = {
   resetDemo: () => void;
   simulateLiveUpdate: () => void;
   dismissToast: (toastId: string) => void;
+  isCreateJobOpen: boolean;
+  openCreateJob: (opener?: HTMLElement | null) => void;
+  closeCreateJob: () => void;
 };
 
 const FieldhandContext = createContext<FieldhandContextValue | null>(null);
@@ -74,6 +77,17 @@ type FieldhandProviderProps = Readonly<{ children: React.ReactNode }>;
 
 export function FieldhandProvider({ children }: FieldhandProviderProps) {
   const { state, dispatch, now, isEmbedded } = useFieldhandState();
+  const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
+  const createJobOpenerRef = useRef<HTMLElement | null>(null);
+  const openCreateJob = (opener?: HTMLElement | null) => {
+    createJobOpenerRef.current =
+      opener ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    setIsCreateJobOpen(true);
+  };
+  const closeCreateJob = () => {
+    setIsCreateJobOpen(false);
+    window.setTimeout(() => createJobOpenerRef.current?.focus(), 0);
+  };
   const contextValue = useMemo<FieldhandContextValue>(
     () => ({
       state,
@@ -114,8 +128,11 @@ export function FieldhandProvider({ children }: FieldhandProviderProps) {
         }
       },
       dismissToast: (toastId) => dispatch({ type: "dismiss_toast", toastId }),
+      isCreateJobOpen,
+      openCreateJob,
+      closeCreateJob,
     }),
-    [dispatch, isEmbedded, now, state],
+    [dispatch, isCreateJobOpen, isEmbedded, now, state],
   );
 
   return <FieldhandContext.Provider value={contextValue}>{children}</FieldhandContext.Provider>;

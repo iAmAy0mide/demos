@@ -48,7 +48,7 @@ function highlightText(value: string, query: string) {
 }
 
 export function CommandPalette() {
-  const { state, setThemeMode, resetDemo } = useFieldhand();
+  const { state, setThemeMode, resetDemo, openCreateJob } = useFieldhand();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [isMac, setIsMac] = useState(false);
@@ -151,7 +151,7 @@ export function CommandPalette() {
         group: "Actions",
         label: "Create job",
         icon: Plus,
-        run: () => window.dispatchEvent(new Event("fieldhand:create-job")),
+        run: () => openCreateJob(),
       },
       {
         id: "shortcuts",
@@ -176,7 +176,7 @@ export function CommandPalette() {
         run: () => setThemeMode("light"),
       },
     ],
-    [resetDemo, router, setThemeMode],
+    [openCreateJob, resetDemo, router, setThemeMode],
   );
   const search = query.toLowerCase();
   const jobs = state.jobs

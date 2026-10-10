@@ -57,8 +57,8 @@ function requiresTechnician(status: JobStatus) {
   return ASSIGNMENT_REQUIRED_STATUSES.includes(status);
 }
 
-function addToast(state: FieldhandState, message: string): FieldhandState {
-  const toast = { id: crypto.randomUUID(), message };
+function addToast(state: FieldhandState, message: string, actionJobId?: string): FieldhandState {
+  const toast = { id: crypto.randomUUID(), message, actionJobId };
   return { ...state, toasts: [...state.toasts, toast].slice(-3) };
 }
 
@@ -122,7 +122,8 @@ export function fieldhandReducer(state: FieldhandState, action: FieldhandAction)
     case "create_job":
       return addToast(
         { ...state, jobs: [action.job, ...state.jobs] },
-        `${action.job.id} created and ready to dispatch.`,
+        `Job ${action.job.id} created`,
+        action.job.id,
       );
     case "set_filters":
       return { ...state, filters: { ...state.filters, ...action.filters } };

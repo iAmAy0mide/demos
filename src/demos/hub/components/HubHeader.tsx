@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 
 import { useActiveSection } from "@/src/demos/hub/lib/useActiveSection";
+import { DemoLink } from "@/src/shared/components/DemoLink";
 import { buildContextMessage, buildWhatsAppLink } from "@/src/shared/config/contact";
+import { publishedWorks } from "@/src/shared/works";
 
 const navigation = [
   { label: "Work", id: "work" },
@@ -24,6 +26,10 @@ export function HubHeader() {
     if (!isOpen) {
       return;
     }
+    const body = document.body;
+    const toggle = menuButton.current;
+    const previousOverflow = body.style.overflow;
+    body.style.overflow = "hidden";
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
@@ -43,19 +49,26 @@ export function HubHeader() {
         first?.focus();
       }
     };
+    const closeOnDesktop = () => window.innerWidth > 704 && setIsOpen(false);
     window.addEventListener("keydown", closeOnEscape);
-    dialog.current?.querySelector<HTMLElement>("a")?.focus();
-    return () => window.removeEventListener("keydown", closeOnEscape);
+    window.addEventListener("resize", closeOnDesktop);
+    dialog.current?.querySelector<HTMLElement>("button")?.focus();
+    return () => {
+      body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("resize", closeOnDesktop);
+      toggle?.focus();
+    };
   }, [isOpen]);
   const closeMenu = () => {
     setIsOpen(false);
-    menuButton.current?.focus();
   };
   const scrollToSection = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
     event.preventDefault();
-    document.getElementById(id)?.scrollIntoView({
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-    });
+    setIsOpen(false);
+    requestAnimationFrame(() =>
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }),
+    );
   };
   return (
     <header className="axm-header">
@@ -93,40 +106,69 @@ export function HubHeader() {
       >
         <span />
         <span />
+        <span />
       </button>
       {isOpen && (
-        <div className="axm-menu-backdrop" onMouseDown={closeMenu}>
+        <div id="axm-mobile-menu" className="axm-menu-backdrop">
           <div
             ref={dialog}
             className="axm-menu-panel"
             role="dialog"
             aria-modal="true"
             aria-label="Navigation"
-            onMouseDown={(event) => event.stopPropagation()}
           >
-            {navigation.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                aria-current={activeSection === item.id ? "true" : undefined}
-                onClick={(event) => {
-                  scrollToSection(event, item.id);
-                  closeMenu();
-                }}
+            <div className="axm-menu-top">
+              <Link href="/" className="axm-brand">
+                <Image src="/images/logo-mark-64.png" alt="" width={28} height={28} />
+                <span>Axmion</span>
+              </Link>
+              <button
+                className="axm-menu-button"
+                type="button"
+                aria-label="Close menu"
+                onClick={closeMenu}
               >
-                {item.label}
+                <span />
+                <span />
+                <span />
+              </button>
+            </div>
+            <div className="axm-menu-scroll">
+              {navigation.map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  aria-current={activeSection === item.id ? "true" : undefined}
+                  onClick={(event) => {
+                    scrollToSection(event, item.id);
+                    closeMenu();
+                  }}
+                >
+                  {item.label}
+                </a>
+              ))}
+              <p className="axm-menu-label">See it working</p>
+              <div className="axm-menu-works">
+                {publishedWorks.map((work) => (
+                  <DemoLink key={work.id} href={work.route}>
+                    <span>{work.name}</span>
+                    <small>{work.kind}</small>
+                  </DemoLink>
+                ))}
+              </div>
+            </div>
+            <div className="axm-menu-bottom">
+              <a
+                className="axm-button"
+                href={buildWhatsAppLink(buildContextMessage())}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Start a project
               </a>
-            ))}
-            <a
-              href={buildWhatsAppLink(buildContextMessage())}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Start a project
-            </a>
-            <button type="button" onClick={closeMenu}>
-              Close menu
-            </button>
+              <a href="tel:+2348051681996">0805 168 1996</a>
+              <span>Lagos, Nigeria</span>
+            </div>
           </div>
         </div>
       )}

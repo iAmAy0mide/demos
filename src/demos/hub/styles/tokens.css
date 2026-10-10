@@ -272,6 +272,10 @@
   font-family: var(--axm-font-serif);
   font-weight: 400;
 }
+.axmion-hub em {
+  letter-spacing: 0;
+  word-spacing: 0.14em;
+}
 .axm-section-intro {
   max-width: 37rem;
   margin: 0;
@@ -492,33 +496,25 @@
 }
 .axm-anatomy-frame {
   position: relative;
-  width: min(100%, 32rem);
+  width: min(100%, 32.5rem);
+  aspect-ratio: 2 / 3;
   margin-inline: auto;
 }
 .axm-anatomy-frame svg {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 .axm-wireframe-outline,
 .axm-wireframe-region {
   fill: none;
-  stroke: var(--axm-line);
+  stroke: color-mix(in srgb, var(--axm-muted) 72%, var(--axm-line));
   stroke-width: 1;
 }
-.axm-wireframe-highlight rect {
-  display: none;
+.axm-wireframe-highlight {
   fill: color-mix(in srgb, var(--axm-signal) 24%, transparent);
   stroke: var(--axm-signal);
   stroke-width: 1;
-}
-.axm-wireframe-highlight.is-goal rect:nth-child(2),
-.axm-wireframe-highlight.is-mechanic rect:nth-child(3),
-.axm-wireframe-highlight.is-proof rect:nth-child(4),
-.axm-wireframe-highlight.is-doubts rect:nth-child(5),
-.axm-wireframe-highlight.is-form rect:nth-child(6),
-.axm-wireframe-highlight.is-mobile rect:nth-child(7) {
-  display: block;
 }
 .axm-anatomy-hotspots button {
   position: absolute;

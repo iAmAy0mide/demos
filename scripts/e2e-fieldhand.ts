@@ -18,6 +18,12 @@ const testTimeout = 60_000;
 const overallTimeout = 8 * 60_000;
 const desktop = { name: "desktop", width: 1296, height: 640, isMobile: false };
 const phone = { name: "phone", width: 390, height: 844, isMobile: true };
+const schedulePhones = [
+  { name: "phone-320", width: 320, height: 568, isMobile: true },
+  { name: "phone-360", width: 360, height: 740, isMobile: true },
+  phone,
+  { name: "phone-412", width: 412, height: 915, isMobile: true },
+];
 type Viewport = { name: string; width: number; height: number; isMobile: boolean };
 type Test = { id: string; viewport: Viewport; run: (page: Page) => Promise<void> };
 let server: ChildProcess | undefined;
@@ -192,10 +198,39 @@ const bugs: Test[] = [
     id: "B5",
     viewport: phone,
     run: async (p) => {
-      await p.goto(`${boardUrl}/schedule`, { waitUntil: "domcontentloaded" });
-      const width = await p.evaluate(() => document.scrollingElement?.scrollWidth ?? 0);
-      if (width > phone.width) {
-        throw new Error(`Schedule scroll width is ${width}px.`);
+      for (const viewport of schedulePhones) {
+        await p.setViewportSize(viewport);
+        await p.goto(`${boardUrl}/schedule`, { waitUntil: "domcontentloaded" });
+        const overflow = await p.evaluate(() => {
+          const isInsideIntentionalScroller = (element: Element | null) => {
+            for (let current = element; current; current = current.parentElement) {
+              if (current.getAttribute("data-scroll-x") === "intentional") {
+                return true;
+              }
+            }
+            return false;
+          };
+          return [...document.querySelectorAll<HTMLElement>("body *")]
+            .filter((element) => {
+              const rect = element.getBoundingClientRect();
+              return (
+                rect.width > 0 &&
+                rect.height > 0 &&
+                !isInsideIntentionalScroller(element) &&
+                rect.right > innerWidth + 1
+              );
+            })
+            .map((element) => element.getAttribute("data-testid") ?? element.tagName);
+        });
+        if (overflow.length) {
+          throw new Error(`Schedule overflow at ${viewport.width}px: ${overflow.join(", ")}.`);
+        }
+        const rightEdges = await p
+          .getByTestId(/schedule-block-/)
+          .evaluateAll((blocks) => blocks.map((block) => block.getBoundingClientRect().right));
+        if (rightEdges.some((right) => right > viewport.width - 4)) {
+          throw new Error(`Schedule block lacks a 4px right margin at ${viewport.width}px.`);
+        }
       }
     },
   },

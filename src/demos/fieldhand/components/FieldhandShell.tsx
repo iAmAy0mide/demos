@@ -205,7 +205,7 @@ export function FieldhandShell({ children }: FieldhandShellProps) {
             <Command size={17} className="hidden md:block" />
           </button>
         </header>
-        <div className="min-h-0">{children}</div>
+        <div className="min-h-0 min-w-0">{children}</div>
         <Suspense fallback={null}>
           <JobDrawer />
         </Suspense>

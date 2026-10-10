@@ -442,6 +442,7 @@ export function DispatchBoard() {
         </div>
       </header>
       <section
+        data-scroll-x="intentional"
         className="mx-3 flex min-w-0 snap-x gap-0 overflow-x-auto border-y border-[var(--fld-line)] text-sm md:mx-6 md:grid md:grid-cols-4"
         aria-label="Today’s operations"
       >
@@ -462,6 +463,7 @@ export function DispatchBoard() {
         ))}
       </section>
       <div
+        data-scroll-x="intentional"
         className="flex min-w-0 items-center gap-1 overflow-x-auto px-3 py-2 md:px-6"
         aria-label="Saved views and filters"
       >
@@ -498,6 +500,7 @@ export function DispatchBoard() {
         aria-label="Phone job status board"
       >
         <div
+          data-scroll-x="intentional"
           className="sticky top-0 z-20 -mx-3 flex h-11 gap-2 overflow-x-auto border-y border-[var(--fld-line)] bg-[var(--fld-canvas)] px-3"
           role="tablist"
           aria-label="Job status"
@@ -540,6 +543,7 @@ export function DispatchBoard() {
         </div>
       </section>
       <section
+        data-scroll-x="intentional"
         className="hidden min-h-0 overflow-x-auto px-4 pb-4 md:block md:px-6"
         aria-label="Job status board"
       >

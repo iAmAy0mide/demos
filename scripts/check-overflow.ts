@@ -18,40 +18,52 @@ const phones = [
   [412, 915],
 ] as const;
 
-type Offender = { selector: string; left: number; right: number; width: number };
+type Offender = { selector: string; left: number; right: number; width: number; reason: string };
 
 async function visibleOverflow(page: Page): Promise<Offender[]> {
   return page.evaluate(() => {
-    const isScrollable = (element: Element | null) => {
+    const isInsideIntentionalScroller = (element: Element | null) => {
       for (let current = element; current; current = current.parentElement) {
-        const style = getComputedStyle(current);
-        if (["auto", "scroll"].includes(style.overflowX)) {
+        if (current.getAttribute("data-scroll-x") === "intentional") {
           return true;
         }
       }
       return false;
     };
-    return [...document.querySelectorAll<HTMLElement>("body *")]
-      .filter((element) => {
-        const rect = element.getBoundingClientRect();
-        return (
-          rect.width > 0 &&
-          rect.height > 0 &&
-          !isScrollable(element.parentElement) &&
-          (rect.left < -0.5 || rect.right > innerWidth + 0.5)
-        );
-      })
-      .slice(0, 30)
-      .map((element) => {
-        const rect = element.getBoundingClientRect();
-        const selector = `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ""}${element.className && typeof element.className === "string" ? `.${element.className.split(/\\s+/).filter(Boolean).slice(0, 2).join(".")}` : ""}`;
-        return {
-          selector,
-          left: Math.round(rect.left),
-          right: Math.round(rect.right),
-          width: Math.round(rect.width),
-        };
-      });
+    const elements = [...document.querySelectorAll<HTMLElement>("body *")];
+    const unmarkedScrollers = elements.filter((element) => {
+      const style = getComputedStyle(element);
+      return (
+        ["auto", "scroll"].includes(style.overflowX) &&
+        element.scrollWidth > element.clientWidth &&
+        element.getAttribute("data-scroll-x") !== "intentional"
+      );
+    });
+    const overflowingElements = elements.filter((element) => {
+      const rect = element.getBoundingClientRect();
+      return (
+        rect.width > 0 &&
+        rect.height > 0 &&
+        !isInsideIntentionalScroller(element) &&
+        (rect.left < -0.5 || rect.right > innerWidth + 0.5)
+      );
+    });
+    return [...unmarkedScrollers, ...overflowingElements].slice(0, 30).map((element) => {
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      const isUnmarkedScroller =
+        ["auto", "scroll"].includes(style.overflowX) &&
+        element.scrollWidth > element.clientWidth &&
+        element.getAttribute("data-scroll-x") !== "intentional";
+      const selector = `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ""}${element.className && typeof element.className === "string" ? `.${element.className.split(/\\s+/).filter(Boolean).slice(0, 2).join(".")}` : ""}`;
+      return {
+        selector,
+        left: Math.round(rect.left),
+        right: Math.round(rect.right),
+        width: Math.round(rect.width),
+        reason: isUnmarkedScroller ? "unmarked horizontal scroller" : "rect exceeds viewport",
+      };
+    });
   });
 }
 
@@ -60,10 +72,10 @@ let failed = false;
 try {
   for (const [width, height] of phones) {
     const page = await createPhonePage(browser, width, height);
-    const results = await Promise.all(
-      routes.map((route) => checkRoute(page, route, width, height)),
-    );
-    failed ||= results.some(Boolean);
+    for (const route of routes) {
+      const hasOverflow = await checkRoute(page, route, width, height);
+      failed ||= hasOverflow;
+    }
     await page.close();
   }
 } finally {

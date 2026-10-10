@@ -36,7 +36,7 @@ export function useDismissibleLayer({
       triggerRef?.current?.focus();
     };
     const dismissOnFocusLeave = (event: FocusEvent) => {
-      const nextTarget = event.target as Node | null;
+      const nextTarget = event.relatedTarget as Node | null;
       if (
         !nextTarget ||
         layerRef.current?.contains(nextTarget) ||
@@ -48,11 +48,11 @@ export function useDismissibleLayer({
     };
     document.addEventListener("pointerdown", dismissOnOutsidePointer);
     document.addEventListener("keydown", dismissOnEscape);
-    document.addEventListener("focusin", dismissOnFocusLeave);
+    document.addEventListener("focusout", dismissOnFocusLeave);
     return () => {
       document.removeEventListener("pointerdown", dismissOnOutsidePointer);
       document.removeEventListener("keydown", dismissOnEscape);
-      document.removeEventListener("focusin", dismissOnFocusLeave);
+      document.removeEventListener("focusout", dismissOnFocusLeave);
     };
   }, [isOpen, layerRef, onDismiss, triggerRef]);
 }

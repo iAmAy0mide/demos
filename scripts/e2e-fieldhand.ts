@@ -208,6 +208,9 @@ const bugs: Test[] = [
       await p.mouse.click(5, 5);
       await hidden(p.getByTestId("job-menu"), "outside dismissal");
       await visibleMenuTrigger(p).click();
+      await p.getByTestId("filters-button").focus();
+      await hidden(p.getByTestId("job-menu"), "focus-leave dismissal");
+      await visibleMenuTrigger(p).click();
       await p.keyboard.press("Escape");
       await hidden(p.getByTestId("job-menu"), "Escape dismissal");
       await p.locator('[data-testid^="job-card-menu-"]:visible').nth(1).click();

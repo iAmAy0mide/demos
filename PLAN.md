@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 7: Axmion hub**
-> Status: `Ready for review (7C-2 complete)`
+> Status: `Ready for review (7C-fix in progress)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.

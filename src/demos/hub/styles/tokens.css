@@ -898,6 +898,98 @@
   }
 }
 .axm-footer {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--axm-line);
+  padding: 4rem 1.5rem 0;
+}
+.axm-footer-grid,
+.axm-footer-bottom {
+  display: grid;
+  width: min(100%, 77.5rem);
+  margin-inline: auto;
+}
+.axm-footer-grid {
+  grid-template-columns: 1.35fr repeat(3, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+}
+.axm-footer-brand,
+.axm-footer-column {
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+}
+.axm-footer-brand > a:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--axm-text);
+  font: 600 1.3rem/1 var(--axm-font-display);
+  text-decoration: none;
+}
+.axm-footer-brand p {
+  max-width: 17ch;
+  margin: 0.8rem 0;
+  color: var(--axm-text);
+  font: 400 1.5rem/1 var(--axm-font-display);
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+.axm-footer-brand .axm-button {
+  width: fit-content;
+}
+.axm-footer-column > p {
+  margin: 0 0 0.45rem;
+  color: var(--axm-muted);
+  font: 500 0.62rem/1.4 var(--axm-font-mono);
+  text-transform: uppercase;
+}
+.axm-footer-column a {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.35rem;
+  color: color-mix(in srgb, var(--axm-text) 72%, transparent);
+  font: 400 0.95rem/1.2 var(--axm-font-display);
+  text-decoration: none;
+}
+.axm-footer-column a:hover {
+  color: var(--axm-text);
+  text-decoration: underline;
+  text-decoration-color: var(--axm-signal);
+  text-underline-offset: 0.35rem;
+}
+.axm-footer-column small,
+.axm-footer-column span {
+  color: var(--axm-muted);
+  font: 500 0.57rem/1.2 var(--axm-font-mono);
+}
+.axm-footer-bottom {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  border-top: 1px solid var(--axm-line);
+  padding: 1rem 0;
+}
+.axm-footer-bottom > a {
+  color: var(--axm-text);
+  font: 500 0.65rem/1 var(--axm-font-mono);
+  text-decoration: none;
+}
+.axm-footer-wordmark {
+  margin-top: -1rem;
+  color: transparent;
+  background: linear-gradient(var(--axm-signal), transparent);
+  background-clip: text;
+  font: 600 20vw/0.72 var(--axm-font-display);
+  letter-spacing: -0.1em;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+/* legacy footer declarations below are overridden by this dedicated footer grid. */
+.axm-footer {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: baseline;
@@ -1044,6 +1136,62 @@
   color: #132018;
   padding: 1rem;
   font: 400 0.94rem/1.5 var(--axm-font-display);
+}
+.axm-contact-grid {
+  align-items: start;
+}
+.axm-brief-form input,
+.axm-brief-form select {
+  min-height: 3rem;
+}
+.axm-brief-form label,
+.axm-brief-form legend {
+  font-family: var(--axm-font-display);
+  font-size: 0.875rem;
+}
+.axm-brief-form input:focus,
+.axm-brief-form textarea:focus,
+.axm-brief-form select:focus {
+  outline: 2px solid var(--axm-signal);
+  outline-offset: 2px;
+}
+.axm-brief-actions .axm-button[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.45;
+  box-shadow: none;
+}
+.axm-contact-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+.axm-contact-links a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--axm-line);
+  color: var(--axm-text);
+  font: 500 0.7rem/1 var(--axm-font-mono);
+  text-decoration: none;
+}
+.axm-brief-preview {
+  position: sticky;
+  top: 6rem;
+  background: #071614;
+}
+.axm-brief-preview > p {
+  display: flex;
+  justify-content: space-between;
+}
+.axm-brief-preview > p span {
+  color: var(--axm-muted);
+}
+.axm-brief-preview > div {
+  position: relative;
+  border-radius: 1rem 1rem 1rem 0.2rem;
+  background: #0b5c4d;
+  color: #effffb;
 }
 .axm-sr-status {
   min-height: 1.25rem;
@@ -1225,5 +1373,36 @@
   }
   .axm-process-line {
     transform: scaleY(1) !important;
+  }
+}
+
+@media (min-width: 44.0625rem) {
+  .axm-footer {
+    display: block;
+    width: auto;
+    margin: 0;
+  }
+}
+@media (max-width: 44rem) {
+  .axm-footer {
+    display: block;
+    width: auto;
+    margin: 0;
+    padding-inline: 1.5rem;
+    text-align: left;
+  }
+  .axm-footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1rem;
+  }
+  .axm-footer-brand {
+    grid-column: 1 / -1;
+  }
+  .axm-footer-column:last-child {
+    grid-column: 1 / -1;
+  }
+  .axm-footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: start;
   }
 }

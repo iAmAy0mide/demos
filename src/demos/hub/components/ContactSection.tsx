@@ -193,7 +193,7 @@ export function ContactSection() {
             <div className="axm-brief-actions">
               <button
                 className="axm-button"
-                disabled={!isBriefValid(brief) || Boolean(errors.link)}
+                aria-disabled={!isBriefValid(brief) || Boolean(errors.link)}
                 type="submit"
               >
                 Send on WhatsApp
@@ -204,11 +204,11 @@ export function ContactSection() {
             </div>
             {!isBriefValid(brief) && (
               <p className="axm-field-hint">
-                Complete your name, business, project type and visitor action to send.
+                Still needed: business name, project type and visitor action.
               </p>
             )}
             <p className="axm-contact-links">
-              <a href={buildTelephoneLink()}>{AXMION_DISPLAY_NUMBER}</a>
+              <a href={buildTelephoneLink()}>Call {AXMION_DISPLAY_NUMBER}</a>
               <a href={buildWhatsAppLink(message)} target="_blank" rel="noopener noreferrer">
                 WhatsApp
               </a>
@@ -218,7 +218,9 @@ export function ContactSection() {
             </p>
           </form>
           <aside className="axm-brief-preview" aria-label="WhatsApp brief preview">
-            <p>WHATSAPP PREVIEW</p>
+            <p>
+              Axmion Web Innovations <span>now</span>
+            </p>
             <div>{message}</div>
           </aside>
         </div>

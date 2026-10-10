@@ -20,7 +20,7 @@ export function HubFooter() {
         <div className="axm-footer-brand">
           <Link href="/" aria-label="Axmion home">
             <Image src="/images/logo-mark-64.png" alt="" width={28} height={28} />
-            <span>Axmion</span>
+            <span>Axmi{"on"}</span>
           </Link>
           <p>Websites that turn attention into action.</p>
           <a
@@ -67,7 +67,7 @@ export function HubFooter() {
         <a href="#content">Back to top</a>
       </div>
       <div className="axm-footer-wordmark" aria-hidden="true">
-        Axmion
+        Axmi{"on"}
       </div>
     </footer>
   );

@@ -2,14 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 
+import { useActiveSection } from "@/src/demos/hub/lib/useActiveSection";
 import { buildContextMessage, buildWhatsAppLink } from "@/src/shared/config/contact";
 
-const navigation = ["Work"];
+const navigation = [
+  { label: "Work", id: "work" },
+  { label: "Services", id: "services" },
+  { label: "Process", id: "process" },
+];
+const navigationIds = navigation.map((item) => item.id);
 
 export function HubHeader() {
   const [isOpen, setIsOpen] = useState(false);
+  const activeSection = useActiveSection(navigationIds);
   const menuButton = useRef<HTMLButtonElement>(null);
   const dialog = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -43,6 +50,12 @@ export function HubHeader() {
     setIsOpen(false);
     menuButton.current?.focus();
   };
+  const scrollToSection = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
+    document.getElementById(id)?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
+  };
   return (
     <header className="axm-header">
       <Link href="/" className="axm-brand" aria-label="Axmion home">
@@ -50,9 +63,14 @@ export function HubHeader() {
         <span>Axmion</span>
       </Link>
       <nav className="axm-nav" aria-label="Primary navigation">
-        {navigation.map((label) => (
-          <a key={label} href={`#${label.toLowerCase()}`}>
-            {label}
+        {navigation.map((item) => (
+          <a
+            key={item.id}
+            href={`#${item.id}`}
+            aria-current={activeSection === item.id ? "true" : undefined}
+            onClick={(event) => scrollToSection(event, item.id)}
+          >
+            {item.label}
           </a>
         ))}
       </nav>
@@ -85,9 +103,17 @@ export function HubHeader() {
             aria-label="Navigation"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            {navigation.map((label) => (
-              <a key={label} href={`#${label.toLowerCase()}`} onClick={closeMenu}>
-                {label}
+            {navigation.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                aria-current={activeSection === item.id ? "true" : undefined}
+                onClick={(event) => {
+                  scrollToSection(event, item.id);
+                  closeMenu();
+                }}
+              >
+                {item.label}
               </a>
             ))}
             <a

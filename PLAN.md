@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 7: Axmion hub**
-> Status: `In progress (7B complete)`
+> Status: `Ready for review (7C-1 complete)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -16,17 +16,17 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 
 ## Phase tracker
 
-| #   | Phase                                                         | Status                    |
-| --- | ------------------------------------------------------------- | ------------------------- |
-| 0   | Scaffold, route groups, shared demo shell                     | Approved                  |
-| 1   | Fieldhand (custom internal tool)                              | Approved                  |
-| 2   | Sunreach Power (landing page)                                 | Approved                  |
-| 3   | Meridian Freight (business site)                              | Approved                  |
-| 4   | Harmattan Coffee Co. (business site)                          | Approved                  |
-| 5   | Rentbook (second custom tool)                                 | Approved                  |
-| 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started               |
-| 7   | Axmion hub (built last, covers every demo that exists)        | In progress (7B complete) |
-| 8   | Polish: performance, a11y, responsive, motion                 | Not started               |
+| #   | Phase                                                         | Status                           |
+| --- | ------------------------------------------------------------- | -------------------------------- |
+| 0   | Scaffold, route groups, shared demo shell                     | Approved                         |
+| 1   | Fieldhand (custom internal tool)                              | Approved                         |
+| 2   | Sunreach Power (landing page)                                 | Approved                         |
+| 3   | Meridian Freight (business site)                              | Approved                         |
+| 4   | Harmattan Coffee Co. (business site)                          | Approved                         |
+| 5   | Rentbook (second custom tool)                                 | Approved                         |
+| 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started                      |
+| 7   | Axmion hub (built last, covers every demo that exists)        | Ready for review (7C-1 complete) |
+| 8   | Polish: performance, a11y, responsive, motion                 | Not started                      |
 
 ---
 
@@ -315,12 +315,19 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-08 | 7B       | Use a request-idle canvas point field with a persistent CTA force.                                                                                       | The hero visual directly expresses the studio proposition—attention resolves toward an action—without pushing visual noise into the rest of the page.                                 |
 | 2026-10-08 | 7B       | Added a Playwright WebP preview generator and responsive preview-frame architecture.                                                                     | Posters keep initial page weight stable while one view-gated iframe makes each concept genuinely inspectable on larger screens.                                                       |
 | 2026-10-08 | 7B-fix-2 | Made the shared shell a dark, pointer-transparent fixed wrapper with a documented clearance contract.                                                    | The old local light shell palette produced the white capsule and the wrapper could intercept nearby phone controls.                                                                   |
+| 2026-10-10 | 7C-1     | Kept the new hub detail sections data-driven and scoped their interactivity to three client components.                                                  | The page remains server-rendered by default while the disclosure, scroll track and anatomy controls ship only where required.                                                         |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-10, Phase 7C-1 hub detail sections
+
+- Done: Added Services, Process and Why it converts sections plus section-aware header navigation. Published work links are filtered through the shared registry; disclosures, scroll-track progress and roving anatomy hotspots all have reduced-motion fallbacks.
+- Verification: `npm run format` and `npm run check` passed with 0 errors and the existing 26 repository size/complexity warnings. Browser-only screenshots, Lighthouse, overflow checks and `check:full` remain unverified in this environment and must be completed before owner approval.
+- Next session: complete only 7C-2 contact, footer polish and SEO/OG work; first generate the missing preview posters and perform the required responsive browser audit for 7C-1.
 
 ### Session: 2026-10-10, Fieldhand B4 create-job repair
 

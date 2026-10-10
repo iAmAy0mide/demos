@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 7: Axmion hub**
-> Status: `Ready for review (7C-1 complete)`
+> Status: `Ready for review (7C-2 complete)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -25,7 +25,7 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | 4   | Harmattan Coffee Co. (business site)                          | Approved                         |
 | 5   | Rentbook (second custom tool)                                 | Approved                         |
 | 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started                      |
-| 7   | Axmion hub (built last, covers every demo that exists)        | Ready for review (7C-1 complete) |
+| 7   | Axmion hub (built last, covers every demo that exists)        | Ready for review (7C-2 complete) |
 | 8   | Polish: performance, a11y, responsive, motion                 | Not started                      |
 
 ---
@@ -316,6 +316,9 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-08 | 7B       | Added a Playwright WebP preview generator and responsive preview-frame architecture.                                                                     | Posters keep initial page weight stable while one view-gated iframe makes each concept genuinely inspectable on larger screens.                                                       |
 | 2026-10-08 | 7B-fix-2 | Made the shared shell a dark, pointer-transparent fixed wrapper with a documented clearance contract.                                                    | The old local light shell palette produced the white capsule and the wrapper could intercept nearby phone controls.                                                                   |
 | 2026-10-10 | 7C-1     | Kept the new hub detail sections data-driven and scoped their interactivity to three client components.                                                  | The page remains server-rendered by default while the disclosure, scroll track and anatomy controls ship only where required.                                                         |
+| 2026-10-10 | 7C-2     | Kept the contact brief entirely client-side and unstored.                                                                                                | A WhatsApp-ready message gives a clear conversion path without inventing backend handling.                                                                                            |
+| 2026-10-10 | 7C-2     | Added noindex directives to fictional concept demos and social-image metadata.                                                                           | The studio hub should rank; fictional brands should not compete with it. Flip `robots.index` to `true` in a demo layout if a concept becomes a real brand.                            |
+| 2026-10-10 | 7C-2     | Added a Sharp-based social-preview generator.                                                                                                            | It composites existing screenshots and the local mark without runtime image requests.                                                                                                 |
 
 ---
 

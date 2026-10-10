@@ -21,7 +21,15 @@ export const metadata: Metadata = {
     template: "%s · Harmattan Coffee Co.",
   },
   description: "Small-lot coffee roasted in Lagos for deliberate mornings.",
-  openGraph: { title: "Harmattan Coffee Co.", description: "Small-lot coffee roasted in Lagos." },
+  openGraph: {
+    title: "Harmattan Coffee Co.",
+    description: "Small-lot coffee roasted in Lagos.",
+    images: [
+      { url: "/og/harmattan.jpg", width: 1200, height: 630, alt: "Harmattan Coffee Co. shop" },
+    ],
+  },
+  twitter: { card: "summary_large_image", images: ["/og/harmattan.jpg"] },
+  robots: { index: false, follow: true },
   icons: {
     icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%235f3c22'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Arial' font-size='38' font-weight='700' fill='white'%3EH%3C/text%3E%3C/svg%3E",
   },

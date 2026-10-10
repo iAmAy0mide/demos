@@ -18,6 +18,7 @@
     "screenshots": "node --experimental-strip-types scripts/screenshots.ts",
     "logo": "node --experimental-strip-types scripts/generate-logo-assets.ts",
     "previews": "node --experimental-strip-types scripts/generate-previews.ts",
+    "og": "node --experimental-strip-types scripts/generate-og.ts",
     "smoke:routes": "node --experimental-strip-types scripts/smoke-routes.ts",
     "check:tokens": "node scripts/check-demo-tokens.mjs",
     "check:fieldhand-tokens": "node scripts/check-demo-tokens.mjs",

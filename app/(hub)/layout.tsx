@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "@/src/demos/hub/styles/tokens.css";
 import { HubFooter } from "@/src/demos/hub/components/HubFooter";
 import { HubHeader } from "@/src/demos/hub/components/HubHeader";
+import { siteUrl } from "@/src/demos/hub/data/seo";
 
 import type { Metadata } from "next";
 
@@ -36,6 +37,7 @@ const martian = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Axmion Web Innovations · Websites that turn attention into action",
   description: "Axmion Web Innovations designs websites and tools that turn attention into action.",
   openGraph: {
@@ -55,8 +57,11 @@ export default function HubLayout({ children }: HubLayoutProps) {
     <div
       className={`axmion-hub ${schibsted.variable} ${instrumentSerif.variable} ${martian.variable}`}
     >
+      <a className="axm-skip-link" href="#content">
+        Skip to content
+      </a>
       <HubHeader />
-      {children}
+      <div id="content">{children}</div>
       <HubFooter />
     </div>
   );

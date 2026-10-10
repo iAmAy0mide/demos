@@ -11,6 +11,7 @@ const navigation = [
   { label: "Work", id: "work" },
   { label: "Services", id: "services" },
   { label: "Process", id: "process" },
+  { label: "Contact", id: "contact" },
 ];
 const navigationIds = navigation.map((item) => item.id);
 

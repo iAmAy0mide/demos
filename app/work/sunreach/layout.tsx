@@ -24,7 +24,20 @@ const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", display
 export const metadata: Metadata = {
   title: { default: "Sunreach Power · Solar for Lagos", template: "%s · Sunreach Power" },
   description: "Solar and inverter systems built for homes and businesses in Lagos.",
-  openGraph: { title: "Sunreach Power", description: "Solar and inverter systems for Lagos." },
+  openGraph: {
+    title: "Sunreach Power",
+    description: "Solar and inverter systems for Lagos.",
+    images: [
+      {
+        url: "/og/sunreach.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Sunreach solar savings calculator",
+      },
+    ],
+  },
+  twitter: { card: "summary_large_image", images: ["/og/sunreach.jpg"] },
+  robots: { index: false, follow: true },
   icons: {
     icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ffc400'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Arial' font-size='38' font-weight='700' fill='%230a1d38'%3ES%3C/text%3E%3C/svg%3E",
   },

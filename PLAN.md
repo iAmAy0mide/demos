@@ -328,6 +328,12 @@ Codex writes here at the end of each session. Keep the most recent session at th
 - Done: The existing phone sheet now follows the visual viewport and `100dvh`, keeping the primary action available with an on-screen keyboard. B4 now covers the required desktop and phone create paths; the drag helper uses Playwright’s native drag action to keep B3 reliable.
 - Verification: `npm run e2e:fieldhand` passed P1–P8 and B1–B5/B7; B6 remains the expected failure. `npm run format` and `npm run check` passed with 0 errors; ESLint retains 25 existing size/complexity warnings. Reviewed the captured schedule desktop dialog and quotes phone sheet.
 
+### Session: 2026-10-10, Fieldhand B5/B6 schedule repair
+
+- Done: Made the Fieldhand content grid shrinkable on phone, constrained the schedule hour row, and marked intentional horizontal scrollers. Schedule blocks now open the existing URL-driven job drawer by click or keyboard and restore focus when closed.
+- Verification: `npm run e2e:fieldhand` passed P1–P8 and B1–B7. The Fieldhand overflow diagnostic reports zero offenders at 320, 360, 390 and 412px. `npm run check` passed with the existing 26 lint warnings.
+- Deferred overflow audit: **High** Rentbook's unmarked phone navigation scroller and overflowing links. **Medium** Meridian's overflowed span content. **Low** Sunreach's off-canvas skip link false positive (1px). Do not fix these in this Fieldhand-only session.
+
 ### Session: 2026-10-08, Phase 7B-fix-2 partial phone repair
 
 - Done after the initial handoff: corrected the shell-offset ownership so Fieldhand and Rentbook pass offsets directly to their sibling DemoShell instances; Fieldhand retains local scroll clearance. Added Fieldhand’s phone attention sheet and filters sheet, with urgent/conflict job entry points and priority/area/category apply/clear controls.

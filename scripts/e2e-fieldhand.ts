@@ -236,14 +236,39 @@ const bugs: Test[] = [
   },
   {
     id: "B6",
-    viewport: phone,
+    viewport: desktop,
     run: async (p) => {
-      await p.goto(`${boardUrl}/schedule`, { waitUntil: "domcontentloaded" });
-      await p
-        .getByTestId(/schedule-block-/)
-        .first()
-        .click();
-      await p.getByTestId("job-drawer").waitFor({ state: "visible", timeout: 1_000 });
+      for (const viewport of [desktop, phone]) {
+        await p.setViewportSize(viewport);
+        await p.goto(`${boardUrl}/schedule`, { waitUntil: "domcontentloaded" });
+        const block = p.locator('[data-testid^="schedule-block-"]:visible').first();
+        const jobId = (await block.getAttribute("data-testid"))?.replace("schedule-block-", "");
+        await block.focus();
+        await p.keyboard.press("Enter");
+        await visible(p.getByTestId("job-drawer"), "job drawer");
+        if (!p.url().includes(`job=${jobId}`)) {
+          throw new Error(`Schedule job URL was not set at ${viewport.width}px.`);
+        }
+        if (viewport.isMobile) {
+          const drawerWidth = await p
+            .getByTestId("job-drawer")
+            .evaluate((drawer) => Math.round(drawer.getBoundingClientRect().width));
+          if (drawerWidth !== viewport.width) {
+            throw new Error(`Phone drawer is ${drawerWidth}px, not ${viewport.width}px.`);
+          }
+        }
+        await p.keyboard.press("Escape");
+        await hidden(p.getByTestId("job-drawer"), "job drawer");
+        if (p.url().includes("job=")) {
+          throw new Error(`Schedule job URL stayed set at ${viewport.width}px.`);
+        }
+        const focusedTestId = await p.evaluate(() =>
+          document.activeElement?.getAttribute("data-testid"),
+        );
+        if (focusedTestId !== `schedule-block-${jobId}`) {
+          throw new Error(`Focus did not return to the schedule block at ${viewport.width}px.`);
+        }
+      }
     },
   },
   {
@@ -268,7 +293,7 @@ const bugs: Test[] = [
   },
 ];
 
-const resolvedBugs = new Set(["B1", "B2", "B3", "B4", "B5", "B7"]);
+const resolvedBugs = new Set(["B1", "B2", "B3", "B4", "B5", "B6", "B7"]);
 
 process.on("SIGINT", () => void shutdown(130));
 process.on("SIGTERM", () => void shutdown(143));

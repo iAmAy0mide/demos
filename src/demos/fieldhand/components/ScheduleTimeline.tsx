@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
@@ -11,6 +12,7 @@ const HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16];
 
 export function ScheduleTimeline() {
   const { state } = useFieldhand();
+  const router = useRouter();
   const [selectedTechnicianId, setSelectedTechnicianId] = useState("");
   const now = useLagosNow();
   const scheduleDay = now ? lagosWeekday(now) : "Lagos";
@@ -58,15 +60,18 @@ export function ScheduleTimeline() {
               {scheduledJobs
                 .filter((job) => lagosHour(new Date(job.scheduledStart as string)) === hour)
                 .map((job) => (
-                  <div
+                  <button
                     key={job.id}
                     data-testid={`schedule-block-${job.id}`}
-                    className="min-w-0 border border-[var(--fld-line)] bg-[var(--fld-raised)] p-2 text-sm"
+                    type="button"
+                    aria-label={`Open ${job.id}: ${job.title}`}
+                    onClick={() => router.push(`/work/fieldhand/schedule?job=${job.id}`)}
+                    className="min-w-0 border border-[var(--fld-line)] bg-[var(--fld-raised)] p-2 text-left text-sm hover:border-[var(--fld-signal)] focus-visible:ring-2 focus-visible:ring-[var(--fld-signal)] focus-visible:outline-none"
                   >
                     <span className="font-mono text-xs text-[var(--fld-signal)]">{job.id}</span>
                     <br />
                     <span className="mt-0.5 block break-words">{job.title}</span>
-                  </div>
+                  </button>
                 ))}
             </div>
           </div>
@@ -110,15 +115,18 @@ export function ScheduleTimeline() {
                     {jobs
                       .filter((job) => lagosHour(new Date(job.scheduledStart as string)) === hour)
                       .map((job) => (
-                        <div
+                        <button
                           key={job.id}
                           data-testid={`schedule-block-${job.id}`}
-                          className={`absolute inset-x-1 top-2 overflow-hidden border px-2 py-1 text-xs ${conflicts.has(job.id) ? "border-[var(--fld-signal)] bg-[var(--fld-selected)]" : "border-[var(--fld-line)] bg-[var(--fld-raised)]"}`}
+                          type="button"
+                          aria-label={`Open ${job.id}: ${job.title}`}
+                          onClick={() => router.push(`/work/fieldhand/schedule?job=${job.id}`)}
+                          className={`absolute inset-x-1 top-2 overflow-hidden border px-2 py-1 text-left text-xs focus-visible:ring-2 focus-visible:ring-[var(--fld-signal)] focus-visible:outline-none ${conflicts.has(job.id) ? "border-[var(--fld-signal)] bg-[var(--fld-selected)]" : "border-[var(--fld-line)] bg-[var(--fld-raised)]"}`}
                         >
                           <span className="font-mono">{job.id}</span>
                           <br />
                           {job.title}
-                        </div>
+                        </button>
                       ))}
                   </div>
                 ))}

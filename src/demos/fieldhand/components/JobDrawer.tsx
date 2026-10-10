@@ -2,7 +2,7 @@
 
 import { ArrowLeft, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AssignPicker } from "@/src/demos/fieldhand/components/AssignPicker";
 import { useFieldhand } from "@/src/demos/fieldhand/components/FieldhandProvider";
@@ -22,6 +22,24 @@ export function JobDrawer() {
   const job = state.jobs.find((item) => item.id === params.get("job"));
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [isAssigning, setIsAssigning] = useState(false);
+
+  const closeDrawer = () => {
+    const path = window.location.pathname;
+    router.push(path);
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>(`[data-testid="schedule-block-${job?.id}"]`)?.focus();
+    });
+  };
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeDrawer();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  });
 
   if (!job) {
     return null;
@@ -43,7 +61,7 @@ export function JobDrawer() {
         <button
           className="grid size-10 place-items-center hover:bg-[var(--fld-hover)]"
           type="button"
-          onClick={() => router.push("/work/fieldhand")}
+          onClick={closeDrawer}
           aria-label="Close job details"
         >
           <span className="md:hidden">
@@ -153,7 +171,7 @@ export function JobDrawer() {
         <button
           type="button"
           className="min-h-11 border border-[var(--fld-line)] px-3 text-sm"
-          onClick={() => router.push("/work/fieldhand")}
+          onClick={closeDrawer}
         >
           Close
         </button>

@@ -1,4 +1,4 @@
-import { AXMION_STUDIO_NAME } from "@/src/shared/config/contact";
+import { AXMION_STUDIO_NAME } from "../../../shared/config/contact.ts";
 
 export const BRIEF_MESSAGE_LIMIT = 1500;
 export const BRIEF_TEXT_LIMIT = 280;

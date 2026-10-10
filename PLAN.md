@@ -326,6 +326,12 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
 
+### Session: 2026-10-10, Phase 7C-2 contact and share assets
+
+- Done: Added the unstored WhatsApp brief composer, polished hub footer, hub JSON-LD, hub-only sitemap, fictional-demo noindex metadata, generated desktop preview posters and six 1200×630 JPG social images. Added precise brief-message and production SEO checks.
+- Verification: formatting, TypeScript and brief-message checks pass; previews and OG assets generated. `next build` compiles and type-checks but the execution host terminates the process during page-data collection, so the production SEO/smoke and full-suite passes remain for an owner environment.
+- Next session: run `npm run build`, `npm run check:full`, and the browser/Lighthouse responsive audit in an environment that permits the full production process; then amend these notes with real outputs. The known Rentbook and other-demo phone issues remain outside this hub-only scope.
+
 ### Session: 2026-10-10, Phase 7C-1 hub detail sections
 
 - Done: Added Services, Process and Why it converts sections plus section-aware header navigation. Published work links are filtered through the shared registry; disclosures, scroll-track progress and roving anatomy hotspots all have reduced-motion fallbacks.

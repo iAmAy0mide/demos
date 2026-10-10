@@ -3,7 +3,7 @@ import { mkdir } from "node:fs/promises";
 
 import { chromium } from "playwright";
 
-import { publishedWorks } from "../src/shared/works";
+import { publishedWorks } from "../src/shared/works.ts";
 
 const PORT = 3102;
 const BASE_URL = process.env.PREVIEW_BASE_URL ?? `http://127.0.0.1:${PORT}`;

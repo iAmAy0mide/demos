@@ -50,6 +50,7 @@ export type Payment = {
   reference: string;
   allocations: PaymentAllocation[];
   notes: string;
+  creditAmount: number;
 };
 export type Receipt = {
   id: string;

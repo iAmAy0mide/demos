@@ -158,6 +158,7 @@ export function createSeedRentbookData(today: Date): RentbookData {
           reference: `RBT-${index}-${month + 12}`,
           allocations: [{ chargeId: charge.id, amount }],
           notes: amount === charge.amount ? "Rent received" : "Part payment",
+          creditAmount: 0,
         });
       }
     }

@@ -1,158 +1,372 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { lagosDateKey } from "@/src/shared/lib/lagos-time";
+import { useDismissibleLayer } from "@/src/shared/lib/useDismissibleLayer";
 import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 import { useRentbook } from "./RentbookProvider";
-import { balanceForCharge, naira } from "../lib/finance";
+import { allocatePayment, balanceForCharge, naira, parseNairaInput } from "../lib/finance";
+
+import type { PaymentMethod } from "../types";
+
+type PaymentErrors = Partial<Record<"tenant" | "amount" | "reference", string>>;
+const REFERENCE_METHODS: PaymentMethod[] = ["bank_transfer", "pos", "cheque"];
+
 export function PaymentDialog() {
   const { state, dispatch } = useRentbook();
   const now = useLagosNow();
   const isEmbedded = useIsEmbedded();
-  const [open, setOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const lastFocusRef = useRef<HTMLElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [tenantId, setTenantId] = useState("");
-  const [amount, setAmount] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [tenantQuery, setTenantQuery] = useState("");
+  const [amountInput, setAmountInput] = useState("");
+  const [date, setDate] = useState("");
+  const [method, setMethod] = useState<PaymentMethod>("bank_transfer");
+  const [reference, setReference] = useState("");
+  const [notes, setNotes] = useState("");
+  const [keepCredit, setKeepCredit] = useState(false);
+  const [errors, setErrors] = useState<PaymentErrors>({});
+  const [confirmDiscard, setConfirmDiscard] = useState(false);
+  const [toast, setToast] = useState("");
+  const amount = parseNairaInput(amountInput) ?? 0;
+  const charges = useMemo(() => chargesForTenant(state, tenantId), [state, tenantId]);
+  const preview = useMemo(
+    () => (amount > 0 ? allocatePayment(charges, state.payments, amount) : null),
+    [amount, charges, state.payments],
+  );
+  const isDirty = Boolean(
+    tenantId || amountInput || reference || notes || method !== "bank_transfer",
+  );
+  useDismissibleLayer({ isOpen, onDismiss: requestClose, layerRef: dialogRef });
+
   useEffect(() => {
-    const show = (event: Event) => {
+    const openPayment = (event: Event) => {
       const detail =
         event instanceof CustomEvent ? (event.detail as { tenantId?: string }) : undefined;
-      setOpen(true);
-      setError("");
+      lastFocusRef.current =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
       setTenantId(detail?.tenantId ?? "");
+      setTenantQuery(state.tenants.find((tenant) => tenant.id === detail?.tenantId)?.name ?? "");
+      setDate(now ? lagosDateKey(now) : "");
+      setIsOpen(true);
+      setErrors({});
     };
-    const escape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
-    };
-    window.addEventListener("rentbook:payment", show);
-    window.addEventListener("keydown", escape);
-    return () => {
-      window.removeEventListener("rentbook:payment", show);
-      window.removeEventListener("keydown", escape);
-    };
-  }, []);
-  const charges = useMemo(
-    () =>
-      state.charges
-        .filter((c) => state.leases.find((l) => l.id === c.leaseId)?.tenantId === tenantId)
-        .sort((a, b) => a.dueDate.localeCompare(b.dueDate)),
-    [state, tenantId],
-  );
-  const total = Number(amount) || 0;
-  const outstanding = charges.reduce((sum, c) => sum + balanceForCharge(c, state.payments), 0);
-  function save() {
-    if (!now || !tenantId) {
-      setError("Choose the tenant who made this payment.");
+    window.addEventListener("rentbook:payment", openPayment);
+    return () => window.removeEventListener("rentbook:payment", openPayment);
+  }, [now, state.tenants]);
+
+  useEffect(() => {
+    if (!isOpen) {
       return;
     }
-    if (!Number.isFinite(total) || total <= 0) {
-      setError("Enter a payment amount greater than zero.");
+    dialogRef.current?.querySelector<HTMLElement>("input, button, select, textarea")?.focus();
+    const trapFocus = (event: KeyboardEvent) => trapDialogFocus(event, dialogRef.current);
+    document.addEventListener("keydown", trapFocus);
+    return () => document.removeEventListener("keydown", trapFocus);
+  }, [isOpen]);
+
+  function requestClose() {
+    if (isDirty && !confirmDiscard) {
+      setConfirmDiscard(true);
       return;
     }
-    if (total > outstanding) {
-      setError(`This payment exceeds the ${naira(outstanding)} outstanding balance.`);
+    close();
+  }
+  function close() {
+    setIsOpen(false);
+    setConfirmDiscard(false);
+    setTenantId("");
+    setTenantQuery("");
+    setAmountInput("");
+    setReference("");
+    setNotes("");
+    setKeepCredit(false);
+    window.setTimeout(() => lastFocusRef.current?.focus(), 0);
+  }
+  function validate() {
+    const next: PaymentErrors = {};
+    if (!tenantId) {
+      next.tenant = "Choose the tenant who made this payment.";
+    }
+    if (parseNairaInput(amountInput) === null || amount <= 0) {
+      next.amount = "Enter a payment amount greater than zero.";
+    }
+    if (REFERENCE_METHODS.includes(method) && !reference.trim()) {
+      next.reference = "Add the bank, POS or cheque reference.";
+    }
+    if (preview && preview.creditAmount > 0 && !keepCredit) {
+      next.amount = "Confirm that the extra amount should remain as tenant credit.";
+    }
+    setErrors(next);
+    return next;
+  }
+  function save(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const nextErrors = validate();
+    if (Object.keys(nextErrors).length || !now || !preview) {
+      const field = Object.keys(nextErrors)[0];
+      dialogRef.current?.querySelector<HTMLElement>(`[name="${field}"]`)?.focus();
       return;
     }
-    let remaining = total;
-    const allocations = charges
-      .map((charge) => {
-        const value = Math.min(remaining, balanceForCharge(charge, state.payments));
-        remaining -= value;
-        return { chargeId: charge.id, amount: value };
-      })
-      .filter((x) => x.amount > 0);
     dispatch({
       type: "record_payment",
       payment: {
         id: `payment-${crypto.randomUUID()}`,
         tenantId,
-        amount: total,
-        date: lagosDateKey(now),
-        method: "bank_transfer",
-        reference: "MANUAL",
-        allocations,
-        notes: "",
+        amount,
+        date,
+        method,
+        reference: reference.trim(),
+        allocations: preview.allocations,
+        notes: notes.trim(),
+        creditAmount: keepCredit ? preview.creditAmount : 0,
       },
     });
-    setOpen(false);
-    setAmount("");
-    setTenantId("");
-    setSuccess(`${naira(total)} recorded and allocated to the oldest balances.`);
-    window.setTimeout(() => setSuccess(""), 5000);
+    setToast(`Payment of ${naira(amount)} recorded`);
+    close();
+    window.setTimeout(() => setToast(""), 5_000);
   }
-  if (!open) {
-    return success && !isEmbedded ? (
+
+  if (!isOpen) {
+    return toast && !isEmbedded ? (
       <p className="rbk-toast" role="status">
-        {success}
+        {toast} <a href="/work/rentbook/rent-roll">View in rent roll</a>
       </p>
     ) : null;
   }
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Record payment"
-      className="rbk-dialog"
-      onMouseDown={(e) => {
-        if (e.currentTarget === e.target) {
-          setOpen(false);
-        }
-      }}
-    >
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          save();
-        }}
+    <div className="rbk-dialog">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="payment-title"
+        className="rbk-payment-drawer"
+        data-testid="payment-drawer"
       >
-        <h2>Record payment</h2>
-        <label>
-          Tenant
-          <select
-            required
-            value={tenantId}
-            onChange={(e) => {
-              setTenantId(e.target.value);
-              setError("");
-            }}
-          >
-            <option value="">Choose tenant</option>
-            {state.tenants.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Amount
-          <input
-            required
-            inputMode="numeric"
-            value={amount}
-            onChange={(e) => {
-              setAmount(e.target.value);
-              setError("");
-            }}
-            placeholder="250000"
-          />
-        </label>
-        <p>Oldest charges are allocated first. {naira(outstanding)} outstanding.</p>
-        {error ? (
-          <p className="rbk-form-error" role="alert">
-            {error}
-          </p>
+        {confirmDiscard ? (
+          <section className="rbk-discard-confirm" aria-live="assertive">
+            <p>Discard this payment entry?</p>
+            <button type="button" onClick={close}>
+              Discard
+            </button>
+            <button type="button" onClick={() => setConfirmDiscard(false)}>
+              Keep editing
+            </button>
+          </section>
         ) : null}
-        <button className="rbk-primary">Save payment</button>
-        <button type="button" onClick={() => setOpen(false)}>
-          Cancel
-        </button>
-      </form>
+        <form onSubmit={save} noValidate>
+          <header>
+            <div>
+              <p>Collection entry</p>
+              <h2 id="payment-title">Record payment</h2>
+            </div>
+            <button type="button" onClick={requestClose} aria-label="Close record payment">
+              ×
+            </button>
+          </header>
+          <label>
+            Tenant{" "}
+            <input
+              name="tenant"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls="rentbook-tenants"
+              aria-expanded="false"
+              list="rentbook-tenants"
+              value={tenantQuery}
+              onChange={(event) => {
+                setTenantQuery(event.target.value);
+                const match = state.tenants.find(
+                  (item) => item.name.toLowerCase() === event.target.value.toLowerCase(),
+                );
+                setTenantId(match?.id ?? "");
+              }}
+              aria-describedby={errors.tenant ? "tenant-error" : undefined}
+              placeholder="Search tenant"
+            />
+            <datalist id="rentbook-tenants">
+              {state.tenants.map((item) => (
+                <option key={item.id} value={item.name} />
+              ))}
+            </datalist>
+          </label>
+          {errors.tenant ? (
+            <p id="tenant-error" className="rbk-form-error">
+              {errors.tenant}
+            </p>
+          ) : null}
+          <div className="rbk-payment-field-grid">
+            <label>
+              Amount{" "}
+              <input
+                name="amount"
+                inputMode="decimal"
+                className="rbk-money-input"
+                value={amountInput}
+                onBlur={() => validate()}
+                onChange={(event) => setAmountInput(event.target.value)}
+                placeholder="1,500,000 or 1.5m"
+                aria-describedby={errors.amount ? "amount-error" : undefined}
+              />
+            </label>
+            <label>
+              Date{" "}
+              <input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+            </label>
+          </div>
+          {errors.amount ? (
+            <p id="amount-error" className="rbk-form-error">
+              {errors.amount}
+            </p>
+          ) : null}
+          <div className="rbk-payment-field-grid">
+            <label>
+              Method{" "}
+              <select
+                value={method}
+                onChange={(event) => setMethod(event.target.value as PaymentMethod)}
+              >
+                <option value="cash">Cash</option>
+                <option value="bank_transfer">Transfer</option>
+                <option value="pos">POS</option>
+                <option value="cheque">Cheque</option>
+              </select>
+            </label>
+            <label>
+              Reference{" "}
+              {REFERENCE_METHODS.includes(method) ? (
+                <input
+                  name="reference"
+                  value={reference}
+                  onBlur={() => validate()}
+                  onChange={(event) => setReference(event.target.value)}
+                  aria-describedby={errors.reference ? "reference-error" : undefined}
+                />
+              ) : (
+                <input value="Not required for cash" disabled />
+              )}
+            </label>
+          </div>
+          {errors.reference ? (
+            <p id="reference-error" className="rbk-form-error">
+              {errors.reference}
+            </p>
+          ) : null}
+          <label>
+            Notes{" "}
+            <textarea value={notes} onChange={(event) => setNotes(event.target.value)} rows={2} />
+          </label>
+          <PaymentPreview
+            charges={charges}
+            preview={preview}
+            keepCredit={keepCredit}
+            onKeepCredit={setKeepCredit}
+          />
+          <footer>
+            <button type="button" onClick={requestClose}>
+              Cancel
+            </button>
+            <button className="rbk-primary" type="submit">
+              Save payment
+            </button>
+          </footer>
+        </form>
+      </div>
     </div>
+  );
+}
+
+function chargesForTenant(state: ReturnType<typeof useRentbook>["state"], tenantId: string) {
+  const leaseIds = new Set(
+    state.leases.filter((lease) => lease.tenantId === tenantId).map((lease) => lease.id),
+  );
+  return state.charges
+    .filter(
+      (charge) => leaseIds.has(charge.leaseId) && balanceForCharge(charge, state.payments) > 0,
+    )
+    .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+}
+
+function trapDialogFocus(event: KeyboardEvent, dialog: HTMLDivElement | null) {
+  if (event.key !== "Tab") {
+    return;
+  }
+  const targets = [
+    ...(dialog?.querySelectorAll<HTMLElement>(
+      "button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])",
+    ) ?? []),
+  ];
+  if (!targets.length) {
+    return;
+  }
+  const first = targets[0];
+  const last = targets.at(-1);
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last?.focus();
+  }
+  if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function PaymentPreview({
+  charges,
+  preview,
+  keepCredit,
+  onKeepCredit,
+}: {
+  charges: ReturnType<typeof chargesForTenant>;
+  preview: ReturnType<typeof allocatePayment> | null;
+  keepCredit: boolean;
+  onKeepCredit: (value: boolean) => void;
+}) {
+  if (!preview) {
+    return (
+      <aside className="rbk-allocation-preview">
+        <b>Allocation preview</b>
+        <p>Enter an amount to see how it applies oldest first.</p>
+      </aside>
+    );
+  }
+  return (
+    <aside className="rbk-allocation-preview">
+      <b>Allocation preview</b>
+      {preview.allocations.length ? (
+        <ul>
+          {preview.allocations.map((allocation) => {
+            const charge = charges.find((item) => item.id === allocation.chargeId);
+            return (
+              <li key={allocation.chargeId}>
+                <span>{charge?.description}</span>
+                <strong>{naira(allocation.amount)}</strong>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p>No outstanding charges for this tenant.</p>
+      )}
+      <p>
+        Remaining balance <strong>{naira(preview.remainingBalance)}</strong>
+      </p>
+      {preview.creditAmount > 0 ? (
+        <label className="rbk-credit-toggle">
+          <input
+            type="checkbox"
+            checked={keepCredit}
+            onChange={(event) => onKeepCredit(event.target.checked)}
+          />{" "}
+          Keep the extra {naira(preview.creditAmount)} as credit
+        </label>
+      ) : null}
+    </aside>
   );
 }

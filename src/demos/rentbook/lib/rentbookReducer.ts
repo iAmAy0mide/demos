@@ -50,7 +50,8 @@ export function rentbookReducer(state: RentbookState, action: RentbookAction): R
         (total, allocation) => total + allocation.amount,
         0,
       );
-      if (allocated !== action.payment.amount) {
+      const expectedAmount = allocated + action.payment.creditAmount;
+      if (Math.round(expectedAmount * 100) !== Math.round(action.payment.amount * 100)) {
         return state;
       }
       const valid = action.payment.allocations.every((allocation) => {
@@ -60,7 +61,13 @@ export function rentbookReducer(state: RentbookState, action: RentbookAction): R
           allocation.amount <= balanceForCharge(charge, state.payments) + OVERPAYMENT_CREDIT_LIMIT
         );
       });
-      return valid ? { ...state, payments: [action.payment, ...state.payments] } : state;
+      const hasValidCredit =
+        action.payment.creditAmount >= 0 &&
+        (action.payment.creditAmount === 0 ||
+          action.payment.creditAmount > OVERPAYMENT_CREDIT_LIMIT);
+      return valid && hasValidCredit
+        ? { ...state, payments: [action.payment, ...state.payments] }
+        : state;
     }
   }
 }

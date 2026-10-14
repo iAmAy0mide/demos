@@ -3,6 +3,12 @@ import type { Charge, ChargeStatus, Payment } from "../types";
 export const DUE_SOON_DAYS = 14;
 export const OVERPAYMENT_CREDIT_LIMIT = 0;
 
+export type PaymentAllocationPreview = {
+  allocations: Array<{ chargeId: string; amount: number }>;
+  remainingBalance: number;
+  creditAmount: number;
+};
+
 export function paidTowardCharge(chargeId: string, payments: Payment[]) {
   return payments.reduce(
     (total, payment) =>
@@ -15,6 +21,58 @@ export function paidTowardCharge(chargeId: string, payments: Payment[]) {
 }
 export function balanceForCharge(charge: Charge, payments: Payment[]) {
   return Math.max(0, charge.amount - paidTowardCharge(charge.id, payments));
+}
+
+/**
+ * Money enters as naira for the UI, but allocation uses integer kobo so a
+ * payment can never lose or gain a fraction through floating-point maths.
+ */
+export function allocatePayment(
+  charges: Charge[],
+  payments: Payment[],
+  amount: number,
+): PaymentAllocationPreview {
+  const amountKobo = toKobo(amount);
+  if (amountKobo <= 0) {
+    throw new Error("Payment amount must be greater than zero.");
+  }
+  let remainingKobo = amountKobo;
+  const allocations = charges
+    .slice()
+    .sort((first, second) => first.dueDate.localeCompare(second.dueDate))
+    .flatMap((charge) => {
+      const outstandingKobo = toKobo(balanceForCharge(charge, payments));
+      const allocatedKobo = Math.min(remainingKobo, outstandingKobo);
+      remainingKobo -= allocatedKobo;
+      return allocatedKobo ? [{ chargeId: charge.id, amount: fromKobo(allocatedKobo) }] : [];
+    });
+  const outstandingKobo = charges.reduce(
+    (total, charge) => total + toKobo(balanceForCharge(charge, payments)),
+    0,
+  );
+  return {
+    allocations,
+    remainingBalance: fromKobo(Math.max(0, outstandingKobo - amountKobo)),
+    creditAmount: fromKobo(remainingKobo),
+  };
+}
+
+export function parseNairaInput(value: string) {
+  const clean = value.trim().toLowerCase().replace(/,/g, "");
+  const match = clean.match(/^(\d+(?:\.\d{1,2})?)(m)?$/);
+  if (!match) {
+    return null;
+  }
+  const parsed = Number(match[1]) * (match[2] ? 1_000_000 : 1);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function toKobo(value: number) {
+  return Math.round(value * 100);
+}
+
+function fromKobo(value: number) {
+  return value / 100;
 }
 export function getChargeStatus(charge: Charge, payments: Payment[], today: Date): ChargeStatus {
   const balance = balanceForCharge(charge, payments);

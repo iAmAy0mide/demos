@@ -31,6 +31,8 @@
   color: var(--rbk-emerald);
 }
 .rbk-roll-table {
+  max-height: calc(100dvh - 20rem);
+  overflow: auto;
   overflow-x: auto;
   border: 1px solid var(--rbk-line);
   background: var(--rbk-surface);
@@ -48,6 +50,10 @@
   white-space: nowrap;
 }
 .rbk-roll-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--rbk-surface);
   color: var(--rbk-muted);
   font-size: 0.65rem;
 }
@@ -63,6 +69,60 @@
 .rbk-status-overdue {
   color: var(--rbk-red);
   background: color-mix(in srgb, var(--rbk-red) 10%, transparent);
+}
+.rbk-balance {
+  text-align: right !important;
+  font-family: var(--rbk-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.rbk-roll-table small {
+  display: block;
+  color: var(--rbk-muted);
+  font-size: 0.64rem;
+}
+.rbk-monogram {
+  display: inline-grid;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-right: 0.5rem;
+  place-items: center;
+  border-radius: 50%;
+  background: hsl(var(--rbk-avatar) 38% 88%);
+  color: var(--rbk-ink);
+  font: 600 0.62rem var(--rbk-font-mono);
+  vertical-align: middle;
+}
+.rbk-view-tabs {
+  display: inline-flex;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-paper);
+}
+.rbk-view-tabs button {
+  border-width: 0 0 0 1px;
+}
+.rbk-view-tabs button:first-child {
+  border-left: 0;
+}
+.rbk-filter-chips,
+.rbk-bulk-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--rbk-muted);
+  font-size: 0.75rem;
+}
+.rbk-filter-chips button,
+.rbk-bulk-bar button {
+  min-height: 32px;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+  color: var(--rbk-ink);
+}
+.rbk-bulk-bar {
+  margin: 0.5rem 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-paper);
 }
 .rbk-status-paid {
   color: var(--rbk-emerald);
@@ -121,6 +181,7 @@
 }
 @media (max-width: 700px) {
   .rbk-roll-table {
+    max-height: none;
     border: 0;
     background: transparent;
   }

@@ -18,3 +18,127 @@
   box-shadow: 0 0.7rem 2rem var(--rbk-shadow);
   font-size: 0.8rem;
 }
+.rbk-toast a {
+  color: inherit;
+  font-weight: 700;
+}
+.rbk-payment-drawer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: grid;
+  width: min(100%, 43rem);
+  height: 100%;
+  overflow: auto;
+  border-left: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+  box-shadow: -1rem 0 3rem var(--rbk-shadow);
+}
+.rbk-payment-drawer form {
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+  padding: clamp(1.2rem, 3vw, 2.5rem);
+}
+.rbk-payment-drawer header,
+.rbk-payment-drawer footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.rbk-payment-drawer header p,
+.rbk-payment-drawer h2 {
+  margin: 0;
+}
+.rbk-payment-drawer header p {
+  color: var(--rbk-muted);
+  font: 0.68rem var(--rbk-font-mono);
+}
+.rbk-payment-drawer header button,
+.rbk-payment-drawer footer button {
+  min-height: 44px;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-paper);
+  color: var(--rbk-ink);
+  padding: 0.5rem 0.8rem;
+}
+.rbk-payment-drawer label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--rbk-muted);
+  font-size: 0.75rem;
+}
+.rbk-payment-drawer input,
+.rbk-payment-drawer select,
+.rbk-payment-drawer textarea {
+  min-height: 42px;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-paper);
+  color: var(--rbk-ink);
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+}
+.rbk-money-input {
+  font-family: var(--rbk-font-mono) !important;
+  font-variant-numeric: tabular-nums;
+}
+.rbk-payment-field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+.rbk-allocation-preview {
+  padding: 1rem;
+  border: 1px dashed var(--rbk-line);
+  background: var(--rbk-paper);
+}
+.rbk-allocation-preview p {
+  margin: 0.45rem 0 0;
+  color: var(--rbk-muted);
+  font-size: 0.78rem;
+}
+.rbk-allocation-preview ul {
+  padding: 0;
+  margin: 0.7rem 0;
+  list-style: none;
+}
+.rbk-allocation-preview li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--rbk-line);
+  font-size: 0.78rem;
+}
+.rbk-credit-toggle {
+  display: flex !important;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  color: var(--rbk-ink) !important;
+}
+.rbk-discard-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  gap: 0.7rem;
+  padding: 2rem;
+  background: var(--rbk-surface);
+  text-align: center;
+}
+.rbk-discard-confirm button {
+  min-height: 44px;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-paper);
+  color: var(--rbk-ink);
+}
+@media (max-width: 600px) {
+  .rbk-payment-drawer {
+    width: 100%;
+    border-left: 0;
+  }
+  .rbk-payment-field-grid {
+    grid-template-columns: 1fr;
+  }
+}

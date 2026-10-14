@@ -43,7 +43,12 @@ export function RentbookHeader({
           <small>Okafor &amp; Sons Properties</small>
         </span>
       </Link>
-      <nav className="rbk-nav" aria-label="Rentbook navigation" data-testid="rentbook-nav">
+      <nav
+        className="rbk-nav"
+        aria-label="Rentbook navigation"
+        data-scroll-x="intentional"
+        data-testid="rentbook-nav"
+      >
         {links.map(([name, href]) => (
           <Link
             key={href}

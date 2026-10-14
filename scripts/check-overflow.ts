@@ -1,7 +1,7 @@
 import { chromium, type Browser, type Page } from "playwright";
 
 const baseUrl = process.env.CHECK_BASE_URL ?? "http://127.0.0.1:3000";
-const routes = [
+const defaultRoutes = [
   "/",
   "/work/fieldhand",
   "/work/fieldhand/schedule",
@@ -11,6 +11,7 @@ const routes = [
   "/work/meridian",
   "/work/harmattan",
 ];
+const routes = process.env.CHECK_ROUTES?.split(",").filter(Boolean) ?? defaultRoutes;
 const phones = [
   [320, 568],
   [360, 740],

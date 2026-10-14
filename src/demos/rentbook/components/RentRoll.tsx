@@ -48,7 +48,7 @@ export function RentRoll() {
 
   const rows = useMemo(
     () =>
-      state.charges
+      currentCharges(state.charges)
         .map((charge) => {
           const lease = state.leases.find((entry) => entry.id === charge.leaseId);
           const tenant = state.tenants.find((entry) => entry.id === lease?.tenantId);
@@ -108,7 +108,7 @@ export function RentRoll() {
     return () => window.removeEventListener("keydown", handleKeys);
   }, [rows]);
   const viewCounts = useMemo(() => {
-    const allRows = state.charges.map((charge) =>
+    const allRows = currentCharges(state.charges).map((charge) =>
       getChargeStatus(charge, state.payments, now ?? new Date()),
     );
     return Object.fromEntries(
@@ -312,6 +312,18 @@ export function RentRoll() {
       </div>
     </main>
   );
+}
+
+function currentCharges(charges: Charge[]) {
+  return charges.filter((charge) => {
+    const latestForLease = charges
+      .filter((candidate) => candidate.leaseId === charge.leaseId)
+      .reduce(
+        (latest, candidate) => (candidate.dueDate > latest.dueDate ? candidate : latest),
+        charge,
+      );
+    return latestForLease.id === charge.id;
+  });
 }
 
 function countForView(view: View, statuses: ChargeStatus[], units: Unit[]) {

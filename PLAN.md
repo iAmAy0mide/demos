@@ -243,6 +243,9 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 
 ### Session: 2026-10-14, Rentbook rent roll and payment follow-up
 
+- In progress: Receipt/reminder implementation committed as `a0e34ef` (11 files, 756 insertions, 20 deletions). Focused `format`, `typecheck`, `check`, amount-word and reminder scripts passed with zero errors; `check` retains 43 existing size/complexity warnings.
+- Still required before review: extend browser e2e assertions, capture/view receipt, print and reminder screenshots, run phone checks/build/full suite, and document their actual outputs. Do not mark this slice Ready for review yet.
+
 - Done: Added kobo-safe oldest-first payment allocation with an eight-case verifier, an allocation-preview payment drawer, explicit overpayment credit confirmation, reducer support for credit, row menu dismissal, keyboard roll actions, saved-view counts, multi-select state, sticky ledger scrolling and a compact phone treatment.
 - In progress / rough: The new Rentbook e2e file covers overview, roll opening and phone stacking, but its captured runner output stopped after R1; the full requested interaction matrix and screenshots remain unverified.
 - Known issues: `npm run lint` has no errors but retains 36 project warnings, including size/complexity warnings in the Rentbook payment and rent-roll components. `npm run typecheck` and `scripts/check-allocation.ts` pass.

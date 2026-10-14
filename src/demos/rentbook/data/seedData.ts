@@ -96,38 +96,10 @@ export function createSeedRentbookData(today: Date): RentbookData {
   }));
   const units: Unit[] = [];
   const leases: Lease[] = [];
-  let cursor = 0;
+  const cursor = { value: 0 };
   const vacant = new Set([7, 22, 39]);
-  properties.forEach((property, p) =>
-    property.unitIds.forEach((id, u) => {
-      const serial = p * 8 + u + 1;
-      const tenant = vacant.has(serial) ? null : tenants[cursor++];
-      const leaseId = tenant ? `lease-${tenant.id}` : null;
-      units.push({
-        id,
-        propertyId: property.id,
-        label: u < 6 ? `Flat ${u + 1}${String.fromCharCode(65 + p)}` : `Shop ${u - 5}`,
-        status: tenant ? "occupied" : "vacant",
-        tenantId: tenant?.id ?? null,
-        leaseId,
-      });
-      if (tenant && leaseId) {
-        leases.push({
-          id: leaseId,
-          tenantId: tenant.id,
-          unitId: id,
-          frequency: frequencyForSerial(serial),
-          rentAmount:
-            u >= 6 ? 350000 + (serial % 2) * 50000 : [250000, 825000, 2100000, 4200000][serial % 4],
-          startDate: shifted(today, -11),
-          endDate: serial === 2 ? shifted(today, 0, 22) : shifted(today, 10),
-          cautionDeposit: 150000,
-          agencyFee: Math.round((u >= 6 ? 350000 : 1800000) * 0.1),
-          legalFee: Math.round((u >= 6 ? 350000 : 1800000) * 0.05),
-          serviceCharge: 35000,
-        });
-      }
-    }),
+  properties.forEach((property, propertyIndex) =>
+    appendPropertyUnits({ property, propertyIndex, tenants, vacant, cursor, units, leases, today }),
   );
   const charges: Charge[] = [];
   const payments: Payment[] = [];
@@ -237,6 +209,63 @@ export function createSeedRentbookData(today: Date): RentbookData {
       },
     ],
   };
+}
+
+function appendPropertyUnits({
+  property,
+  propertyIndex,
+  tenants,
+  vacant,
+  cursor,
+  units,
+  leases,
+  today,
+}: {
+  property: Property;
+  propertyIndex: number;
+  tenants: Tenant[];
+  vacant: Set<number>;
+  cursor: { value: number };
+  units: Unit[];
+  leases: Lease[];
+  today: Date;
+}) {
+  property.unitIds.forEach((id, unitIndex) => {
+    const serial = propertyIndex * UNITS_PER_PROPERTY + unitIndex + 1;
+    const tenant = vacant.has(serial) ? null : tenants[cursor.value++];
+    const leaseId = tenant ? `lease-${tenant.id}` : null;
+    units.push({
+      id,
+      propertyId: property.id,
+      label:
+        unitIndex < 6
+          ? `Flat ${unitIndex + 1}${String.fromCharCode(65 + propertyIndex)}`
+          : `Shop ${unitIndex - 5}`,
+      status: tenant ? "occupied" : "vacant",
+      tenantId: tenant?.id ?? null,
+      leaseId,
+    });
+    if (!tenant || !leaseId) {
+      return;
+    }
+    const shop = unitIndex >= 6;
+    const baseRent = shop ? 350000 : 1800000;
+    leases.push({
+      id: leaseId,
+      tenantId: tenant.id,
+      unitId: id,
+      frequency: frequencyForSerial(serial),
+      rentAmount: shop
+        ? 350000 + (serial % 2) * 50000
+        : [250000, 825000, 2100000, 4200000][serial % 4],
+      startDate: shifted(today, -11),
+      endDate: serial === 2 ? shifted(today, 0, 22) : shifted(today, 10),
+      cautionDeposit: 150000,
+      agencyFee: Math.round(baseRent * 0.1),
+      legalFee: Math.round(baseRent * 0.05),
+      serviceCharge: 35000,
+    });
+  });
 }
 
 function frequencyForSerial(serial: number) {

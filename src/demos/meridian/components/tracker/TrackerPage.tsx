@@ -8,7 +8,7 @@ import {
   normalizeTrackingNumber,
 } from "@/src/demos/meridian/lib/tracker";
 
-import { ShipmentResult } from "./ShipmentResult";
+import { TrackerState } from "./TrackerState";
 const examples = ["MRD-18472", "MRD-22019", "MRD-17305", "MRD-19488"];
 export function TrackerPage() {
   const router = useRouter();
@@ -68,27 +68,12 @@ export function TrackerPage() {
           ))}
         </p>
       </form>
-      {loading && (
-        <div className="mrd-result-state" aria-live="polite">
-          Reading movement record…
-        </div>
-      )}
-      {!requested && !loading && (
-        <div className="mrd-result-state">
-          Enter a shipment number to view its route, handling events and document register.
-        </div>
-      )}
-      {formatError && (
-        <div className="mrd-result-state mrd-error" role="alert">
-          Use the format MRD-12345. You can also choose one of the demo records above.
-        </div>
-      )}
-      {requested && !formatError && !shipment && !loading && (
-        <div className="mrd-result-state mrd-error" role="alert">
-          We could not find that record. Check the reference or use a demo number.
-        </div>
-      )}
-      {shipment && !loading && <ShipmentResult shipment={shipment} />}
+      <TrackerState
+        requested={requested}
+        isLoading={loading}
+        hasFormatError={formatError}
+        shipment={shipment}
+      />
     </section>
   );
 }

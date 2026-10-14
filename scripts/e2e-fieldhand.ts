@@ -1,21 +1,10 @@
-import { spawn, type ChildProcess } from "node:child_process";
-import { access } from "node:fs/promises";
-import { createRequire } from "node:module";
+import { retryAssert, runE2E, type E2ETest } from "./lib/e2e.ts";
 
-const require = createRequire(import.meta.url);
-const { launchBrowser } = require("./lib/browser.ts") as {
-  launchBrowser: () => Promise<Browser>;
-};
-
-import type { Browser, Locator, Page } from "playwright";
+import type { Locator, Page } from "playwright";
 
 const port = Number(process.env.E2E_PORT ?? "3100");
 const baseUrl = `http://127.0.0.1:${port}`;
 const boardUrl = `${baseUrl}/work/fieldhand`;
-const defaultTimeout = 15_000;
-const navigationTimeout = 30_000;
-const testTimeout = 60_000;
-const overallTimeout = 8 * 60_000;
 const desktop = { name: "desktop", width: 1296, height: 640, isMobile: false };
 const phone = { name: "phone", width: 390, height: 844, isMobile: true };
 const schedulePhones = [
@@ -24,9 +13,7 @@ const schedulePhones = [
   phone,
   { name: "phone-412", width: 412, height: 915, isMobile: true },
 ];
-type Viewport = { name: string; width: number; height: number; isMobile: boolean };
-type Test = { id: string; viewport: Viewport; run: (page: Page) => Promise<void> };
-let server: ChildProcess | undefined;
+type Test = E2ETest;
 
 const protectedTests: Test[] = [
   {
@@ -295,40 +282,14 @@ const bugs: Test[] = [
 
 const resolvedBugs = new Set(["B1", "B2", "B3", "B4", "B5", "B6", "B7"]);
 
-process.on("SIGINT", () => void shutdown(130));
-process.on("SIGTERM", () => void shutdown(143));
-try {
-  await ensureBrowser();
-  if (process.argv.includes("--build") || !(await exists(".next/BUILD_ID"))) {
-    await command("npm", ["run", "build"]);
-  } else {
-    console.log("build: using existing .next/BUILD_ID");
-  }
-  await available();
-  server = spawn("npm", ["run", "start", "--", "--hostname", "127.0.0.1", "--port", String(port)], {
-    detached: true,
-    stdio: "inherit",
-  });
-  await ready();
-  const browser = await launchBrowser();
-  try {
-    await run(browser, protectedTests, true);
-    await run(
-      browser,
-      bugs.filter((test) => resolvedBugs.has(test.id)),
-      true,
-    );
-    await run(
-      browser,
-      bugs.filter((test) => !resolvedBugs.has(test.id)),
-      false,
-    );
-  } finally {
-    await browser.close();
-  }
-} finally {
-  await stop();
-}
+await runE2E({
+  readinessUrl: boardUrl,
+  suites: [
+    { tests: protectedTests, shouldPass: true },
+    { tests: bugs.filter((test) => resolvedBugs.has(test.id)), shouldPass: true },
+    { tests: bugs.filter((test) => !resolvedBugs.has(test.id)), shouldPass: false },
+  ],
+});
 
 async function board(page: Page) {
   await page.goto(boardUrl, { waitUntil: "domcontentloaded" });
@@ -408,65 +369,9 @@ function visibleAssignControl(page: Page) {
 function visibleMenuTrigger(page: Page) {
   return page.locator('[data-testid^="job-card-menu-"]:visible').first();
 }
-async function ensureBrowser() {
-  const browser = await launchBrowser();
-  await browser.close();
-}
-async function run(browser: Browser, tests: Test[], protectedTest: boolean) {
-  const deadline = Date.now() + overallTimeout;
-  for (const test of tests) {
-    if (Date.now() > deadline) {
-      throw new Error("Overall timeout exceeded.");
-    }
-    const start = performance.now();
-    const context = await browser.newContext({
-      viewport: test.viewport,
-      isMobile: test.viewport.isMobile,
-      hasTouch: test.viewport.isMobile,
-    });
-    const page = await context.newPage();
-    page.setDefaultTimeout(defaultTimeout);
-    page.setDefaultNavigationTimeout(navigationTimeout);
-    await page.addInitScript(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
-    try {
-      await timeout(test.run(page), testTimeout);
-      console.log(
-        `${protectedTest ? "PASS" : "UNEXPECTED PASS"} ${test.id} ${test.viewport.name} ${Math.round(performance.now() - start)}ms`,
-      );
-      if (!protectedTest) {
-        process.exitCode = 1;
-      }
-    } catch (error) {
-      const shot = `.screenshots/e2e/${test.id.toLowerCase()}-${Date.now()}.png`;
-      await page.screenshot({ path: shot, fullPage: true }).catch(() => undefined);
-      console.log(
-        `${protectedTest ? "FAIL" : "EXPECTED FAIL"} ${test.id} ${test.viewport.name} ${Math.round(performance.now() - start)}ms: ${error instanceof Error ? error.message : String(error)} (${shot})`,
-      );
-      if (protectedTest) {
-        process.exitCode = 1;
-      }
-    } finally {
-      await context.close();
-    }
-  }
-}
 async function drag(page: Page, source: Locator, target: Locator) {
   void page;
-  const until = Date.now() + 3_000;
-  let failure: unknown;
-  while (Date.now() < until) {
-    try {
-      await source.dragTo(target, { timeout: 3_000 });
-      return;
-    } catch (error) {
-      failure = error;
-      await wait(100);
-    }
-  }
-  throw failure instanceof Error ? failure : new Error("Drag retry timed out.");
+  await retryAssert(() => source.dragTo(target, { timeout: 3_000 }), "Drag");
 }
 async function visible(locator: Locator, what: string) {
   await locator.waitFor({ state: "visible" }).catch(() => {
@@ -477,74 +382,4 @@ async function hidden(locator: Locator, what: string) {
   await locator.waitFor({ state: "hidden" }).catch(() => {
     throw new Error(`${what} stayed open.`);
   });
-}
-async function ready() {
-  const until = Date.now() + navigationTimeout;
-  while (Date.now() < until) {
-    try {
-      const result = await fetch(boardUrl, { signal: AbortSignal.timeout(1_000) });
-      if (result.ok) {
-        return console.log(`ready: ${boardUrl}`);
-      }
-      console.log(`ready: waiting (${result.status})`);
-    } catch {
-      console.log("ready: waiting");
-    }
-    await wait(500);
-  }
-  throw new Error("Server readiness timed out.");
-}
-async function available() {
-  const result = await command("lsof", ["-nP", `-iTCP:${port}`, "-sTCP:LISTEN"], true);
-  if (result.output.trim()) {
-    throw new Error(`Refusing to start: port ${port} is in use by:\n${result.output.trim()}`);
-  }
-}
-async function command(commandName: string, args: string[], allowFailure = false) {
-  return new Promise<{ output: string }>((resolve, reject) => {
-    const child = spawn(commandName, args);
-    let output = "";
-    child.stdout.on("data", (data: Buffer) => {
-      output += data;
-      process.stdout.write(data);
-    });
-    child.stderr.on("data", (data: Buffer) => {
-      output += data;
-      process.stderr.write(data);
-    });
-    child.on("error", reject);
-    child.on("close", (code) =>
-      code === 0 || allowFailure
-        ? resolve({ output })
-        : reject(new Error(`${commandName} failed with ${code}.`)),
-    );
-  });
-}
-async function stop() {
-  if (!server?.pid) {
-    return;
-  }
-  process.kill(-server.pid, "SIGTERM");
-  await new Promise((resolve) => server?.once("close", resolve));
-  server = undefined;
-}
-async function shutdown(code: number) {
-  await stop();
-  process.exit(code);
-}
-function exists(path: string) {
-  return access(path)
-    .then(() => true)
-    .catch(() => false);
-}
-function timeout<T>(promise: Promise<T>, milliseconds: number) {
-  return Promise.race([
-    promise,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error("Test exceeded 60 seconds.")), milliseconds),
-    ),
-  ]);
-}
-function wait(milliseconds: number) {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }

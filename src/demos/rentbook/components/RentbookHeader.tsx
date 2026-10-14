@@ -41,11 +41,12 @@ export function RentbookHeader({
           <small>Okafor &amp; Sons Properties</small>
         </span>
       </Link>
-      <nav className="rbk-nav" aria-label="Rentbook navigation">
+      <nav className="rbk-nav" aria-label="Rentbook navigation" data-testid="rentbook-nav">
         {links.map(([name, href]) => (
           <Link
             key={href}
             className={isCurrentRoute(pathname, href) ? "rbk-nav-active" : undefined}
+            data-testid={`rentbook-nav-${href === "/work/rentbook" ? "overview" : href.split("/").at(-1)}`}
             href={href}
           >
             {name}

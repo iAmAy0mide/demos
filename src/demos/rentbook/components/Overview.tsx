@@ -43,7 +43,7 @@ export function Overview() {
   const paymentFeed = payments.slice(0, 5);
 
   return (
-    <main className="rbk-page">
+    <main className="rbk-page" data-testid="rentbook-overview">
       <header className="rbk-page-header">
         <div>
           <p>{formatLagosLongDate(today)}</p>

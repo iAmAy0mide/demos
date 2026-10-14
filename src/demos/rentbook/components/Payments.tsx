@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useRentbook } from "./RentbookProvider";
 import { formatRentbookDate, naira } from "../lib/finance";
@@ -25,9 +25,13 @@ export function Payments() {
   const [propertyId, setPropertyId] = useState("all");
   const [range, setRange] = useState<Range>("all");
   const [sort, setSort] = useState<SortKey>("date");
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => {
+    queueMicrotask(() => setToday(new Date()));
+  }, []);
   const rows = useMemo(
-    () => paymentRows(state, query, method, propertyId, range, sort),
-    [state, query, method, propertyId, range, sort],
+    () => (today ? paymentRows({ state, query, method, propertyId, range, sort, today }) : []),
+    [state, query, method, propertyId, range, sort, today],
   );
   const total = rows.reduce((sum, row) => sum + row.payment.amount, 0);
   if (!state.isLoaded) {
@@ -156,15 +160,23 @@ function openReceipt(receiptId: string) {
   window.history.pushState({}, "", `?receipt=${receiptId}`);
   window.dispatchEvent(new CustomEvent("rentbook:receipt", { detail: { receiptId } }));
 }
-function paymentRows(
-  state: ReturnType<typeof useRentbook>["state"],
-  query: string,
-  method: "all" | PaymentMethod,
-  propertyId: string,
-  range: Range,
-  sort: SortKey,
-): PaymentRow[] {
-  const today = new Date();
+function paymentRows({
+  state,
+  query,
+  method,
+  propertyId,
+  range,
+  sort,
+  today,
+}: {
+  state: ReturnType<typeof useRentbook>["state"];
+  query: string;
+  method: "all" | PaymentMethod;
+  propertyId: string;
+  range: Range;
+  sort: SortKey;
+  today: Date;
+}): PaymentRow[] {
   const month = today.toISOString().slice(0, 7);
   const last = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().slice(0, 7);
   const year = String(today.getFullYear());

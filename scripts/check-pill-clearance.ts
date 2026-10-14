@@ -84,19 +84,25 @@ async function checkRoute(page: Page, route: string, width: number, height: numb
   await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
   const covered = await Promise.all(
     (["top", "bottom"] as const).map((position) =>
-      checkPosition(page, route, width, height, position),
+      checkPosition({ page, route, width, height, position }),
     ),
   );
   return covered.some(Boolean);
 }
 
-async function checkPosition(
-  page: Page,
-  route: string,
-  width: number,
-  height: number,
-  position: "top" | "bottom",
-) {
+async function checkPosition({
+  page,
+  route,
+  width,
+  height,
+  position,
+}: {
+  page: Page;
+  route: string;
+  width: number;
+  height: number;
+  position: "top" | "bottom";
+}) {
   await page.evaluate(
     (target) => window.scrollTo(0, target === "bottom" ? document.body.scrollHeight : 0),
     position,

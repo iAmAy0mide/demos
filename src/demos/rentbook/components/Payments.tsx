@@ -2,13 +2,21 @@
 
 import { useMemo, useState } from "react";
 
-import { formatRentbookDate, naira } from "../lib/finance";
 import { useRentbook } from "./RentbookProvider";
+import { formatRentbookDate, naira } from "../lib/finance";
 
-import type { Payment, PaymentMethod } from "../types";
+import type { PaymentMethod } from "../types";
 
 type SortKey = "date" | "tenant" | "amount";
 type Range = "all" | "this_month" | "last_month" | "this_year";
+type PaymentRow = {
+  payment: ReturnType<typeof useRentbook>["state"]["payments"][number];
+  tenant: string;
+  unit: string;
+  property: string;
+  receipt: string;
+  receiptId: string;
+};
 
 export function Payments() {
   const { state } = useRentbook();
@@ -22,7 +30,9 @@ export function Payments() {
     [state, query, method, propertyId, range, sort],
   );
   const total = rows.reduce((sum, row) => sum + row.payment.amount, 0);
-  if (!state.isLoaded) return <main className="rbk-page">Preparing payments…</main>;
+  if (!state.isLoaded) {
+    return <main className="rbk-page">Preparing payments…</main>;
+  }
   return (
     <main className="rbk-page" data-testid="payments-page">
       <header className="rbk-page-header">
@@ -90,7 +100,7 @@ export function Payments() {
               {(["date", "tenant", "amount"] as const).map((key) => (
                 <th key={key}>
                   <button type="button" onClick={() => setSort(key)}>
-                    {key === "date" ? "Date" : key === "tenant" ? "Tenant" : "Amount"}
+                    {sortLabel(key)}
                     {sort === key ? " ↓" : ""}
                   </button>
                 </th>
@@ -153,7 +163,7 @@ function paymentRows(
   propertyId: string,
   range: Range,
   sort: SortKey,
-) {
+): PaymentRow[] {
   const today = new Date();
   const month = today.toISOString().slice(0, 7);
   const last = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().slice(0, 7);
@@ -185,11 +195,18 @@ function paymentRows(
           (range === "this_year" && row.payment.date.startsWith(year))) &&
         `${row.tenant} ${row.unit} ${row.receipt}`.toLowerCase().includes(query.toLowerCase()),
     )
-    .sort((a, b) =>
-      sort === "amount"
-        ? b.payment.amount - a.payment.amount
-        : sort === "tenant"
-          ? a.tenant.localeCompare(b.tenant)
-          : b.payment.date.localeCompare(a.payment.date),
-    );
+    .sort((first, second) => compareRows(first, second, sort));
+}
+
+function sortLabel(key: SortKey) {
+  return { date: "Date", tenant: "Tenant", amount: "Amount" }[key];
+}
+function compareRows(first: PaymentRow, second: PaymentRow, sort: SortKey) {
+  if (sort === "amount") {
+    return second.payment.amount - first.payment.amount;
+  }
+  if (sort === "tenant") {
+    return first.tenant.localeCompare(second.tenant);
+  }
+  return second.payment.date.localeCompare(first.payment.date);
 }

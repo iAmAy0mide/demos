@@ -10,8 +10,16 @@ const menuButton = (page: Page) => page.getByRole("button", { name: "Open menu" 
 const closeButton = (page: Page) => page.getByRole("button", { name: "Close menu" });
 
 async function openMenu(page: Page) {
-  await menuButton(page).click();
-  await closeButton(page).waitFor();
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await menuButton(page).click();
+    try {
+      await closeButton(page).waitFor({ timeout: 5_000 });
+      return;
+    } catch {
+      // The first click can land before the client handler hydrates on a cold production load.
+    }
+  }
+  throw new Error("The mobile navigation did not open after hydration.");
 }
 
 async function assertInViewport(page: Page, label: string) {
@@ -44,15 +52,20 @@ async function checkPhone(page: Page, width: number, height: number) {
     throw new Error("Focus did not return to the menu toggle after Escape.");
   }
   await openMenu(page);
-  await page.getByRole("link", { name: "Contact" }).click();
+  await page
+    .getByRole("dialog", { name: "Navigation" })
+    .getByRole("link", { name: "Contact" })
+    .click();
   await page.locator("#contact").waitFor();
   const scrolledToContact = await page.evaluate(() => window.scrollY > 0);
   if (!scrolledToContact) {
     throw new Error("A mobile navigation anchor did not scroll to its section.");
   }
   await openMenu(page);
-  await page.getByRole("link", { name: "Start a project" }).scrollIntoViewIfNeeded();
-  const cta = page.getByRole("link", { name: "Start a project" });
+  const cta = page
+    .getByRole("dialog", { name: "Navigation" })
+    .getByRole("link", { name: "Start a project" });
+  await cta.scrollIntoViewIfNeeded();
   if (!(await cta.isVisible())) {
     throw new Error("The mobile menu CTA is unreachable.");
   }

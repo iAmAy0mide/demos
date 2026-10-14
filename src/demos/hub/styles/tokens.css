@@ -172,7 +172,7 @@
 .axm-menu-scroll {
   min-height: 0;
   overflow-y: auto;
-  padding: 1rem 1.5rem 2rem;
+  padding: 1rem 1.5rem 8rem;
 }
 .axm-menu-panel .axm-menu-button {
   display: block;

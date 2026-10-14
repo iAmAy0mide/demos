@@ -358,6 +358,14 @@ Codex writes here at the end of each session. Keep the most recent session at th
 - Verification: `npm run format` and `npm run check` completed with no errors; lint retains 28 pre-existing size/complexity warnings. Fieldhand P1–P8 and B1–B7 passed on `E2E_PORT=3101`; Rentbook R1 passed on the default port after a production rebuild. No screenshots were viewed because this session made no visual or layout change.
 - Next session: Run `npm run check:full` in an isolated environment before marking the current hub phase ready for review; it now includes both e2e suites.
 
+### Session: 2026-10-14, Rentbook R1 foundations
+
+- Status: `In progress (R1 complete)`.
+- Done: Recorded the requested Rentbook audit; extended the schema-versioned, deterministic Lagos seed with lease fees, receipts, expenses and reminder history; added display formatters; rebuilt the property-scoped overview with monthly/YTD collection, outstanding, collection rate, occupancy, SVG income/expense chart, table disclosure, attention actions and formatted payment feed. Reset is now directly reachable in the top bar and the non-functional overdue-reminder control is removed.
+- Verification: `npm run format`, `npm run typecheck`, `npm run check`, `npm run check:rentbook-seed`, and `npm run check:metadata` ran with zero errors. The seed check output was `Rentbook seed checks passed: 5 properties, 40 units, 37 tenants.` The repository retains 30 pre-existing/new size and complexity warnings; `Overview.tsx` is one of them and should be split in a dedicated refactor session.
+- Known limits: Browser E2E, screenshots, phone overflow/pill checks, `check:full`, and production build were not completed here; Chromium fails its sandbox startup with `sandbox_host_linux.cc:41 ... Operation not permitted`.
+- Next session: Add the full R1 e2e coverage for property switching, persistence recovery, reset, route titles and rendered ISO-date checks; then run the browser and production checks in an environment that permits Chromium and the production server.
+
 ### Session: 2026-10-14, Phase 7C fix verification
 
 - Done: Added the Playwright mobile-menu contract and registered it in `check:full`; fixed the browser helper’s extensionless local import; added explicit mobile-menu dialog ownership and navigation grouping; refined brief state messaging, selected controls, select affordance, inline errors and WhatsApp preview; and removed stale footer CSS that overrode the replacement footer grid.

@@ -38,43 +38,8 @@ export function rentbookReducer(state: RentbookState, action: RentbookAction): R
       return { ...state, selectedPropertyId: action.propertyId };
     case "reset":
       return { ...action.payload, selectedPropertyId: "all", isLoaded: true };
-    case "record_payment": {
-      const chargeIds = new Set(state.charges.map((charge) => charge.id));
-      if (
-        action.payment.allocations.some(
-          (allocation) => !chargeIds.has(allocation.chargeId) || allocation.amount <= 0,
-        )
-      ) {
-        return state;
-      }
-      const allocated = action.payment.allocations.reduce(
-        (total, allocation) => total + allocation.amount,
-        0,
-      );
-      const expectedAmount = allocated + action.payment.creditAmount;
-      if (Math.round(expectedAmount * 100) !== Math.round(action.payment.amount * 100)) {
-        return state;
-      }
-      const valid = action.payment.allocations.every((allocation) => {
-        const charge = state.charges.find((entry) => entry.id === allocation.chargeId);
-        return (
-          charge !== undefined &&
-          allocation.amount <= balanceForCharge(charge, state.payments) + OVERPAYMENT_CREDIT_LIMIT
-        );
-      });
-      const hasValidCredit =
-        action.payment.creditAmount >= 0 &&
-        (action.payment.creditAmount === 0 ||
-          action.payment.creditAmount > OVERPAYMENT_CREDIT_LIMIT);
-      if (!valid || !hasValidCredit) {
-        return state;
-      }
-      return {
-        ...state,
-        payments: [action.payment, ...state.payments],
-        receipts: [nextReceipt(state.receipts, action.payment), ...state.receipts],
-      };
-    }
+    case "record_payment":
+      return recordPayment(state, action.payment);
     case "log_reminder":
       return {
         ...state,
@@ -89,6 +54,49 @@ export function rentbookReducer(state: RentbookState, action: RentbookAction): R
         ],
       };
   }
+}
+
+function recordPayment(state: RentbookState, payment: Payment): RentbookState {
+  if (!hasKnownPositiveAllocations(state, payment) || !matchesPaymentTotal(payment)) {
+    return state;
+  }
+  if (!allocationsFitBalances(state, payment) || !hasValidCredit(payment)) {
+    return state;
+  }
+  return {
+    ...state,
+    payments: [payment, ...state.payments],
+    receipts: [nextReceipt(state.receipts, payment), ...state.receipts],
+  };
+}
+
+function hasKnownPositiveAllocations(state: RentbookState, payment: Payment) {
+  const chargeIds = new Set(state.charges.map((charge) => charge.id));
+  return payment.allocations.every(
+    (allocation) => chargeIds.has(allocation.chargeId) && allocation.amount > 0,
+  );
+}
+
+function matchesPaymentTotal(payment: Payment) {
+  const allocated = payment.allocations.reduce((total, allocation) => total + allocation.amount, 0);
+  return Math.round((allocated + payment.creditAmount) * 100) === Math.round(payment.amount * 100);
+}
+
+function allocationsFitBalances(state: RentbookState, payment: Payment) {
+  return payment.allocations.every((allocation) => {
+    const charge = state.charges.find((entry) => entry.id === allocation.chargeId);
+    if (!charge) {
+      return false;
+    }
+    return allocation.amount <= balanceForCharge(charge, state.payments) + OVERPAYMENT_CREDIT_LIMIT;
+  });
+}
+
+function hasValidCredit(payment: Payment) {
+  return (
+    payment.creditAmount >= 0 &&
+    (payment.creditAmount === 0 || payment.creditAmount > OVERPAYMENT_CREDIT_LIMIT)
+  );
 }
 
 function nextReceipt(receipts: Receipt[], payment: Payment): Receipt {

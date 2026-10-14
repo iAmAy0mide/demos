@@ -80,15 +80,15 @@ function createField(
     canvas.style.height = `${height}px`;
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
     points = createPoints(width < 768 ? MOBILE_POINT_COUNT : DESKTOP_POINT_COUNT, width, height);
-    draw(context, points, width, height, null, getActionTarget(hero, ctaRef));
+    draw({ context, points, width, height, pointer: null, action: getActionTarget(hero, ctaRef) });
   };
   const drawFrame = (time: number) => {
     if (!isVisible || !isTabVisible || reducedMotion.matches) {
       return;
     }
     const action = getActionTarget(hero, ctaRef);
-    advancePoints(points, time / 1000, width, height, pointer, action);
-    draw(context, points, width, height, pointer, action);
+    advancePoints({ points, elapsed: time / 1000, width, height, pointer, action });
+    draw({ context, points, width, height, pointer, action });
     animationFrame = window.requestAnimationFrame(drawFrame);
   };
   const restart = () => {
@@ -142,14 +142,21 @@ function getActionTarget(hero: HTMLElement, ctaRef: RefObject<HTMLElement | null
   };
 }
 
-function draw(
-  context: CanvasRenderingContext2D,
-  points: ReturnType<typeof createPoints>,
-  width: number,
-  height: number,
-  pointer: FieldTarget | null,
-  action: FieldTarget,
-) {
+function draw({
+  context,
+  points,
+  width,
+  height,
+  pointer,
+  action,
+}: {
+  context: CanvasRenderingContext2D;
+  points: ReturnType<typeof createPoints>;
+  width: number;
+  height: number;
+  pointer: FieldTarget | null;
+  action: FieldTarget;
+}) {
   context.clearRect(0, 0, width, height);
   context.lineWidth = 0.5;
   for (let outer = 0; outer < points.length; outer += 1) {

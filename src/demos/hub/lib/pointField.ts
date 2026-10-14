@@ -20,14 +20,21 @@ export function createPoints(count: number, width: number, height: number): Poin
 }
 
 /** The field combines tiny orbital drift with inverse-distance pulls; the CTA pull is persistent so attention visibly resolves into action. */
-export function advancePoints(
-  points: Point[],
-  elapsed: number,
-  width: number,
-  height: number,
-  pointer: FieldTarget | null,
-  action: FieldTarget,
-) {
+export function advancePoints({
+  points,
+  elapsed,
+  width,
+  height,
+  pointer,
+  action,
+}: {
+  points: Point[];
+  elapsed: number;
+  width: number;
+  height: number;
+  pointer: FieldTarget | null;
+  action: FieldTarget;
+}) {
   for (const point of points) {
     applyDrift(point, elapsed, width, height);
     applyPull(point, action, ACTION_RADIUS);

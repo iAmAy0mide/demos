@@ -1,0 +1,70 @@
+.rbk-tenants-page {
+  position: relative;
+}
+.rbk-tenant-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+.rbk-tenant-controls input {
+  min-height: 44px;
+  width: min(100%, 24rem);
+  padding: 0 0.8rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+  color: var(--rbk-ink);
+  font: inherit;
+}
+.rbk-tenant-list {
+  max-height: min(60dvh, 48rem);
+  overflow-y: auto;
+  border-top: 1px solid var(--rbk-line);
+  border-bottom: 1px solid var(--rbk-line);
+}
+.rbk-tenant-row {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(13rem, 1.8fr) minmax(10rem, 1fr) minmax(9rem, 0.9fr) 6rem;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--rbk-line);
+  color: var(--rbk-ink);
+  text-decoration: none;
+}
+.rbk-tenant-row:hover {
+  background: color-mix(in srgb, var(--rbk-emerald) 5%, var(--rbk-surface));
+}
+.rbk-tenant-row small {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--rbk-muted);
+  font-size: 0.72rem;
+}
+.rbk-tenant-row > strong {
+  justify-self: end;
+}
+.rbk-empty {
+  padding: 2rem 1rem;
+  color: var(--rbk-muted);
+}
+@media (max-width: 700px) {
+  .rbk-tenant-controls {
+    display: grid;
+  }
+  .rbk-tenant-row {
+    grid-template-columns: 2.5rem 1fr auto;
+    gap: 0.7rem;
+  }
+  .rbk-tenant-row > span:nth-of-type(3) {
+    grid-column: 2;
+  }
+  .rbk-tenant-row > strong {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .rbk-tenant-row > .rbk-status {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}

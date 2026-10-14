@@ -1,4 +1,4 @@
-import { DeferredScreen } from "@/src/demos/rentbook/components/DeferredScreen";
+import { TenantList } from "@/src/demos/rentbook/components/TenantList";
 
 import type { Metadata } from "next";
 
@@ -8,10 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function TenantsPage() {
-  return (
-    <DeferredScreen
-      title="Tenants"
-      description="Tenant profiles, lease history and statements will live here."
-    />
-  );
+  return <TenantList />;
 }

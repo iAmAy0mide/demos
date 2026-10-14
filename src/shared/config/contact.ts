@@ -2,9 +2,27 @@ export const AXMION_DISPLAY_NUMBER = "0805 168 1996";
 export const AXMION_INTERNATIONAL_DIGITS = "2348051681996";
 export const AXMION_STUDIO_NAME = "Axmion Web Innovations";
 
-export function buildWhatsAppLink(message?: string) {
+export function toInternationalNigerianNumber(value: string) {
+  const digits = value.replace(/\D/g, "");
+  if (digits.startsWith("234") && digits.length === 13) {
+    return digits;
+  }
+  if (digits.startsWith("0") && digits.length === 11) {
+    return `234${digits.slice(1)}`;
+  }
+  if (digits.length === 10 && digits.startsWith("8")) {
+    return `234${digits}`;
+  }
+  return null;
+}
+
+export function buildWhatsAppLinkTo(internationalDigits: string, message?: string) {
   const query = encodeURIComponent(message ?? "");
-  return `https://wa.me/${AXMION_INTERNATIONAL_DIGITS}?text=${query}`;
+  return `https://wa.me/${internationalDigits}?text=${query}`;
+}
+
+export function buildWhatsAppLink(message?: string) {
+  return buildWhatsAppLinkTo(AXMION_INTERNATIONAL_DIGITS, message);
 }
 
 export function buildTelephoneLink() {

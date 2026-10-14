@@ -101,6 +101,7 @@ export function HubHeader() {
         className="axm-menu-button"
         type="button"
         aria-label="Open menu"
+        aria-controls="axm-mobile-menu"
         aria-expanded={isOpen}
         onClick={() => setIsOpen(true)}
       >
@@ -134,19 +135,18 @@ export function HubHeader() {
               </button>
             </div>
             <div className="axm-menu-scroll">
-              {navigation.map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  aria-current={activeSection === item.id ? "true" : undefined}
-                  onClick={(event) => {
-                    scrollToSection(event, item.id);
-                    closeMenu();
-                  }}
-                >
-                  {item.label}
-                </a>
-              ))}
+              <nav className="axm-menu-nav" aria-label="Mobile navigation">
+                {navigation.map((item) => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    aria-current={activeSection === item.id ? "true" : undefined}
+                    onClick={(event) => scrollToSection(event, item.id)}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
               <p className="axm-menu-label">See it working</p>
               <div className="axm-menu-works">
                 {publishedWorks.map((work) => (

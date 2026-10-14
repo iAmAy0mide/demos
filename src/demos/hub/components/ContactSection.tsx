@@ -6,6 +6,7 @@ import {
   BRIEF_TEXT_LIMIT,
   buildBriefMessage,
   getBriefErrors,
+  getMissingBriefFields,
   isBriefValid,
   type BriefInput,
 } from "@/src/demos/hub/lib/briefMessage";
@@ -35,6 +36,7 @@ export function ContactSection() {
   const formRef = useRef<HTMLFormElement>(null);
   const message = buildBriefMessage(brief);
   const errors = getBriefErrors(brief);
+  const missingFields = getMissingBriefFields(brief);
   const update = (key: keyof BriefInput, value: string | readonly string[]) =>
     setBrief((current) => ({ ...current, [key]: value }));
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -163,9 +165,11 @@ export function ContactSection() {
               onChange={(event) => update("visitorAction", event.target.value)}
               onBlur={() => setTouched((v) => ({ ...v, visitorAction: true }))}
             />
-            <p id="visitorAction-count" className="axm-field-hint">
-              {brief.visitorAction.length}/{BRIEF_TEXT_LIMIT}
-            </p>
+            <div className="axm-textarea-meta">
+              <p id="visitorAction-count" className="axm-field-hint">
+                {brief.visitorAction.length}/{BRIEF_TEXT_LIMIT}
+              </p>
+            </div>
             {showError("visitorAction") && (
               <p id="visitorAction-error" className="axm-field-error">
                 {errors.visitorAction}
@@ -202,10 +206,8 @@ export function ContactSection() {
                 Copy brief
               </button>
             </div>
-            {!isBriefValid(brief) && (
-              <p className="axm-field-hint">
-                Still needed: business name, project type and visitor action.
-              </p>
+            {missingFields.length > 0 && (
+              <p className="axm-field-hint">Still needed: {formatMissingFields(missingFields)}.</p>
             )}
             <p className="axm-contact-links">
               <a href={buildTelephoneLink()}>Call {AXMION_DISPLAY_NUMBER}</a>
@@ -250,10 +252,20 @@ function Field({ label, id, value, error, onChange, onBlur }: FieldProps) {
         onBlur={onBlur}
       />
       {error && (
-        <p id={`${id}-error`} className="axm-field-error">
+        <p id={`${id}-error`} className="axm-field-error" role="alert">
           {error}
         </p>
       )}
     </div>
   );
+}
+
+function formatMissingFields(fields: readonly string[]) {
+  if (fields.length < 2) {
+    return fields[0];
+  }
+  if (fields.length === 2) {
+    return `${fields[0]} and ${fields[1]}`;
+  }
+  return `${fields.slice(0, -1).join(", ")}, and ${fields.at(-1)}`;
 }

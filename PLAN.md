@@ -7,7 +7,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 7: Axmion hub**
-> Status: `Ready for review (7C-fix in progress)`
+> Status: `In progress (7C verification blocked)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -16,17 +16,17 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 
 ## Phase tracker
 
-| #   | Phase                                                         | Status                           |
-| --- | ------------------------------------------------------------- | -------------------------------- |
-| 0   | Scaffold, route groups, shared demo shell                     | Approved                         |
-| 1   | Fieldhand (custom internal tool)                              | Approved                         |
-| 2   | Sunreach Power (landing page)                                 | Approved                         |
-| 3   | Meridian Freight (business site)                              | Approved                         |
-| 4   | Harmattan Coffee Co. (business site)                          | Approved                         |
-| 5   | Rentbook (second custom tool)                                 | Approved                         |
-| 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started                      |
-| 7   | Axmion hub (built last, covers every demo that exists)        | Ready for review (7C-2 complete) |
-| 8   | Polish: performance, a11y, responsive, motion                 | Not started                      |
+| #   | Phase                                                         | Status                                |
+| --- | ------------------------------------------------------------- | ------------------------------------- |
+| 0   | Scaffold, route groups, shared demo shell                     | Approved                              |
+| 1   | Fieldhand (custom internal tool)                              | Approved                              |
+| 2   | Sunreach Power (landing page)                                 | Approved                              |
+| 3   | Meridian Freight (business site)                              | Approved                              |
+| 4   | Harmattan Coffee Co. (business site)                          | Approved                              |
+| 5   | Rentbook (second custom tool)                                 | Approved                              |
+| 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started                           |
+| 7   | Axmion hub (built last, covers every demo that exists)        | In progress (7C verification blocked) |
+| 8   | Polish: performance, a11y, responsive, motion                 | Not started                           |
 
 ---
 
@@ -319,12 +319,23 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-10 | 7C-2     | Kept the contact brief entirely client-side and unstored.                                                                                                | A WhatsApp-ready message gives a clear conversion path without inventing backend handling.                                                                                            |
 | 2026-10-10 | 7C-2     | Added noindex directives to fictional concept demos and social-image metadata.                                                                           | The studio hub should rank; fictional brands should not compete with it. Flip `robots.index` to `true` in a demo layout if a concept becomes a real brand.                            |
 | 2026-10-10 | 7C-2     | Added a Sharp-based social-preview generator.                                                                                                            | It composites existing screenshots and the local mark without runtime image requests.                                                                                                 |
+| 2026-10-14 | 7C-fix   | Demo links from the hub open in a new tab with `noopener noreferrer`.                                                                                    | A prospect can inspect a concept without losing the showcase or its in-progress brief.                                                                                                |
+| 2026-10-14 | 7C-fix   | Reworked the mobile menu as a full-screen, focus-managed dialog.                                                                                         | The hub navigation, work links and project CTA remain legible and reachable on narrow devices.                                                                                        |
+| 2026-10-14 | 7C-fix   | Consolidated the footer into its dedicated responsive grid and removed obsolete overrides.                                                               | The prior legacy selectors superseded the intended mobile and desktop footer layout.                                                                                                  |
+| 2026-10-14 | 7C-fix   | Kept anatomy hotspot positions in one typed 320×480 coordinate system.                                                                                   | SVG regions and 44px interactive targets retain their correspondence at every tested viewport.                                                                                        |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-14, Phase 7C fix verification
+
+- Done: Added the Playwright mobile-menu contract and registered it in `check:full`; fixed the browser helper’s extensionless local import; added explicit mobile-menu dialog ownership and navigation grouping; refined brief state messaging, selected controls, select affordance, inline errors and WhatsApp preview; and removed stale footer CSS that overrode the replacement footer grid.
+- Verification: `npm run format`, `npm run check:brief-message`, `npm run check:contact`, `npm run typecheck`, and `npm run lint` completed successfully. `npm run check:anatomy` passed at 320, 360, 390 and 412px (and its larger contract widths), including 44px targets and region alignment. `npm run check:menu` is implemented but cannot pass in this host: the available dev server returns invalid HMR WebSocket responses to Chromium, leaving React unhydrated (`aria-expanded` remains false after a click). A production build cannot start while the existing `next-server` process holds Next’s build lock. No screenshots or Lighthouse scores are claimed.
+- In progress / rough: Full browser checks (`check:menu`, overflow, pill clearance, Fieldhand E2E), production build, full suite, screenshots, keyboard/reduced-motion walkthrough and Lighthouse remain pending in an environment with an isolated production server. Phase 7 is deliberately not ready for review.
+- Next session: stop or isolate the existing local Next dev server, build and serve the production bundle on a free port, set `CHECK_BASE_URL` for the browser scripts, then complete the listed responsive, keyboard, reduced-motion and Lighthouse evidence before returning Phase 7 to Ready for review.
 
 ### Session: 2026-10-10, Phase 7C-2 contact and share assets
 

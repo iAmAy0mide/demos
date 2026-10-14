@@ -53,3 +53,13 @@ export function getBriefErrors(input: BriefInput) {
     link: input.link && !/^https?:\/\/[^\s]+$/i.test(input.link) ? "Use a full https:// link." : "",
   };
 }
+
+export function getMissingBriefFields(input: BriefInput) {
+  const errors = getBriefErrors(input);
+  return [
+    errors.name && "your name",
+    errors.businessName && "business name",
+    errors.projectType && "project type",
+    errors.visitorAction && "visitor action",
+  ].filter((field): field is string => Boolean(field));
+}

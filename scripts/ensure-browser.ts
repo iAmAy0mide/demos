@@ -1,4 +1,4 @@
-import { launchBrowser } from "./lib/browser";
+import { launchBrowser } from "./lib/browser.ts";
 
 try {
   const browser = await launchBrowser();

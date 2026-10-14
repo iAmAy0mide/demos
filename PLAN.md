@@ -248,6 +248,12 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - Known issues: `npm run lint` has no errors but retains 36 project warnings, including size/complexity warnings in the Rentbook payment and rent-roll components. `npm run typecheck` and `scripts/check-allocation.ts` pass.
 - Next session should: Split the Rentbook roll and payment components to remove warnings, complete the requested e2e assertions, take the four requested screenshots, and run the full browser/phone/build quality gate before requesting review.
 
+### Session: 2026-10-14, Payments foundation handoff
+
+- Done: Added a pure tenant-targeted WhatsApp link helper and Nigerian phone normaliser, with contact-link checks. Added kobo-safe amount-in-words conversion, receipt sequence generation in the payment reducer (`RC-YYYY-0001`), and an amount-words verification script.
+- Commits: `6f41703 feat(shared): add tenant WhatsApp links`; `aed1ba9 feat(rentbook): add receipt numbering and amount words`.
+- Next session should: Build the Payments page, receipt dialog/print styles, reminder composer/bulk flow, their e2e coverage, and complete the full quality gate/screenshots.
+
 ## Phase 6: Stockroom (optional)
 
 Optional third custom tool, pending owner approval after Rentbook: a light-first pharmacy or provision-store POS with keyboard-fast checkout, split payments, live stock, a credit ledger and end-of-day report. Do not build during Phase 5.

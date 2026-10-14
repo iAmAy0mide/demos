@@ -241,6 +241,13 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 | Mobile bottom navigation    | Done    | `RentbookMobileNavigation` is rendered by the shell and the shared shell receives a bottom offset.                                                                                                             |
 | Dead controls               | Partial | Overview has no reminder control; rent-roll reminder behavior still needs a direct interaction audit before R3.                                                                                                |
 
+### Session: 2026-10-14, Rentbook rent roll and payment follow-up
+
+- Done: Added kobo-safe oldest-first payment allocation with an eight-case verifier, an allocation-preview payment drawer, explicit overpayment credit confirmation, reducer support for credit, row menu dismissal, keyboard roll actions, saved-view counts, multi-select state, sticky ledger scrolling and a compact phone treatment.
+- In progress / rough: The new Rentbook e2e file covers overview, roll opening and phone stacking, but its captured runner output stopped after R1; the full requested interaction matrix and screenshots remain unverified.
+- Known issues: `npm run lint` has no errors but retains 36 project warnings, including size/complexity warnings in the Rentbook payment and rent-roll components. `npm run typecheck` and `scripts/check-allocation.ts` pass.
+- Next session should: Split the Rentbook roll and payment components to remove warnings, complete the requested e2e assertions, take the four requested screenshots, and run the full browser/phone/build quality gate before requesting review.
+
 ## Phase 6: Stockroom (optional)
 
 Optional third custom tool, pending owner approval after Rentbook: a light-first pharmacy or provision-store POS with keyboard-fast checkout, split payments, live stock, a credit ledger and end-of-day report. Do not build during Phase 5.

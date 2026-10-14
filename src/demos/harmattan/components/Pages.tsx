@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { lagosDayOfWeek, lagosHour } from "@/src/shared/lib/lagos-time";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
@@ -9,7 +9,6 @@ import { CoffeeBag } from "./CoffeeBag";
 import { CoffeeCard } from "./CoffeeCard";
 import { coffees } from "../data/coffees";
 import { articles } from "../data/journal";
-import { calculateSubscriptionPrice, naira } from "../lib/pricing";
 export function HomePage() {
   const now = useLagosNow();
   const open = now
@@ -163,142 +162,6 @@ export function CoffeeList() {
       ) : (
         <p className="hrm-empty">Nothing there yet. Try a broader taste.</p>
       )}
-    </main>
-  );
-}
-export function SubscribePage() {
-  const [choice, setChoice] = useState("Roaster’s Choice"),
-    [selected, setSelected] = useState([coffees[0]]),
-    [size, setSize] = useState<"250g" | "1kg">("250g"),
-    [bags, setBags] = useState(1),
-    [city, setCity] = useState<"Lagos" | "Abuja" | "Nationwide">("Lagos"),
-    [done, setDone] = useState(false);
-  const price = useMemo(
-    () => calculateSubscriptionPrice({ selected, size, bags, city }),
-    [selected, size, bags, city],
-  );
-  if (done) {
-    return (
-      <main id="main" className="hrm-page hrm-success">
-        <p className="hrm-kicker">Order HC-24187</p>
-        <h1>Your first box is on its way.</h1>
-        <p>
-          We’ll roast, pack and send your coffee with a delivery update. Adjust, pause or skip
-          whenever you need.
-        </p>
-        <ol>
-          <li>We roast your selection this week.</li>
-          <li>Your delivery note lands before it leaves us.</li>
-          <li>You make a very good cup.</li>
-        </ol>
-      </main>
-    );
-  }
-  return (
-    <main id="main" className="hrm-page">
-      <p className="hrm-kicker">Build your box</p>
-      <h1>Make the coffee show up.</h1>
-      <div className="hrm-builder">
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setDone(true);
-          }}
-        >
-          <fieldset>
-            <legend>1. Who chooses?</legend>
-            {["Roaster’s Choice", "I choose"].map((value) => (
-              <label className="hrm-choice" key={value}>
-                <input type="radio" checked={choice === value} onChange={() => setChoice(value)} />
-                {value}
-              </label>
-            ))}
-          </fieldset>
-          {choice === "I choose" && (
-            <fieldset>
-              <legend>Pick up to three</legend>
-              {coffees.map((coffee) => (
-                <label className="hrm-choice" key={coffee.slug}>
-                  <input
-                    type="checkbox"
-                    checked={selected.some((item) => item.slug === coffee.slug)}
-                    onChange={() =>
-                      setSelected((old) => {
-                        if (old.some((item) => item.slug === coffee.slug)) {
-                          return old.filter((item) => item.slug !== coffee.slug);
-                        }
-                        if (old.length < 3) {
-                          return [...old, coffee];
-                        }
-                        return old;
-                      })
-                    }
-                  />
-                  {coffee.name}
-                </label>
-              ))}
-            </fieldset>
-          )}
-          <fieldset>
-            <legend>2. Your pace</legend>
-            <label>
-              Bag size
-              <select value={size} onChange={(event) => setSize(event.target.value as typeof size)}>
-                <option>250g</option>
-                <option>1kg</option>
-              </select>
-            </label>
-            <label>
-              Bags per delivery
-              <select value={bags} onChange={(event) => setBags(Number(event.target.value))}>
-                {[1, 2, 3, 4].map((value) => (
-                  <option key={value}>{value}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Delivery city
-              <select value={city} onChange={(event) => setCity(event.target.value as typeof city)}>
-                <option>Lagos</option>
-                <option>Abuja</option>
-                <option>Nationwide</option>
-              </select>
-            </label>
-          </fieldset>
-          <fieldset>
-            <legend>3. Where should we send it?</legend>
-            <label>
-              Your name
-              <input required placeholder="Your full name" />
-            </label>
-            <label>
-              Phone number
-              <input required pattern="^(?:\+234|0)[789][01]\d{8}$" placeholder="0803 000 0000" />
-            </label>
-            <label>
-              Delivery address
-              <textarea required placeholder="Your address and a useful landmark" />
-            </label>
-          </fieldset>
-          <button className="hrm-button" disabled={!selected.length}>
-            Pay with card, transfer or USSD (demo)
-          </button>
-        </form>
-        <aside className="hrm-live-box">
-          <p>Your box</p>
-          <div>
-            {selected.map((coffee) => (
-              <CoffeeBag coffee={coffee} small key={coffee.slug} />
-            ))}
-          </div>
-          <b>{naira(price.total)} per delivery</b>
-          <small>
-            {naira(price.savings)} saved ·{" "}
-            {price.delivery ? `${naira(price.delivery)} delivery` : "Free delivery"} · VAT-free
-          </small>
-          <p>Pause or skip anytime.</p>
-        </aside>
-      </div>
     </main>
   );
 }

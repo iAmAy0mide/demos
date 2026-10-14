@@ -92,11 +92,21 @@ export function getChargeStatus(charge: Charge, payments: Payment[], today: Date
   }
   return "upcoming";
 }
-export function amountInWords(amount: number) {
-  const whole = Math.floor(amount);
-  const kobo = Math.round((amount - whole) * 100);
-  const words = numberWords(whole);
-  return `${words} naira${kobo ? ` and ${numberWords(kobo)} kobo` : " only"}`;
+export function amountInWords(kobo: number) {
+  if (!Number.isInteger(kobo) || kobo <= 0) {
+    throw new Error("Amount in kobo must be a positive integer.");
+  }
+  const nairaAmount = Math.floor(kobo / 100);
+  const koboAmount = kobo % 100;
+  const parts = nairaAmount ? [`${numberWords(nairaAmount)} naira`] : [];
+  if (koboAmount) {
+    parts.push(`${numberWords(koboAmount)} kobo`);
+  }
+  return `${capitalize(parts.join(", "))} only`;
+}
+
+function capitalize(value: string) {
+  return `${value[0]?.toUpperCase()}${value.slice(1)}`;
 }
 function numberWords(value: number): string {
   if (value === 0) {
@@ -154,9 +164,9 @@ function numberWords(value: number): string {
   const words = groups.flatMap(([limit, label]) => {
     const group = Math.floor(remainder / limit);
     remainder %= limit;
-    return group ? [underThousand(group), label] : [];
+    return group ? [`${underThousand(group)} ${label}`] : [];
   });
-  return [...words, underThousand(remainder)].filter(Boolean).join(" ");
+  return [...words, underThousand(remainder)].filter(Boolean).join(", ");
 }
 export function naira(value: number) {
   return new Intl.NumberFormat("en-NG", {

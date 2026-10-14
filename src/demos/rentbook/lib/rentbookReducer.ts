@@ -1,6 +1,6 @@
 import { balanceForCharge, OVERPAYMENT_CREDIT_LIMIT } from "./finance";
 
-import type { Payment, RentbookData } from "../types";
+import type { Payment, Receipt, RentbookData } from "../types";
 
 export type RentbookState = RentbookData & {
   selectedPropertyId: string | "all";
@@ -65,9 +65,28 @@ export function rentbookReducer(state: RentbookState, action: RentbookAction): R
         action.payment.creditAmount >= 0 &&
         (action.payment.creditAmount === 0 ||
           action.payment.creditAmount > OVERPAYMENT_CREDIT_LIMIT);
-      return valid && hasValidCredit
-        ? { ...state, payments: [action.payment, ...state.payments] }
-        : state;
+      if (!valid || !hasValidCredit) {
+        return state;
+      }
+      return {
+        ...state,
+        payments: [action.payment, ...state.payments],
+        receipts: [nextReceipt(state.receipts, action.payment), ...state.receipts],
+      };
     }
   }
+}
+
+function nextReceipt(receipts: Receipt[], payment: Payment): Receipt {
+  const highest = receipts.reduce((maximum, receipt) => {
+    const sequence = Number(receipt.number.match(/(\d{4})$/)?.[1] ?? 0);
+    return Math.max(maximum, sequence);
+  }, 0);
+  const year = payment.date.slice(0, 4);
+  return {
+    id: `receipt-${payment.id}`,
+    paymentId: payment.id,
+    issuedDate: payment.date,
+    number: `RC-${year}-${String(highest + 1).padStart(4, "0")}`,
+  };
 }

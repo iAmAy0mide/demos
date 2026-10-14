@@ -8,6 +8,8 @@ import { findSchedulingConflicts } from "@/src/demos/fieldhand/lib/jobUtils";
 import { lagosHour, lagosWeekday } from "@/src/shared/lib/lagos-time";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
+import { ScheduleMobileTimeline } from "./ScheduleMobileTimeline";
+
 const HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16];
 
 export function ScheduleTimeline() {
@@ -33,50 +35,13 @@ export function ScheduleTimeline() {
         <p className="font-mono text-xs text-[var(--fld-muted)]">{scheduleDay} · Lagos</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-[-.04em]">Technician timeline</h1>
       </header>
-      <section className="mt-4 md:hidden" aria-label="Technician day timeline">
-        <div
-          data-scroll-x="intentional"
-          className="relative -mx-3 flex snap-x gap-2 overflow-x-auto px-3 pb-3 after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-8 after:bg-linear-to-l after:from-[var(--fld-canvas)] after:to-transparent"
-        >
-          {state.technicians.map((technician) => (
-            <button
-              key={technician.id}
-              data-testid={`technician-chip-${technician.id}`}
-              type="button"
-              onClick={() => setSelectedTechnicianId(technician.id)}
-              className={`min-h-11 shrink-0 snap-start rounded-full border px-3 text-sm ${selectedTechnician.id === technician.id ? "border-[var(--fld-signal)] text-[var(--fld-signal)]" : "border-[var(--fld-line)]"}`}
-            >
-              {technician.initials} {technician.name.split(" ")[0]}
-            </button>
-          ))}
-        </div>
-        {HOURS.map((hour) => (
-          <div
-            key={hour}
-            className="grid min-h-16 min-w-0 grid-cols-[3rem_minmax(0,1fr)] border-t border-[var(--fld-line)] py-2"
-          >
-            <span className="font-mono text-xs text-[var(--fld-muted)]">{hour}:00</span>
-            <div className="min-w-0 space-y-1">
-              {scheduledJobs
-                .filter((job) => lagosHour(new Date(job.scheduledStart as string)) === hour)
-                .map((job) => (
-                  <button
-                    key={job.id}
-                    data-testid={`schedule-block-${job.id}`}
-                    type="button"
-                    aria-label={`Open ${job.id}: ${job.title}`}
-                    onClick={() => router.push(`/work/fieldhand/schedule?job=${job.id}`)}
-                    className="min-w-0 border border-[var(--fld-line)] bg-[var(--fld-raised)] p-2 text-left text-sm hover:border-[var(--fld-signal)] focus-visible:ring-2 focus-visible:ring-[var(--fld-signal)] focus-visible:outline-none"
-                  >
-                    <span className="font-mono text-xs text-[var(--fld-signal)]">{job.id}</span>
-                    <br />
-                    <span className="mt-0.5 block break-words">{job.title}</span>
-                  </button>
-                ))}
-            </div>
-          </div>
-        ))}
-      </section>
+      <ScheduleMobileTimeline
+        technicians={state.technicians}
+        selectedTechnician={selectedTechnician}
+        scheduledJobs={scheduledJobs}
+        onTechnicianChange={setSelectedTechnicianId}
+        onJobOpen={(jobId) => router.push(`/work/fieldhand/schedule?job=${jobId}`)}
+      />
       <div
         data-scroll-x="intentional"
         className="mt-6 hidden overflow-x-auto border border-[var(--fld-line)] md:block"

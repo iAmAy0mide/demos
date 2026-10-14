@@ -237,6 +237,21 @@ These are non-negotiable for every demo.
 
 ---
 
+## Working agreement for every session
+
+1. **One deliverable per session.** Start with a precondition check and paste the output of `git log --oneline -6`, `git status`, and `npm run check:full`. If the tree is dirty or any check is red, stop and state what failed.
+2. **Make surgical edits.** Never restructure, rename, split, or restyle existing components during a bug-fix or feature session. Put new features in new files; keep edits to existing files to the smallest necessary change, such as one handler, prop, or menu item. Refactors belong only in dedicated refactor sessions, with tests running throughout.
+3. **Commit after each numbered step** with a conventional message and paste `git diff --stat`. If a commit fails, paste the exact error and continue. Never bypass the pre-commit hook.
+4. **Use real evidence.** Paste actual command output, describe only screenshots you viewed, and state plainly what was not run. Never claim something is verified when it was not run.
+5. **Do not stop partially done.** Continue until the stated definition of done is met. Stop only for (a) a real environment limit, with the exact command and output pasted; (b) a choice between readings that changes visible design or behaviour; or (c) low remaining context. For (c), commit everything green and write the exact next step in the `PLAN.md` handoff.
+6. **Resolve ambiguity conservatively.** Choose the reading that changes the fewest existing files and preserves current behaviour, state the assumption in one line, then continue.
+7. **Ship an e2e test with every interactive feature** in the same commit. Tests use `data-testid` attributes added only as attributes: no wrappers, class changes, or style changes. Protected tests document existing behaviour and must pass after every commit; revert any change that breaks one.
+8. **Run the phone check for every UI change.** `scripts/check-overflow.ts` and `scripts/check-pill-clearance.ts` must pass at 320, 360, 390, and 412px widths. Deliberate horizontal scrollers must carry `data-scroll-x="intentional"`.
+9. **Keep interaction contracts sound.** Reducers enforce data rules and rejected actions are never silent: show an error toast while preserving state. Overlays are solid, dismissible by outside click and Escape, limited to one open at a time, and focus-managed. Never position interactive markers as an HTML overlay over a drawing; draw them in the same SVG or use one shared coordinate system.
+10. **Use npm.** Embed mode (`?embed=1`) disables hints, toasts, and `localStorage` writes in every demo.
+
+---
+
 ## 9. Formatting and the quality gate
 
 - Formatting is automatic: Prettier with the repo config. Never hand-format and never fight the formatter. Run `npm run format` before every commit.

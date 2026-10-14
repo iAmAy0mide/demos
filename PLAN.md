@@ -277,10 +277,13 @@ See **Definition of done** in `AGENTS.md`. In short: distinct design, working fe
 - [ ] `npm run format` run; tree is formatted
 - [ ] `npm run check` passes (format, lint, typecheck, token, time, metadata, and seed checks)
 - [ ] `npm run build` passes
+- [ ] Precondition evidence is pasted: `git log --oneline -6`, `git status`, and `npm run check:full`
 - [ ] New files respect size limits, or the exception is justified in a comment
 - [ ] No dead code, console logs, TODOs, or commented-out code
 - [ ] Screenshots taken and viewed for every UI change
 - [ ] Phone overflow and Axmion-pill clearance checks pass at 320 / 360 / 390 / 412px for every UI change
+- [ ] Every interactive feature has a same-commit e2e test using attribute-only `data-testid` hooks; protected tests pass
+- [ ] Embed mode (`?embed=1`) disables hints, toasts, and `localStorage` writes in every demo
 
 ---
 
@@ -323,12 +326,20 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-14 | 7C-fix   | Reworked the mobile menu as a full-screen, focus-managed dialog.                                                                                         | The hub navigation, work links and project CTA remain legible and reachable on narrow devices.                                                                                        |
 | 2026-10-14 | 7C-fix   | Consolidated the footer into its dedicated responsive grid and removed obsolete overrides.                                                               | The prior legacy selectors superseded the intended mobile and desktop footer layout.                                                                                                  |
 | 2026-10-14 | 7C-fix   | Kept anatomy hotspot positions in one typed 320×480 coordinate system.                                                                                   | SVG regions and 44px interactive targets retain their correspondence at every tested viewport.                                                                                        |
+| 2026-10-14 | 7C       | Centralized Playwright e2e lifecycle management in `scripts/lib/e2e.ts`.                                                                                 | Fieldhand and Rentbook now use one production-server, isolation, retry, screenshot and cleanup contract.                                                                              |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-14, shared e2e infrastructure
+
+- Assumption: “add these lines” means the new precondition, interactive-e2e, and embed-mode rules belong in the recurring quality-gate checklist; the existing phone-check line already covers the required widths and scripts.
+- Done: Added the session working agreement, extracted the Fieldhand e2e lifecycle into `scripts/lib/e2e.ts`, added the Rentbook overview smoke test and stable attribute-only test hooks, and registered both suites in `e2e` and `check:full`.
+- Verification: `npm run format` and `npm run check` completed with no errors; lint retains 28 pre-existing size/complexity warnings. Fieldhand P1–P8 and B1–B7 passed on `E2E_PORT=3101`; Rentbook R1 passed on the default port after a production rebuild. No screenshots were viewed because this session made no visual or layout change.
+- Next session: Run `npm run check:full` in an isolated environment before marking the current hub phase ready for review; it now includes both e2e suites.
 
 ### Session: 2026-10-14, Phase 7C fix verification
 

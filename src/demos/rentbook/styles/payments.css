@@ -3,6 +3,121 @@
   color: var(--rbk-red);
   font-size: 0.78rem;
 }
+.rbk-payment-filters {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  gap: 0.65rem;
+  margin: 1.5rem 0;
+}
+.rbk-payment-filters input,
+.rbk-payment-filters select {
+  min-height: 44px;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+  color: var(--rbk-ink);
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+}
+.rbk-payment-total {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  border-block: 1px solid var(--rbk-line);
+  padding: 1rem 0;
+}
+.rbk-payment-total span,
+.rbk-payment-total small {
+  color: var(--rbk-muted);
+  font-size: 0.78rem;
+}
+.rbk-payment-total strong {
+  font: 600 1.6rem var(--rbk-font-mono);
+}
+.rbk-payments-table {
+  max-height: calc(100dvh - 22rem);
+  overflow: auto;
+  margin-top: 1rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+}
+.rbk-payments-table table {
+  min-width: 900px;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.rbk-payments-table th,
+.rbk-payments-table td {
+  padding: 0.85rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rbk-line);
+  vertical-align: top;
+}
+.rbk-payments-table th {
+  position: sticky;
+  top: 0;
+  background: var(--rbk-paper);
+}
+.rbk-payments-table th button,
+.rbk-receipt-link {
+  border: 0;
+  background: transparent;
+  color: var(--rbk-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.rbk-receipt-link {
+  color: var(--rbk-emerald);
+  text-decoration: underline;
+}
+.rbk-payments-table small {
+  display: block;
+  color: var(--rbk-muted);
+  margin-top: 0.25rem;
+}
+@media (max-width: 700px) {
+  .rbk-payment-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+  .rbk-payment-filters input {
+    grid-column: 1/-1;
+  }
+  .rbk-payments-table {
+    max-height: none;
+    overflow: visible;
+    border: 0;
+  }
+  .rbk-payments-table table,
+  .rbk-payments-table tbody,
+  .rbk-payments-table tr,
+  .rbk-payments-table td {
+    display: block;
+    min-width: 0;
+  }
+  .rbk-payments-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+  .rbk-payments-table tr {
+    border: 1px solid var(--rbk-line);
+    margin: 0.7rem 0;
+    padding: 0.25rem 0.8rem;
+  }
+  .rbk-payments-table td {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 0.5rem;
+    padding: 0.55rem 0;
+  }
+  .rbk-payments-table td::before {
+    content: attr(data-label);
+    color: var(--rbk-muted);
+  }
+}
 .rbk-toast {
   position: fixed;
   z-index: 60;

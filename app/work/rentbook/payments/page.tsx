@@ -1,4 +1,4 @@
-import { DeferredScreen } from "@/src/demos/rentbook/components/DeferredScreen";
+import { Payments } from "@/src/demos/rentbook/components/Payments";
 
 import type { Metadata } from "next";
 
@@ -8,10 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function PaymentsPage() {
-  return (
-    <DeferredScreen
-      title="Payments"
-      description="A searchable payment history and receipts will live here."
-    />
-  );
+  return <Payments />;
 }

@@ -28,6 +28,8 @@ export type Lease = {
   startDate: string;
   endDate: string;
   cautionDeposit: number;
+  agencyFee: number;
+  legalFee: number;
   serviceCharge: number;
 };
 export type Charge = {
@@ -49,6 +51,12 @@ export type Payment = {
   allocations: PaymentAllocation[];
   notes: string;
 };
+export type Receipt = {
+  id: string;
+  paymentId: string;
+  issuedDate: string;
+  number: string;
+};
 export type MaintenanceRequest = {
   id: string;
   unitId: string;
@@ -58,6 +66,14 @@ export type MaintenanceRequest = {
   estimate: number;
 };
 export type ActivityEntry = { id: string; tenantId: string; date: string; message: string };
+export type Expense = {
+  id: string;
+  propertyId: string;
+  date: string;
+  amount: number;
+  category: "maintenance" | "management" | "service_cost";
+  description: string;
+};
 export type RentbookData = {
   properties: Property[];
   units: Unit[];
@@ -65,6 +81,8 @@ export type RentbookData = {
   leases: Lease[];
   charges: Charge[];
   payments: Payment[];
+  receipts: Receipt[];
+  expenses: Expense[];
   maintenance: MaintenanceRequest[];
   activity: ActivityEntry[];
 };

@@ -31,16 +31,40 @@ function isData(value: unknown): value is RentbookData {
     "leases",
     "charges",
     "payments",
+    "receipts",
+    "expenses",
     "maintenance",
     "activity",
   ].every((key) => Array.isArray((value as Record<string, unknown>)[key]));
 }
 
 function persistedData(state: typeof initialRentbookState): PersistedRentbook {
-  const { properties, units, tenants, leases, charges, payments, maintenance, activity } = state;
+  const {
+    properties,
+    units,
+    tenants,
+    leases,
+    charges,
+    payments,
+    receipts,
+    expenses,
+    maintenance,
+    activity,
+  } = state;
   return {
     version: RENTBOOK_SCHEMA_VERSION,
-    data: { properties, units, tenants, leases, charges, payments, maintenance, activity },
+    data: {
+      properties,
+      units,
+      tenants,
+      leases,
+      charges,
+      payments,
+      receipts,
+      expenses,
+      maintenance,
+      activity,
+    },
     selectedPropertyId: state.selectedPropertyId,
   };
 }

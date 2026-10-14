@@ -18,6 +18,8 @@ export const initialRentbookState: RentbookState = {
   leases: [],
   charges: [],
   payments: [],
+  receipts: [],
+  expenses: [],
   maintenance: [],
   activity: [],
   selectedPropertyId: "all",

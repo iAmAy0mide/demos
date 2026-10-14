@@ -1,16 +1,20 @@
-import type { Charge, Lease, Payment, Property, RentbookData, Tenant, Unit } from "../types";
+import { lagosDateKey } from "@/src/shared/lib/lagos-time";
 
-function lagosDateKey(date: Date) {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Africa/Lagos",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(date);
-  const part = (type: Intl.DateTimeFormatPartTypes) =>
-    parts.find((entry) => entry.type === type)?.value ?? "";
-  return `${part("year")}-${part("month")}-${part("day")}`;
-}
+import type {
+  Charge,
+  Expense,
+  Lease,
+  Payment,
+  Property,
+  Receipt,
+  RentbookData,
+  Tenant,
+  Unit,
+} from "../types";
+
+const PORTFOLIO_SEED = 20261014;
+const UNITS_PER_PROPERTY = 8;
+const HISTORY_MONTHS = 12;
 
 const buildings = [
   ["Admiralty Court", "Lekki Phase 1"],
@@ -64,13 +68,21 @@ function shifted(today: Date, months: number, days = 0) {
   date.setUTCDate(date.getUTCDate() + days);
   return lagosDateKey(date);
 }
+
+function seededNumber(seed: number) {
+  let value = seed + PORTFOLIO_SEED;
+  value = Math.imul(value ^ (value >>> 16), 0x45d9f3b);
+  value = Math.imul(value ^ (value >>> 16), 0x45d9f3b);
+  return ((value ^ (value >>> 16)) >>> 0) / 4_294_967_296;
+}
+
 export function createSeedRentbookData(today: Date): RentbookData {
   const properties: Property[] = buildings.map(([name, area], i) => ({
     id: `property-${i + 1}`,
     name,
     area,
     address: `${18 + i * 7} ${area} Road, Lagos`,
-    unitIds: Array.from({ length: 8 }, (_, u) => `unit-${i + 1}-${u + 1}`),
+    unitIds: Array.from({ length: UNITS_PER_PROPERTY }, (_, u) => `unit-${i + 1}-${u + 1}`),
   }));
   const tenants: Tenant[] = names.map((name, i) => ({
     id: `tenant-${i + 1}`,
@@ -110,6 +122,8 @@ export function createSeedRentbookData(today: Date): RentbookData {
           startDate: shifted(today, -11),
           endDate: serial === 2 ? shifted(today, 0, 22) : shifted(today, 10),
           cautionDeposit: 150000,
+          agencyFee: Math.round((u >= 6 ? 350000 : 1800000) * 0.1),
+          legalFee: Math.round((u >= 6 ? 350000 : 1800000) * 0.05),
           serviceCharge: 35000,
         });
       }
@@ -118,7 +132,7 @@ export function createSeedRentbookData(today: Date): RentbookData {
   const charges: Charge[] = [];
   const payments: Payment[] = [];
   leases.forEach((lease, index) => {
-    for (let month = -11; month <= 0; month += 1) {
+    for (let month = 1 - HISTORY_MONTHS; month <= 0; month += 1) {
       const dueSoon = month === 0 && [1, 4, 8, 18].includes(index);
       const charge = {
         id: `charge-${index}-${month}`,
@@ -148,6 +162,28 @@ export function createSeedRentbookData(today: Date): RentbookData {
       }
     }
   });
+  const receipts: Receipt[] = payments.map((payment, index) => ({
+    id: `receipt-${index + 1}`,
+    paymentId: payment.id,
+    issuedDate: payment.date,
+    number: `RBK-26-${String(index + 1).padStart(4, "0")}`,
+  }));
+  const expenses: Expense[] = [];
+  properties.forEach((property, propertyIndex) => {
+    for (let month = 1 - HISTORY_MONTHS; month <= 0; month += 1) {
+      const seed = propertyIndex * HISTORY_MONTHS + month + HISTORY_MONTHS;
+      const category = ["maintenance", "management", "service_cost"] as const;
+      const expenseCategory = category[seed % category.length];
+      expenses.push({
+        id: `expense-${propertyIndex + 1}-${month}`,
+        propertyId: property.id,
+        date: shifted(today, month, 3 + Math.floor(seededNumber(seed) * 8)),
+        amount: 85000 + Math.round(seededNumber(seed + 99) * 180000),
+        category: expenseCategory,
+        description: `${expenseCategory.replace("_", " ")} for ${property.name}`,
+      });
+    }
+  });
   return {
     properties,
     units,
@@ -155,6 +191,8 @@ export function createSeedRentbookData(today: Date): RentbookData {
     leases,
     charges,
     payments,
+    receipts,
+    expenses,
     maintenance: [
       {
         id: "maintenance-1",
@@ -189,7 +227,14 @@ export function createSeedRentbookData(today: Date): RentbookData {
         estimate: 35000,
       },
     ],
-    activity: [],
+    activity: [
+      {
+        id: "activity-reminder-1",
+        tenantId: "tenant-4",
+        date: shifted(today, -3),
+        message: "Second rent reminder sent by WhatsApp.",
+      },
+    ],
   };
 }
 

@@ -44,6 +44,7 @@ export function RentbookShell({ children }: RentbookShellProps) {
         properties={state.properties}
         selectedPropertyId={state.selectedPropertyId}
         onOpenCommands={() => setIsCommandOpen(true)}
+        onOpenReset={() => setIsResetOpen(true)}
         onOpenPayment={openPayment}
         onPropertyChange={selectProperty}
       />

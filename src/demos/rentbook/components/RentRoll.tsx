@@ -29,7 +29,6 @@ export function RentRoll() {
   const [frequency, setFrequency] = useState<"all" | Lease["frequency"]>("all");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const menuRef = useRef<HTMLTableCellElement>(null);
-  const [isReminderSent, setIsReminderSent] = useState(false);
 
   const rows = useMemo(
     () =>
@@ -102,14 +101,6 @@ export function RentRoll() {
           <h1>Rent roll</h1>
           <span>{rows.length} accounts in this view</span>
         </div>
-        <button
-          className="rbk-primary"
-          type="button"
-          disabled={!rows.some((row) => row.status === "overdue")}
-          onClick={() => setIsReminderSent(true)}
-        >
-          Send overdue reminders
-        </button>
       </header>
       <section className="rbk-roll-controls">
         <input
@@ -149,11 +140,6 @@ export function RentRoll() {
           </button>
         ))}
       </section>
-      {isReminderSent ? (
-        <p className="rbk-inline-success" role="status">
-          Reminders prepared for the overdue accounts in this view.
-        </p>
-      ) : null}
       <div className="rbk-roll-table" role="region" aria-label="Rent roll" tabIndex={0}>
         <table>
           <thead>

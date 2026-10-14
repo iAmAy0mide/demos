@@ -108,6 +108,36 @@ export function naira(value: number) {
   }).format(value);
 }
 
+export function compactNaira(value: number) {
+  const magnitude = Math.abs(value);
+  if (magnitude >= 1_000_000) {
+    return `₦${(value / 1_000_000).toFixed(magnitude >= 10_000_000 ? 0 : 1)}m`;
+  }
+  if (magnitude >= 1_000) {
+    return `₦${Math.round(value / 1_000)}k`;
+  }
+  return naira(value);
+}
+
+export function formatPercent(value: number) {
+  return new Intl.NumberFormat("en-NG", { maximumFractionDigits: 0, style: "percent" }).format(
+    value,
+  );
+}
+
+export function relativeDueDate(dateKey: string, today: Date) {
+  const dueAt = new Date(`${dateKey}T12:00:00+01:00`).getTime();
+  const todayAt = new Date(today).getTime();
+  const days = Math.round((dueAt - todayAt) / 86_400_000);
+  if (days === 0) {
+    return "Due today";
+  }
+  if (days > 0) {
+    return `Due in ${days} day${days === 1 ? "" : "s"}`;
+  }
+  return `${Math.abs(days)} day${days === -1 ? "" : "s"} overdue`;
+}
+
 export function formatRentbookDate(dateKey: string) {
   return new Intl.DateTimeFormat("en-GB", {
     timeZone: "Africa/Lagos",

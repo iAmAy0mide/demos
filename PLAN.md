@@ -225,6 +225,22 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 - Payments, reminders and overlays have focus management, Escape/outside dismissal, token focus rings, and accessible top-right toasts.
 - Demo `README.md` required.
 
+### R1 foundations audit — 2026-10-14
+
+| Requirement                 | Status  | Evidence                                                                                                                                                                                                       |
+| --------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Seed size and history       | Partial | `createSeedRentbookData` creates 5 properties, 40 units, 37 tenants, 37 leases and 12 rent-charge months; it has no expenses, receipts, agency/legal fees, or seeded reminder history.                         |
+| Persistence schema version  | Done    | `RentbookProvider` writes version 2 and rejects missing/different versions or malformed top-level data after mount.                                                                                            |
+| Metadata                    | Done    | The server `app/work/rentbook/layout.tsx` exports a title template, description, Open Graph image, robots and inline SVG icon.                                                                                 |
+| Raw ISO dates               | Partial | Finance has a display formatter, but `Overview` renders `payment.date` directly.                                                                                                                               |
+| Property switcher filtering | Partial | The selected property is persisted and scopes overview calculations; deferred workspace pages do not yet use scoped data.                                                                                      |
+| Overview contents           | Partial | It has annual collection, outstanding, occupancy, a short payment feed and overdue list; it lacks this-month/rate stats, 12-month income-versus-expense SVG, table disclosure and expiring/due-week attention. |
+| Top bar                     | Partial | It has brand, route links, switcher, search, command trigger and the only payment button; Reset is only reachable through the command dialog.                                                                  |
+| Command palette             | Done    | Cmd/Ctrl+K opens the focus-targeted command dialog.                                                                                                                                                            |
+| Reset confirmation          | Done    | Reset uses the dedicated confirmation dialog and reseeds through the reducer.                                                                                                                                  |
+| Mobile bottom navigation    | Done    | `RentbookMobileNavigation` is rendered by the shell and the shared shell receives a bottom offset.                                                                                                             |
+| Dead controls               | Partial | Overview has no reminder control; rent-roll reminder behavior still needs a direct interaction audit before R3.                                                                                                |
+
 ## Phase 6: Stockroom (optional)
 
 Optional third custom tool, pending owner approval after Rentbook: a light-first pharmacy or provision-store POS with keyboard-fast checkout, split payments, live stock, a credit ledger and end-of-day report. Do not build during Phase 5.
@@ -327,6 +343,7 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-14 | 7C-fix   | Consolidated the footer into its dedicated responsive grid and removed obsolete overrides.                                                               | The prior legacy selectors superseded the intended mobile and desktop footer layout.                                                                                                  |
 | 2026-10-14 | 7C-fix   | Kept anatomy hotspot positions in one typed 320×480 coordinate system.                                                                                   | SVG regions and 44px interactive targets retain their correspondence at every tested viewport.                                                                                        |
 | 2026-10-14 | 7C       | Centralized Playwright e2e lifecycle management in `scripts/lib/e2e.ts`.                                                                                 | Fieldhand and Rentbook now use one production-server, isolation, retry, screenshot and cleanup contract.                                                                              |
+| 2026-10-14 | R1       | Extended the Rentbook seed with receipts, expenses and lease fees, and rebuilt overview figures from its scoped ledger.                                  | A single schema-versioned portfolio now drives summary figures, the chart, attention list and payment feed without a parallel UI fixture.                                             |
 
 ---
 

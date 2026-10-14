@@ -18,6 +18,7 @@ type RentbookHeaderProps = {
   properties: Property[];
   selectedPropertyId: string;
   onOpenCommands: () => void;
+  onOpenReset: () => void;
   onOpenPayment: () => void;
   onPropertyChange: (propertyId: string) => void;
 };
@@ -27,6 +28,7 @@ export function RentbookHeader({
   properties,
   selectedPropertyId,
   onOpenCommands,
+  onOpenReset,
   onOpenPayment,
   onPropertyChange,
 }: RentbookHeaderProps) {
@@ -82,6 +84,9 @@ export function RentbookHeader({
           aria-label="Open commands"
         >
           <Command aria-hidden="true" size={16} />
+        </button>
+        <button className="rbk-command-trigger" type="button" onClick={onOpenReset}>
+          Reset demo
         </button>
         <button className="rbk-primary" type="button" onClick={onOpenPayment}>
           Record payment

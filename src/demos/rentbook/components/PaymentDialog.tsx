@@ -17,9 +17,12 @@ export function PaymentDialog() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   useEffect(() => {
-    const show = () => {
+    const show = (event: Event) => {
+      const detail =
+        event instanceof CustomEvent ? (event.detail as { tenantId?: string }) : undefined;
       setOpen(true);
       setError("");
+      setTenantId(detail?.tenantId ?? "");
     };
     const escape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {

@@ -1,24 +1,14 @@
 "use client";
 
-import { Menu, ShoppingBag, X } from "lucide-react";
+import { X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { AxmionAttribution } from "@/src/shared/components/AxmionAttribution";
-
+import { HarmattanFooter } from "./HarmattanFooter";
+import { harmattanLinks, HarmattanHeader } from "./HarmattanHeader";
 import { getCoffee } from "../data/coffees";
 import { naira } from "../lib/pricing";
 import { BagProvider, useBag } from "../lib/useBag";
-
-const links = [
-  ["Coffees", "/work/harmattan/coffees"],
-  ["Subscribe", "/work/harmattan/subscribe"],
-  ["Roast Lab", "/work/harmattan/roast-lab"],
-  ["Cafés", "/work/harmattan/cafes"],
-  ["Story", "/work/harmattan/story"],
-  ["Journal", "/work/harmattan/journal"],
-  ["Wholesale", "/work/harmattan/wholesale"],
-] as const;
 
 export function HarmattanSite({ children }: { children: React.ReactNode }) {
   return (
@@ -57,42 +47,15 @@ function HarmattanSiteContent({ children }: { children: React.ReactNode }) {
       <a className="hrm-skip" href="#main">
         Skip to content
       </a>
-      <header className="hrm-header">
-        <Link href="/work/harmattan" className="hrm-logo" aria-label="Harmattan Coffee Co. home">
-          <span>H</span>
-          <b>Harmattan</b>
-          <i>Coffee Co.</i>
-        </Link>
-        <nav aria-label="Main navigation">
-          {links.map(([label, href]) => (
-            <Link key={href} href={href}>
-              {label}
-            </Link>
-          ))}
-        </nav>
-        <button
-          ref={bagButton}
-          className="hrm-bag"
-          onClick={() => setBagOpen(true)}
-          aria-label={`Open bag, ${itemCount} items`}
-        >
-          <ShoppingBag aria-hidden="true" size={18} />
-          <span>{itemCount}</span>
-        </button>
-        <Link className="hrm-subscribe" href="/work/harmattan/subscribe">
-          Start a subscription
-        </Link>
-        <button
-          ref={menuButton}
-          className="hrm-menu"
-          onClick={() => setMenuOpen(true)}
-          aria-label="Open menu"
-        >
-          <Menu />
-        </button>
-      </header>
+      <HarmattanHeader
+        itemCount={itemCount}
+        bagButton={bagButton}
+        menuButton={menuButton}
+        onOpenBag={() => setBagOpen(true)}
+        onOpenMenu={() => setMenuOpen(true)}
+      />
       {children}
-      <Footer />
+      <HarmattanFooter />
       {notice && (
         <div className="hrm-bag-notice" role="status">
           {notice}
@@ -101,7 +64,7 @@ function HarmattanSiteContent({ children }: { children: React.ReactNode }) {
       {menuOpen && (
         <Layer title="Menu" close={closeMenu}>
           <nav className="hrm-drawer-links">
-            {links.map(([label, href]) => (
+            {harmattanLinks.map(([label, href]) => (
               <Link onClick={closeMenu} key={href} href={href}>
                 {label}
               </Link>
@@ -202,49 +165,5 @@ function Layer({
         {children}
       </aside>
     </div>
-  );
-}
-function Footer() {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  return (
-    <footer className="hrm-footer">
-      <section>
-        <p className="hrm-kicker">A small good thing, once a month</p>
-        <h2>Notes from the roastery, no shouting.</h2>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setMessage(
-              /^\S+@\S+\.\S+$/.test(email)
-                ? "You are on the list. First note lands soon."
-                : "Add an email we can reach.",
-            );
-          }}
-        >
-          <label htmlFor="newsletter">Email address</label>
-          <div>
-            <input
-              id="newsletter"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
-            />
-            <button>Join us</button>
-          </div>
-          <p aria-live="polite">{message}</p>
-        </form>
-      </section>
-      <section>
-        <b>Find us</b>
-        <p>
-          Victoria Island · Lekki · Ikeja · Yaba
-          <br />
-          Wuse 2 · Maitama
-        </p>
-        <p>Every day, 7am–8pm</p>
-      </section>
-      <AxmionAttribution demoName="Harmattan Coffee Co." />
-    </footer>
   );
 }

@@ -243,6 +243,12 @@ A minimal floating pill on every `/work/*` route: `← Back to showcase · Next 
 
 ### Session: 2026-10-14, Rentbook rent roll and payment follow-up
 
+### Session: 2026-10-14, Rentbook tenants, ledgers and buildings
+
+- In progress: The authorized deliverable began with the tenant register. Commit `7ad3cb9` adds its scoped, property-aware resident list: search, status filters, monograms, unit/property, lease-end treatment, balance and responsive stacked rows. It also includes the pre-existing `PaymentForm.tsx` in the repository after repairing its lint-blocking brace error.
+- Verification: `npm run format` and `npm run check` passed with zero errors. ESLint retains 23 existing size/complexity warnings. No e2e, browser screenshots, phone checks, ledger/layout scripts or build ran for this step yet.
+- Next session: Implement Steps 2–4 only: dynamic tenant/property routes with branded `notFound`, pure ledger and building-layout helpers with executable check scripts, reducer-persisted notes, print statement styles, accessible one-SVG building view and its unit-list alternative. Extend `scripts/e2e-rentbook.ts`, then run the complete requested visual, print, phone and build verification before review.
+
 - In progress: Receipt/reminder implementation committed as `a0e34ef` (11 files, 756 insertions, 20 deletions). Focused `format`, `typecheck`, `check`, amount-word and reminder scripts passed with zero errors; `check` retains 43 existing size/complexity warnings.
 - Still required before review: extend browser e2e assertions, capture/view receipt, print and reminder screenshots, run phone checks/build/full suite, and document their actual outputs. Do not mark this slice Ready for review yet.
 

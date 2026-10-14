@@ -10,6 +10,7 @@ export type RentbookAction =
   | { type: "hydrate"; payload: RentbookData; selectedPropertyId?: string | "all" }
   | { type: "select_property"; propertyId: string | "all" }
   | { type: "record_payment"; payment: Payment }
+  | { type: "log_reminder"; tenantId: string; tone: string; date: string }
   | { type: "reset"; payload: RentbookData };
 export const initialRentbookState: RentbookState = {
   properties: [],
@@ -74,6 +75,19 @@ export function rentbookReducer(state: RentbookState, action: RentbookAction): R
         receipts: [nextReceipt(state.receipts, action.payment), ...state.receipts],
       };
     }
+    case "log_reminder":
+      return {
+        ...state,
+        activity: [
+          {
+            id: `activity-${state.activity.length + 1}`,
+            tenantId: action.tenantId,
+            date: action.date,
+            message: `${action.tone} rent reminder sent by WhatsApp.`,
+          },
+          ...state.activity,
+        ],
+      };
   }
 }
 

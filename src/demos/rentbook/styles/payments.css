@@ -257,3 +257,214 @@
     grid-template-columns: 1fr;
   }
 }
+.rbk-receipt-layer {
+  z-index: 80;
+}
+.rbk-receipt {
+  position: relative;
+  width: min(100%, 42rem);
+  max-height: 92dvh;
+  overflow: auto;
+  padding: 2.5rem;
+  background: var(--rbk-surface);
+  color: var(--rbk-ink);
+  box-shadow: 0 1rem 4rem var(--rbk-shadow);
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 8px,
+    var(--rbk-line) 8px 9px,
+    transparent 9px 17px
+  );
+  background-position: left top;
+  background-size: 100% 8px;
+  background-repeat: repeat-y;
+}
+.rbk-receipt header {
+  border-bottom: 2px solid var(--rbk-ink);
+  padding-bottom: 1rem;
+}
+.rbk-receipt h2,
+.rbk-receipt p {
+  margin: 0.45rem 0;
+}
+.rbk-receipt dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.rbk-receipt dl div {
+  border-bottom: 1px solid var(--rbk-line);
+  padding: 0.7rem 0;
+}
+.rbk-receipt dt {
+  color: var(--rbk-muted);
+  font-size: 0.72rem;
+}
+.rbk-receipt dd {
+  margin: 0.2rem 0;
+}
+.rbk-receipt-amount {
+  font: 700 2.2rem var(--rbk-font-mono);
+}
+.rbk-receipt-words {
+  max-width: 37rem;
+  color: var(--rbk-muted);
+  font-style: italic;
+}
+.rbk-receipt section {
+  border-block: 1px dashed var(--rbk-line);
+  padding: 0.8rem 0;
+}
+.rbk-receipt section p {
+  display: flex;
+  justify-content: space-between;
+}
+.rbk-paid-stamp {
+  position: absolute;
+  right: 2rem;
+  top: 8rem;
+  transform: rotate(-14deg);
+  width: 8rem;
+  fill: none;
+  stroke: var(--rbk-red);
+  stroke-width: 3;
+}
+.rbk-paid-stamp text {
+  fill: var(--rbk-red);
+  stroke: none;
+  font: 900 2rem var(--rbk-font-sans);
+}
+.rbk-receipt-close {
+  position: absolute;
+  right: 0.7rem;
+  top: 0.5rem;
+  border: 0;
+  background: transparent;
+  font-size: 1.5rem;
+}
+.rbk-receipt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.rbk-receipt-actions button,
+.rbk-receipt-actions a {
+  min-height: 40px;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-paper);
+  padding: 0.5rem;
+  color: var(--rbk-ink);
+  text-decoration: none;
+}
+.rbk-reminder-layer {
+  z-index: 80;
+}
+.rbk-reminder {
+  width: min(100% - 2rem, 38rem);
+  max-height: 92dvh;
+  overflow: auto;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  background: var(--rbk-surface);
+  box-shadow: 0 1rem 4rem var(--rbk-shadow);
+}
+.rbk-reminder header,
+.rbk-reminder footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.rbk-reminder header p,
+.rbk-reminder h2 {
+  margin: 0;
+}
+.rbk-reminder header p {
+  color: var(--rbk-muted);
+  font: 0.72rem var(--rbk-font-mono);
+}
+.rbk-reminder label {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  color: var(--rbk-muted);
+  font-size: 0.78rem;
+}
+.rbk-reminder select,
+.rbk-reminder textarea,
+.rbk-reminder button,
+.rbk-reminder footer button {
+  min-height: 44px;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-paper);
+  color: var(--rbk-ink);
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+}
+.rbk-reminder textarea {
+  resize: vertical;
+}
+.rbk-reminder-tenant {
+  border-bottom: 1px solid var(--rbk-line);
+  padding-bottom: 0.75rem;
+}
+.rbk-chat-preview {
+  margin: 1rem 0;
+  padding: 0.8rem;
+  background: color-mix(in srgb, var(--rbk-emerald) 9%, var(--rbk-paper));
+  border-left: 3px solid var(--rbk-emerald);
+}
+.rbk-chat-preview small {
+  color: var(--rbk-muted);
+}
+.rbk-chat-preview p {
+  margin: 0.45rem 0 0;
+  white-space: pre-wrap;
+}
+.rbk-reminder > .rbk-primary {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+}
+.rbk-reminder footer {
+  margin-top: 0.75rem;
+}
+.rbk-thermal {
+  width: 80mm;
+}
+.rbk-thermal dl {
+  grid-template-columns: 1fr;
+}
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .rbk-receipt-layer,
+  .rbk-receipt-layer * {
+    visibility: visible;
+  }
+  .rbk-receipt-layer {
+    position: absolute;
+    inset: 0;
+    background: white;
+  }
+  .rbk-receipt {
+    width: 180mm;
+    box-shadow: none;
+    max-height: none;
+  }
+  .rbk-receipt.rbk-thermal {
+    width: 80mm;
+    padding: 4mm;
+  }
+  .rbk-receipt-actions,
+  .rbk-receipt-close {
+    display: none;
+  }
+}

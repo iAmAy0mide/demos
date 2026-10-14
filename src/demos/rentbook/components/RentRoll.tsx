@@ -176,6 +176,18 @@ export function RentRoll() {
       {selectedIds.length ? (
         <div className="rbk-bulk-bar" role="status">
           {selectedIds.length} selected{" "}
+          <button
+            type="button"
+            onClick={() => {
+              const tenantIds = rows
+                .filter((row) => selectedIds.includes(row.charge.id))
+                .filter((row) => row.status === "overdue" || row.status === "partial")
+                .flatMap((row) => (row.tenant ? [row.tenant.id] : []));
+              window.dispatchEvent(new CustomEvent("rentbook:reminder", { detail: { tenantIds } }));
+            }}
+          >
+            Send reminders
+          </button>{" "}
           <button type="button" onClick={() => setSelectedIds([])}>
             Clear
           </button>
@@ -220,6 +232,10 @@ export function RentRoll() {
                 const property = state.properties.find((entry) => entry.id === unit?.propertyId);
                 const lastPayment = state.payments.find(
                   (payment) => payment.tenantId === tenant?.id,
+                );
+                const lastReminder = state.activity.find(
+                  (activity) =>
+                    activity.tenantId === tenant?.id && activity.message.includes("reminder"),
                 );
                 return (
                   <tr key={charge.id} data-row-id={charge.id} tabIndex={0}>
@@ -296,6 +312,26 @@ export function RentRoll() {
                             Record payment
                           </button>
                           <a href="/work/rentbook/tenants">View tenant</a>
+                          {(status === "overdue" || status === "partial") && tenant ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                window.dispatchEvent(
+                                  new CustomEvent("rentbook:reminder", {
+                                    detail: { tenantId: tenant.id },
+                                  }),
+                                );
+                                setOpenMenuId(null);
+                              }}
+                            >
+                              Send reminder
+                            </button>
+                          ) : null}
+                          {lastReminder ? (
+                            <span className="rbk-menu-note">
+                              Last reminder: {formatRentbookDate(lastReminder.date)}
+                            </span>
+                          ) : null}
                         </div>
                       ) : null}
                     </td>

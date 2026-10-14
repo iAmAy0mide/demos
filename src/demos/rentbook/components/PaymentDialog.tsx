@@ -32,7 +32,7 @@ export function PaymentDialog() {
   const [keepCredit, setKeepCredit] = useState(false);
   const [errors, setErrors] = useState<PaymentErrors>({});
   const [confirmDiscard, setConfirmDiscard] = useState(false);
-  const [toast, setToast] = useState("");
+  const [receiptId, setReceiptId] = useState<string | null>(null);
   const amount = parseNairaInput(amountInput) ?? 0;
   const charges = useMemo(() => chargesForTenant(state, tenantId), [state, tenantId]);
   const preview = useMemo(
@@ -113,10 +113,11 @@ export function PaymentDialog() {
       dialogRef.current?.querySelector<HTMLElement>(`[name="${field}"]`)?.focus();
       return;
     }
+    const paymentId = `payment-${crypto.randomUUID()}`;
     dispatch({
       type: "record_payment",
       payment: {
-        id: `payment-${crypto.randomUUID()}`,
+        id: paymentId,
         tenantId,
         amount,
         date,
@@ -127,15 +128,15 @@ export function PaymentDialog() {
         creditAmount: keepCredit ? preview.creditAmount : 0,
       },
     });
-    setToast(`Payment of ${naira(amount)} recorded`);
+    setReceiptId(`receipt-${paymentId}`);
     close();
-    window.setTimeout(() => setToast(""), 5_000);
+    window.setTimeout(() => setReceiptId(null), 5_000);
   }
 
   if (!isOpen) {
-    return toast && !isEmbedded ? (
+    return receiptId && !isEmbedded ? (
       <p className="rbk-toast" role="status">
-        {toast} <a href="/work/rentbook/rent-roll">View in rent roll</a>
+        Payment recorded <a href={`/work/rentbook/payments?receipt=${receiptId}`}>Open receipt</a>
       </p>
     ) : null;
   }

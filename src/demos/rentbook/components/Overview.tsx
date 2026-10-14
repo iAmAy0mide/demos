@@ -308,6 +308,7 @@ function AttentionList({
       {entries.map((entry) => {
         const tenant = state.tenants.find((candidate) => candidate.id === entry.lease?.tenantId);
         const detail = attentionDetail(entry, today, state);
+        const action = attentionAction(entry, tenant?.id);
         return (
           <article key={entry.charge?.id ?? entry.lease?.id}>
             <span className="rbk-stamp">
@@ -315,25 +316,40 @@ function AttentionList({
             </span>
             <b>{tenant?.name}</b>
             <span>{detail}</span>
-            {entry.charge ? (
-              <button
-                type="button"
-                onClick={() =>
-                  window.dispatchEvent(
-                    new CustomEvent("rentbook:payment", { detail: { tenantId: tenant?.id } }),
-                  )
-                }
-              >
-                Record payment
-              </button>
-            ) : (
-              <Link href="/work/rentbook/rent-roll">View in rent roll</Link>
-            )}
+            {action}
           </article>
         );
       })}
     </section>
   );
+}
+
+function attentionAction(entry: AttentionEntry, tenantId: string | undefined) {
+  if (entry.charge && (entry.status === "overdue" || entry.status === "partial")) {
+    return (
+      <button
+        type="button"
+        onClick={() =>
+          window.dispatchEvent(new CustomEvent("rentbook:reminder", { detail: { tenantId } }))
+        }
+      >
+        Send reminder
+      </button>
+    );
+  }
+  if (entry.charge) {
+    return (
+      <button
+        type="button"
+        onClick={() =>
+          window.dispatchEvent(new CustomEvent("rentbook:payment", { detail: { tenantId } }))
+        }
+      >
+        Record payment
+      </button>
+    );
+  }
+  return <Link href="/work/rentbook/rent-roll">View in rent roll</Link>;
 }
 
 function attentionDetail(entry: AttentionEntry, today: Date | null, state: OverviewState) {

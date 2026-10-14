@@ -6,6 +6,8 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 import { PaymentDialog } from "./PaymentDialog";
+import { ReceiptDialog } from "./ReceiptDialog";
+import { ReminderDialog } from "./ReminderDialog";
 import { RentbookCommandDialog } from "./RentbookCommandDialog";
 import { RentbookHeader } from "./RentbookHeader";
 import { RentbookMobileNavigation } from "./RentbookMobileNavigation";
@@ -51,6 +53,8 @@ export function RentbookShell({ children }: RentbookShellProps) {
       {children}
       <RentbookMobileNavigation pathname={pathname} onOpenPayment={openPayment} />
       <PaymentDialog />
+      <ReceiptDialog />
+      <ReminderDialog />
       {isCommandOpen ? (
         <RentbookCommandDialog
           inputRef={commandInput}

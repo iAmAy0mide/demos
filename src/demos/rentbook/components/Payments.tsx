@@ -196,18 +196,46 @@ function paymentRows({
         receiptId: receipt?.id ?? "",
       };
     })
-    .filter(
-      (row) =>
-        (method === "all" || row.payment.method === method) &&
-        (propertyId === "all" ||
-          state.units.find((unit) => unit.label === row.unit)?.propertyId === propertyId) &&
-        (range === "all" ||
-          (range === "this_month" && row.payment.date.startsWith(month)) ||
-          (range === "last_month" && row.payment.date.startsWith(last)) ||
-          (range === "this_year" && row.payment.date.startsWith(year))) &&
-        `${row.tenant} ${row.unit} ${row.receipt}`.toLowerCase().includes(query.toLowerCase()),
-    )
+    .filter((row) => matchesMethod(row, method))
+    .filter((row) => matchesProperty(row, propertyId, state))
+    .filter((row) => matchesRange(row, range, { month, last, year }))
+    .filter((row) => matchesQuery(row, query))
     .sort((first, second) => compareRows(first, second, sort));
+}
+
+function matchesMethod(row: PaymentRow, method: "all" | PaymentMethod) {
+  return method === "all" || row.payment.method === method;
+}
+
+function matchesProperty(
+  row: PaymentRow,
+  propertyId: string,
+  state: ReturnType<typeof useRentbook>["state"],
+) {
+  if (propertyId === "all") {
+    return true;
+  }
+  return state.units.find((unit) => unit.label === row.unit)?.propertyId === propertyId;
+}
+
+function matchesRange(
+  row: PaymentRow,
+  range: Range,
+  periods: { month: string; last: string; year: string },
+) {
+  if (range === "all") {
+    return true;
+  }
+  const rangePrefixes = {
+    this_month: periods.month,
+    last_month: periods.last,
+    this_year: periods.year,
+  };
+  return row.payment.date.startsWith(rangePrefixes[range]);
+}
+
+function matchesQuery(row: PaymentRow, query: string) {
+  return `${row.tenant} ${row.unit} ${row.receipt}`.toLowerCase().includes(query.toLowerCase());
 }
 
 function sortLabel(key: SortKey) {

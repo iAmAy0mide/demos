@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { buildWhatsAppLinkTo, toInternationalNigerianNumber } from "@/src/shared/config/contact";
 import { lagosDateKey } from "@/src/shared/lib/lagos-time";
 
+import { ReminderDialogContent } from "./ReminderDialogContent";
 import { useRentbook } from "./RentbookProvider";
 import { balanceForCharge, naira, relativeDueDate } from "../lib/finance";
-import { buildReminderMessage, reminderTones, type ReminderTone } from "../lib/reminders";
+import { buildReminderMessage, type ReminderTone } from "../lib/reminders";
 
 type ReminderRequest = { tenantId?: string; tenantIds?: string[] };
 
@@ -61,7 +61,6 @@ export function ReminderDialog() {
   if (!details) {
     return null;
   }
-  const phone = toInternationalNigerianNumber(details.phone);
   const displayedMessage = message || buildReminderMessage(tone, details);
   const advance = () =>
     position + 1 < tenantIds.length ? setPosition((value) => value + 1) : close();
@@ -75,91 +74,24 @@ export function ReminderDialog() {
     advance();
   };
   return (
-    <div className="rbk-dialog rbk-reminder-layer">
-      <section
-        ref={dialogRef}
-        className="rbk-reminder"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="reminder-title"
-        data-testid="reminder-dialog"
-      >
-        <header>
-          <div>
-            <p>
-              {tenantIds.length > 1
-                ? `${position + 1} of ${tenantIds.length}`
-                : "Tenant correspondence"}
-            </p>
-            <h2 id="reminder-title">Send rent reminder</h2>
-          </div>
-          <button type="button" onClick={close} aria-label="Close reminder">
-            ×
-          </button>
-        </header>
-        <p className="rbk-reminder-tenant">
-          <b>{details.name}</b> · {details.unit}
-        </p>
-        <label>
-          Reminder tone
-          <select
-            aria-label="Reminder tone"
-            value={tone}
-            onChange={(event) => {
-              const nextTone = event.target.value as ReminderTone;
-              setTone(nextTone);
-              setMessage(buildReminderMessage(nextTone, details));
-            }}
-          >
-            {reminderTones.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Message
-          <textarea
-            aria-label="Reminder message"
-            value={displayedMessage}
-            onChange={(event) => setMessage(event.target.value)}
-            rows={7}
-          />
-        </label>
-        <aside className="rbk-chat-preview" aria-label="Message preview">
-          <small>WhatsApp preview</small>
-          <p>{displayedMessage}</p>
-        </aside>
-        {phone ? (
-          <a
-            className="rbk-primary"
-            href={buildWhatsAppLinkTo(phone, displayedMessage)}
-            target="_blank"
-            rel="noreferrer"
-            onClick={sent}
-          >
-            Open in WhatsApp
-          </a>
-        ) : (
-          <p className="rbk-form-error">
-            This tenant has no usable Nigerian phone number. Copy the message or update the tenant
-            record.
-          </p>
-        )}
-        <footer>
-          <button type="button" onClick={() => copyReminder(displayedMessage, setCopyStatus)}>
-            Copy text
-          </button>
-          {tenantIds.length > 1 ? (
-            <button type="button" onClick={advance}>
-              Skip
-            </button>
-          ) : null}
-        </footer>
-        <p className="rbk-sr-only" aria-live="polite">
-          {copyStatus}
-        </p>
-      </section>
-    </div>
+    <ReminderDialogContent
+      details={details}
+      tenantCount={tenantIds.length}
+      position={position}
+      tone={tone}
+      message={displayedMessage}
+      copyStatus={copyStatus}
+      dialogRef={dialogRef}
+      onClose={close}
+      onToneChange={(nextTone) => {
+        setTone(nextTone);
+        setMessage(buildReminderMessage(nextTone, details));
+      }}
+      onMessageChange={setMessage}
+      onSend={sent}
+      onCopy={() => copyReminder(displayedMessage, setCopyStatus)}
+      onSkip={advance}
+    />
   );
 }
 

@@ -1,4 +1,4 @@
-import { DeferredScreen } from "@/src/demos/rentbook/components/DeferredScreen";
+import { Maintenance } from "@/src/demos/rentbook/components/Maintenance";
 
 import type { Metadata } from "next";
 
@@ -8,10 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function MaintenancePage() {
-  return (
-    <DeferredScreen
-      title="Maintenance"
-      description="Maintenance requests and their progress will live here."
-    />
-  );
+  return <Maintenance />;
 }

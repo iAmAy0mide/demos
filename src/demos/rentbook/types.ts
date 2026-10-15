@@ -65,6 +65,9 @@ export type MaintenanceRequest = {
   priority: "low" | "normal" | "high";
   status: "reported" | "assigned" | "in_progress" | "done";
   estimate: number;
+  assignee?: string;
+  notes?: string;
+  createdAt?: string;
 };
 export type ActivityEntry = { id: string; tenantId: string; date: string; message: string };
 export type Expense = {

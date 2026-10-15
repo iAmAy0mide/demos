@@ -10,6 +10,7 @@ import "@/src/demos/rentbook/styles/tenants.css";
 import "@/src/demos/rentbook/styles/ledger.css";
 import "@/src/demos/rentbook/styles/properties.css";
 import "@/src/demos/rentbook/styles/reports.css";
+import "@/src/demos/rentbook/styles/maintenance.css";
 import { RentbookProvider } from "@/src/demos/rentbook/components/RentbookProvider";
 import { RentbookShell } from "@/src/demos/rentbook/components/RentbookShell";
 import { DemoShell } from "@/src/shared/demo-shell/DemoShell";

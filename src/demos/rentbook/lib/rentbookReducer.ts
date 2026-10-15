@@ -1,6 +1,6 @@
 import { balanceForCharge, OVERPAYMENT_CREDIT_LIMIT } from "./finance";
 
-import type { Payment, Receipt, RentbookData } from "../types";
+import type { MaintenanceRequest, Payment, Receipt, RentbookData } from "../types";
 
 export type RentbookState = RentbookData & {
   selectedPropertyId: string | "all";
@@ -12,6 +12,8 @@ export type RentbookAction =
   | { type: "record_payment"; payment: Payment }
   | { type: "log_reminder"; tenantId: string; tone: string; date: string }
   | { type: "add_note"; tenantId: string; note: string; date: string }
+  | { type: "add_maintenance"; request: MaintenanceRequest }
+  | { type: "update_maintenance"; request: MaintenanceRequest }
   | { type: "reset"; payload: RentbookData };
 export const initialRentbookState: RentbookState = {
   properties: [],
@@ -66,6 +68,15 @@ export function rentbookReducer(state: RentbookState, action: RentbookAction): R
           },
           ...state.activity,
         ],
+      };
+    case "add_maintenance":
+      return { ...state, maintenance: [action.request, ...state.maintenance] };
+    case "update_maintenance":
+      return {
+        ...state,
+        maintenance: state.maintenance.map((request) =>
+          request.id === action.request.id ? action.request : request,
+        ),
       };
   }
 }

@@ -1,3 +1,6 @@
+.rbk-maintenance {
+  min-width: 0;
+}
 .rbk-maintenance-tabs {
   display: flex;
   gap: 0.5rem;

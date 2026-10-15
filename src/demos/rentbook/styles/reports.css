@@ -1,3 +1,6 @@
+.rbk-age {
+  display: inline-block;
+}
 .rbk-report-header {
   display: flex;
   align-items: end;

@@ -1,4 +1,4 @@
-import { DeferredScreen } from "@/src/demos/rentbook/components/DeferredScreen";
+import { Reports } from "@/src/demos/rentbook/components/Reports";
 
 import type { Metadata } from "next";
 
@@ -8,10 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function ReportsPage() {
-  return (
-    <DeferredScreen
-      title="Reports"
-      description="Collection, income and arrears reporting will live here."
-    />
-  );
+  return <Reports />;
 }

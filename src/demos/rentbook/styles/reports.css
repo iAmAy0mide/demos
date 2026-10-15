@@ -1,0 +1,136 @@
+.rbk-report-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.rbk-report-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.rbk-report-actions button {
+  min-height: 44px;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+  color: var(--rbk-ink);
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+}
+.rbk-report-sheet {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+}
+.rbk-report-sheet p,
+.rbk-report-sheet h2 {
+  margin: 0;
+}
+.rbk-report-sheet p {
+  color: var(--rbk-muted);
+  font-size: 0.75rem;
+}
+.rbk-report-sheet h2 {
+  font-size: 1.2rem;
+}
+.rbk-report-chart,
+.rbk-age-chart {
+  width: 100%;
+  max-height: 11rem;
+}
+.rbk-report-chart rect {
+  fill: var(--rbk-emerald);
+}
+.rbk-report-chart line {
+  stroke: var(--rbk-line);
+}
+.rbk-report-chart polyline {
+  fill: none;
+  stroke: var(--rbk-red);
+  stroke-width: 3;
+}
+.rbk-report-chart text {
+  fill: var(--rbk-muted);
+  font: 11px var(--rbk-font-mono);
+}
+.rbk-report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.rbk-report-table th,
+.rbk-report-table td {
+  padding: 0.65rem;
+  border-top: 1px solid var(--rbk-line);
+  text-align: left;
+}
+.rbk-report-table td {
+  font-family: var(--rbk-font-mono);
+}
+.rbk-report-table a {
+  color: var(--rbk-emerald);
+}
+.rbk-age-chart rect {
+  stroke: var(--rbk-surface);
+  stroke-width: 2;
+}
+.rbk-age-0-30 {
+  fill: var(--rbk-amber);
+}
+.rbk-age-31-60 {
+  fill: #bd7d14;
+}
+.rbk-age-61-90 {
+  fill: #c14e35;
+}
+.rbk-age-90plus {
+  fill: var(--rbk-red);
+}
+.rbk-age-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+}
+.rbk-age-legend span {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+.rbk-age-legend i {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+.rbk-report-caption strong {
+  font-family: var(--rbk-font-mono);
+}
+@media (max-width: 600px) {
+  .rbk-report-header {
+    align-items: start;
+    flex-direction: column;
+  }
+  .rbk-report-table {
+    display: block;
+    overflow-x: auto;
+  }
+  .rbk-report-table th,
+  .rbk-report-table td {
+    white-space: nowrap;
+  }
+}
+@media print {
+  .rbk-reports {
+    padding: 0;
+  }
+  .rbk-report-actions {
+    display: none;
+  }
+  .rbk-report-sheet {
+    break-inside: avoid;
+  }
+  .rbk-report-table {
+    font-size: 9px;
+  }
+}

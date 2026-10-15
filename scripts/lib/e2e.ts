@@ -1,6 +1,7 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { access, mkdir } from "node:fs/promises";
 import { createRequire } from "node:module";
+import { createServer } from "node:net";
 
 import type { Browser, Page } from "playwright";
 
@@ -34,6 +35,11 @@ type E2ERunnerOptions = {
   suites: E2ESuite[];
 };
 
+type ProductionServerOptions = {
+  readinessPath?: string;
+  forceBuild?: boolean;
+};
+
 let server: ChildProcess | undefined;
 
 export async function runE2E({ readinessUrl, suites }: E2ERunnerOptions) {
@@ -64,6 +70,29 @@ export async function runE2E({ readinessUrl, suites }: E2ERunnerOptions) {
   } finally {
     process.removeListener("SIGINT", onInterrupt);
     process.removeListener("SIGTERM", onTerminate);
+    await stopServer();
+  }
+}
+
+export async function withProductionServer<T>(
+  task: (baseUrl: string) => Promise<T>,
+  { readinessPath = "/", forceBuild = false }: ProductionServerOptions = {},
+) {
+  await ensureBrowser();
+  if (forceBuild || !(await exists(".next/BUILD_ID"))) {
+    await command("npm", ["run", "build"]);
+  }
+  const port = await findFreePort();
+  const baseUrl = `http://127.0.0.1:${port}`;
+  await assertPortAvailable(port);
+  server = spawn("npm", ["run", "start", "--", "--hostname", "127.0.0.1", "--port", String(port)], {
+    detached: true,
+    stdio: "inherit",
+  });
+  try {
+    await waitForReadiness(`${baseUrl}${readinessPath}`);
+    return await task(baseUrl);
+  } finally {
     await stopServer();
   }
 }
@@ -145,6 +174,22 @@ async function runTest(browser: Browser, test: E2ETest, shouldPass: boolean) {
 
 function e2ePort() {
   return Number(process.env.E2E_PORT ?? "3100");
+}
+
+function findFreePort() {
+  return new Promise<number>((resolve, reject) => {
+    const candidate = createServer();
+    candidate.once("error", reject);
+    candidate.listen(0, "127.0.0.1", () => {
+      const address = candidate.address();
+      if (!address || typeof address === "string") {
+        candidate.close();
+        reject(new Error("Could not reserve a local audit port."));
+        return;
+      }
+      candidate.close((error) => (error ? reject(error) : resolve(address.port)));
+    });
+  });
 }
 
 async function ensureBrowser() {

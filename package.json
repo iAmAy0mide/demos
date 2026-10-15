@@ -37,6 +37,7 @@
     "check:seo": "node --experimental-strip-types scripts/check-seo.ts",
     "check:overflow": "node --experimental-strip-types scripts/check-overflow.ts",
     "check:pill-clearance": "node --experimental-strip-types scripts/check-pill-clearance.ts",
+    "audit:lighthouse": "node --experimental-strip-types scripts/audit-lighthouse.ts",
     "e2e:fieldhand": "node --experimental-strip-types scripts/e2e-fieldhand.ts",
     "e2e:rentbook": "node --experimental-strip-types scripts/e2e-rentbook.ts",
     "e2e": "npm run e2e:fieldhand && npm run e2e:rentbook"

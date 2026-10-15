@@ -111,7 +111,7 @@ function LedgerTable({
   closingBalance: number;
 }) {
   return (
-    <div className="rbk-ledger-table">
+    <div className="rbk-ledger-table" data-scroll-x="intentional">
       <table>
         <thead>
           <tr>

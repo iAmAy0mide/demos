@@ -11,7 +11,11 @@ export function RentbookMobileNavigation({
   onOpenPayment,
 }: RentbookMobileNavigationProps) {
   return (
-    <nav className="rbk-mobile-nav" aria-label="Rentbook mobile navigation">
+    <nav
+      className="rbk-mobile-nav"
+      aria-label="Rentbook mobile navigation"
+      data-testid="rentbook-mobile-nav"
+    >
       <Link href="/work/rentbook" aria-current={pathname === "/work/rentbook" ? "page" : undefined}>
         <LayoutDashboard aria-hidden="true" size={17} />
         Overview

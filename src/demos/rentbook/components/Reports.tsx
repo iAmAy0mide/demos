@@ -47,7 +47,7 @@ export function Reports() {
           <h2 id="income-heading">Income by month</h2>
         </div>
         <IncomeChart values={report.months} />
-        <table className="rbk-report-table">
+        <table className="rbk-report-table" data-scroll-x="intentional">
           <caption className="rbk-sr-only">Income by month and property</caption>
           <thead>
             <tr>
@@ -95,7 +95,7 @@ export function Reports() {
             </span>
           ))}
         </div>
-        <table className="rbk-report-table">
+        <table className="rbk-report-table" data-scroll-x="intentional">
           <caption className="rbk-sr-only">Tenants by arrears age</caption>
           <thead>
             <tr>

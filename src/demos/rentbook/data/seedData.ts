@@ -62,6 +62,14 @@ const names = [
   "Rasheedat Bello",
   "Nnamdi Kalu",
 ];
+
+export function isSeedTenantId(id: string) {
+  return /^tenant-\d+$/.test(id) && Number(id.slice(7)) <= names.length;
+}
+
+export function isSeedPropertyId(id: string) {
+  return /^property-[1-5]$/.test(id);
+}
 function shifted(today: Date, months: number, days = 0) {
   const date = new Date(today);
   date.setUTCMonth(date.getUTCMonth() + months);

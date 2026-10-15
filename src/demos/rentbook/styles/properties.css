@@ -1,0 +1,233 @@
+.rbk-property-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.rbk-properties {
+}
+.rbk-building-page {
+}
+.rbk-svg {
+}
+.rbk-property-card {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1rem;
+  border: 1px solid var(--rbk-line);
+  color: var(--rbk-ink);
+  text-decoration: none;
+  background: var(--rbk-surface);
+}
+.rbk-property-card:hover {
+  border-color: var(--rbk-emerald);
+}
+.rbk-property-card p,
+.rbk-property-card span {
+  margin: 0;
+  color: var(--rbk-muted);
+  font-size: 0.75rem;
+}
+.rbk-property-card h2 {
+  margin: 0.25rem 0;
+  font-size: 1.15rem;
+}
+.rbk-property-card dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+  border-top: 1px solid var(--rbk-line);
+  padding-top: 0.7rem;
+}
+.rbk-property-card dt,
+.rbk-building-stats span {
+  color: var(--rbk-muted);
+  font-size: 0.68rem;
+}
+.rbk-property-card dd {
+  margin: 0.25rem 0 0;
+  font: 0.75rem var(--rbk-font-mono);
+}
+.rbk-building-mini {
+  width: 100%;
+  height: 100px;
+  fill: color-mix(in srgb, var(--rbk-emerald) 10%, var(--rbk-surface));
+  stroke: var(--rbk-emerald);
+  stroke-width: 4;
+}
+.rbk-building-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 1.5rem 0;
+  border-block: 1px solid var(--rbk-line);
+}
+.rbk-building-stats div {
+  padding: 0.8rem;
+  border-right: 1px solid var(--rbk-line);
+}
+.rbk-building-stats strong {
+  display: block;
+  margin-top: 0.25rem;
+  font: 0.85rem var(--rbk-font-mono);
+}
+.rbk-building-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+  gap: 1rem;
+}
+.rbk-elevation-wrap {
+  padding: 1rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+}
+.rbk-elevation {
+  display: block;
+  width: 100%;
+}
+.rbk-roof,
+.rbk-building-frame {
+  fill: color-mix(in srgb, var(--rbk-ink) 5%, var(--rbk-surface));
+  stroke: var(--rbk-ink);
+  stroke-width: 3;
+}
+.rbk-svg-unit {
+  cursor: pointer;
+}
+.rbk-svg-unit rect {
+  stroke: var(--rbk-ink);
+  stroke-width: 2;
+}
+.rbk-svg-unit text {
+  fill: var(--rbk-ink);
+  font: 18px var(--rbk-font-sans);
+  pointer-events: none;
+}
+.rbk-svg-unit text + text {
+  font-size: 14px;
+}
+.rbk-svg-paid rect,
+.rbk-key-paid {
+  fill: color-mix(in srgb, var(--rbk-emerald) 28%, var(--rbk-surface));
+}
+.rbk-svg-due_soon rect,
+.rbk-key-due_soon {
+  fill: var(--rbk-amber);
+}
+.rbk-svg-overdue rect,
+.rbk-key-overdue {
+  fill: var(--rbk-red);
+}
+.rbk-svg-partial rect,
+.rbk-key-partial {
+  fill: color-mix(in srgb, var(--rbk-amber) 55%, var(--rbk-surface));
+}
+.rbk-svg-vacant rect,
+.rbk-key-vacant {
+  fill: var(--rbk-slate);
+}
+.rbk-svg-notice rect,
+.rbk-key-notice {
+  fill: color-mix(in srgb, var(--rbk-red) 45%, var(--rbk-surface));
+}
+.rbk-svg-maintenance rect,
+.rbk-key-maintenance {
+  fill: var(--rbk-muted);
+}
+.rbk-svg-unit:focus rect {
+  stroke: var(--rbk-emerald);
+  stroke-width: 6;
+}
+.rbk-entrance {
+  fill: var(--rbk-ink);
+}
+.rbk-elevation > text {
+  fill: var(--rbk-surface);
+  font: 16px var(--rbk-font-mono);
+}
+.rbk-building-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+  font-size: 0.72rem;
+}
+.rbk-key {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-right: 0.25rem;
+  border: 1px solid var(--rbk-ink);
+}
+.rbk-unit-panel {
+  padding: 1rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-paper);
+}
+.rbk-unit-panel h2 {
+  margin: 0.25rem 0;
+}
+.rbk-unit-panel h3 {
+  margin: 1rem 0 0.5rem;
+}
+.rbk-unit-panel dl {
+  display: grid;
+  gap: 0.7rem;
+}
+.rbk-unit-actions {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.rbk-unit-actions button,
+.rbk-unit-actions a {
+  min-height: 44px;
+  padding: 0.65rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+  color: var(--rbk-ink);
+  text-decoration: none;
+  cursor: pointer;
+}
+.rbk-unit-actions .rbk-primary {
+  border: 0;
+}
+.rbk-unit-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.rbk-unit-list h2 {
+  grid-column: 1/-1;
+  font-size: 1rem;
+}
+.rbk-unit-list button {
+  min-height: 44px;
+  padding: 0.5rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+  text-align: left;
+  color: var(--rbk-ink);
+}
+.rbk-unit-list button span {
+  display: block;
+  color: var(--rbk-muted);
+  font-size: 0.7rem;
+}
+@media (max-width: 700px) {
+  .rbk-building-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .rbk-building-layout {
+    grid-template-columns: 1fr;
+  }
+  .rbk-elevation-wrap {
+    padding: 0.4rem;
+  }
+  .rbk-elevation {
+    min-height: 260px;
+  }
+  .rbk-svg-unit text {
+    font-size: 16px;
+  }
+}

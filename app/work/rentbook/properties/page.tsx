@@ -1,4 +1,4 @@
-import { DeferredScreen } from "@/src/demos/rentbook/components/DeferredScreen";
+import { Properties } from "@/src/demos/rentbook/components/Properties";
 
 import type { Metadata } from "next";
 
@@ -8,10 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function PropertiesPage() {
-  return (
-    <DeferredScreen
-      title="Properties"
-      description="Building health, occupancy and unit details will live here."
-    />
-  );
+  return <Properties />;
 }

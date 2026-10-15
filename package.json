@@ -25,6 +25,8 @@
     "check:lagos-time": "node scripts/check-lagos-time.mjs",
     "check:fieldhand-slots": "node --experimental-strip-types scripts/check-fieldhand-slots.ts",
     "check:rentbook-seed": "node --experimental-strip-types scripts/check-rentbook-seed.ts",
+    "check:ledger": "node --experimental-strip-types scripts/check-ledger.ts",
+    "check:building-layout": "node --experimental-strip-types scripts/check-building-layout.ts",
     "check:contact": "node --experimental-strip-types scripts/check-contact.ts",
     "check:attribution": "node --experimental-strip-types scripts/check-attribution.ts",
     "check:brief-message": "node --experimental-strip-types scripts/check-brief-message.ts",

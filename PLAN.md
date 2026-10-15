@@ -2,6 +2,14 @@
 
 Living plan and progress tracker for **Axmion Showcase**. Codex reads this at the start of every session and updates it at the end of every session.
 
+### Session: 2026-10-15, Rentbook tenant and property continuation
+
+- Done: Preserved the existing uncommitted tenant-ledger, portfolio and building-view work; tightened dynamic-route validation to the seeded IDs; separated the ledger notes panel and SVG elevation keyboard mechanics; cleared the three newly introduced continuation lint warnings. The pure ledger and building-layout checkers pass.
+- In progress / rough: Browser E2E, screenshots, keyboard walkthrough and final production build remain unverified. This continuation does not change phase status.
+- Known issues: `npm run lint` has 23 pre-existing warnings elsewhere in the repository but no new warnings in the tenant/property work. The focused E2E production server stopped on a stale `.next/server/preview-props.json` artifact. An isolated fresh build also failed while Next tried to self-host Google Fonts: retries ended with `ETIMEDOUT` and `ENETUNREACH` on port 443. Git remains read-only: `fatal: Unable to create '/home/ayomide/Web_Dev/demos/.git/index.lock': Read-only file system`.
+- Verification: `npm run typecheck`, `npm run check:ledger`, and `npm run check:building-layout` passed. `npm run e2e:rentbook` could launch Chromium after escalation but could not obtain a valid current production output; no screenshots were viewed.
+- Next session should: restore network access for the font fetch or use an approved local-font build path, obtain a fresh successful production build, rerun Rentbook E2E and required phone checks, inspect the requested desktop/phone/print screenshots, then commit the three logical Rentbook slices if Git becomes writable.
+
 ---
 
 ## Current stage

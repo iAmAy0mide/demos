@@ -1,0 +1,183 @@
+.rbk-ledger-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.rbk-ledger-page {
+}
+.rbk-ledger-contact {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  font: 0.76rem var(--rbk-font-mono);
+}
+.rbk-ledger-contact a {
+  color: var(--rbk-emerald);
+}
+.rbk-lease-summary {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: 1.5rem 0;
+  border-block: 1px solid var(--rbk-line);
+}
+.rbk-lease-summary div {
+  min-width: 0;
+  padding: 0.8rem;
+  border-right: 1px solid var(--rbk-line);
+}
+.rbk-lease-summary dt,
+.rbk-unit-panel dt {
+  color: var(--rbk-muted);
+  font-size: 0.7rem;
+}
+.rbk-lease-summary dd,
+.rbk-unit-panel dd {
+  margin: 0.3rem 0 0;
+  font: 0.78rem var(--rbk-font-mono);
+}
+.rbk-ledger-table {
+  overflow-x: auto;
+  border-block: 1px solid var(--rbk-line);
+}
+.rbk-ledger-table table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.rbk-ledger-table th,
+.rbk-ledger-table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--rbk-line);
+  text-align: left;
+}
+.rbk-ledger-table td:nth-last-child(-n + 3),
+.rbk-ledger-table tfoot td {
+  font-family: var(--rbk-font-mono);
+  text-align: right;
+}
+.rbk-ledger-table a {
+  color: var(--rbk-emerald);
+}
+.rbk-ledger-table tfoot {
+  background: var(--rbk-paper);
+}
+.rbk-statement-footer {
+  display: none;
+}
+.rbk-ledger-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.25rem 0;
+}
+.rbk-ledger-actions button,
+.rbk-ledger-support button {
+  min-height: 44px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--rbk-line);
+  background: var(--rbk-surface);
+  color: var(--rbk-ink);
+  cursor: pointer;
+}
+.rbk-ledger-actions .rbk-primary {
+  border: 0;
+}
+.rbk-ledger-support {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.rbk-ledger-support section {
+  padding: 1rem;
+  border: 1px solid var(--rbk-line);
+}
+.rbk-ledger-support h2 {
+  margin: 0 0 0.8rem;
+  font-size: 1rem;
+}
+.rbk-timeline {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+.rbk-timeline li {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0.75rem 0;
+}
+.rbk-timeline time,
+.rbk-activity time {
+  color: var(--rbk-muted);
+  font: 0.7rem var(--rbk-font-mono);
+}
+.rbk-activity p {
+  display: grid;
+  gap: 0.2rem;
+}
+.rbk-ledger-support label {
+  display: grid;
+  gap: 0.4rem;
+}
+.rbk-ledger-support textarea {
+  min-height: 70px;
+  border: 1px solid var(--rbk-line);
+  padding: 0.6rem;
+  font: inherit;
+}
+.rbk-ledger-support button {
+  margin-top: 0.5rem;
+}
+@media (max-width: 700px) {
+  .rbk-ledger-header,
+  .rbk-lease-summary,
+  .rbk-ledger-support {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .rbk-lease-summary div {
+    border-bottom: 1px solid var(--rbk-line);
+  }
+  .rbk-ledger-contact {
+    grid-template-columns: 1fr 1fr;
+  }
+  .rbk-ledger-table {
+    margin-inline: -1rem;
+  }
+  .rbk-ledger-table th,
+  .rbk-ledger-table td {
+    padding: 0.65rem;
+  }
+}
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .rbk-statement,
+  .rbk-statement * {
+    visibility: visible;
+  }
+  .rbk-statement {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    padding: 1.5rem;
+    color: #102b22;
+    background: #fff;
+  }
+  .rbk-statement-footer {
+    display: block;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+  }
+  .rbk-ledger-table {
+    overflow: visible;
+  }
+  .rbk-ledger-table table {
+    min-width: 0;
+  }
+  .rbk-top,
+  .rbk-mobile-nav,
+  .axm-shell {
+    display: none !important;
+  }
+}

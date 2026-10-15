@@ -7,6 +7,7 @@ const overviewUrl = `http://127.0.0.1:${port}/work/rentbook`;
 const rentRollUrl = `${overviewUrl}/rent-roll`;
 const paymentsUrl = `${overviewUrl}/payments`;
 const tenantsUrl = `${overviewUrl}/tenants`;
+const propertiesUrl = `${overviewUrl}/properties`;
 
 const tests: E2ETest[] = [
   {
@@ -38,6 +39,16 @@ const tests: E2ETest[] = [
     id: "R6",
     viewport: { name: "desktop", width: 1296, height: 640, isMobile: false },
     run: exerciseTenantRegister,
+  },
+  {
+    id: "R7",
+    viewport: { name: "desktop", width: 1296, height: 640, isMobile: false },
+    run: exerciseTenantLedger,
+  },
+  {
+    id: "R8",
+    viewport: { name: "phone", width: 390, height: 844, isMobile: true },
+    run: exerciseBuilding,
   },
 ];
 
@@ -158,4 +169,67 @@ async function exerciseTenantRegister(page: Page) {
   if ((await accounts.count()) >= count) {
     throw new Error("Tenant status filter did not narrow the register.");
   }
+}
+
+async function exerciseTenantLedger(page: Page) {
+  await page.goto(`${tenantsUrl}/tenant-1`, { waitUntil: "domcontentloaded" });
+  await page.getByTestId("tenant-ledger").waitFor();
+  const before = await page.locator(".rbk-ledger-table tfoot td").textContent();
+  await page.getByRole("button", { name: "Record payment" }).click();
+  await page.getByTestId("payment-drawer").waitFor();
+  await page.getByLabel(/Amount/i).fill("100000");
+  await page.getByLabel(/Reference/i).fill("LEDGER-R7");
+  await page
+    .getByRole("button", { name: /record payment/i })
+    .last()
+    .click();
+  await page.getByTestId("tenant-ledger").waitFor();
+  if ((await page.locator(".rbk-ledger-table tfoot td").textContent()) === before) {
+    throw new Error("Ledger payment did not update the closing balance.");
+  }
+  await page.emulateMedia({ media: "print" });
+  if (
+    (await page
+      .getByTestId("tenant-statement")
+      .evaluate((element) => getComputedStyle(element).visibility)) !== "visible"
+  ) {
+    throw new Error("Ledger statement is not visible in print media.");
+  }
+  if (
+    (await page
+      .locator(".rbk-ledger-actions")
+      .evaluate((element) => getComputedStyle(element).visibility)) !== "hidden"
+  ) {
+    throw new Error("Ledger actions are visible in print media.");
+  }
+  await page.emulateMedia({ media: "screen" });
+  await page.goto(`${tenantsUrl}/missing`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("heading", { name: /not in this book/i }).waitFor();
+}
+
+async function exerciseBuilding(page: Page) {
+  await page.goto(`${propertiesUrl}/property-1`, { waitUntil: "domcontentloaded" });
+  await page.getByTestId("building-view").waitFor();
+  const units = page.locator(".rbk-svg-unit");
+  if ((await units.count()) !== 8) {
+    throw new Error("Building view unit count differs from property seed.");
+  }
+  await units.first().click();
+  await page.getByText("Selected unit").waitFor();
+  await units.first().focus();
+  await page.keyboard.press("ArrowRight");
+  if ((await page.locator(".rbk-svg-unit[tabindex='0']").count()) !== 1) {
+    throw new Error("Roving tabindex did not retain a single active unit.");
+  }
+  await page.getByRole("button", { name: /Flat 2A/i }).click();
+  if ((await page.locator(".rbk-unit-panel h2").textContent()) !== "Flat 2A") {
+    throw new Error("Alternative unit list did not select its unit.");
+  }
+  await page.goto(propertiesUrl, { waitUntil: "domcontentloaded" });
+  await page.getByLabel("Property").selectOption("property-1");
+  if ((await page.getByTestId("property-grid").locator(".rbk-property-card").count()) !== 1) {
+    throw new Error("Property switcher did not filter building cards.");
+  }
+  await page.goto(`${propertiesUrl}/missing`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("heading", { name: /not in this book/i }).waitFor();
 }

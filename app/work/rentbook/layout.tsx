@@ -7,6 +7,8 @@ import "@/src/demos/rentbook/styles/overview.css";
 import "@/src/demos/rentbook/styles/rent-roll.css";
 import "@/src/demos/rentbook/styles/payments.css";
 import "@/src/demos/rentbook/styles/tenants.css";
+import "@/src/demos/rentbook/styles/ledger.css";
+import "@/src/demos/rentbook/styles/properties.css";
 import { RentbookProvider } from "@/src/demos/rentbook/components/RentbookProvider";
 import { RentbookShell } from "@/src/demos/rentbook/components/RentbookShell";
 import { DemoShell } from "@/src/shared/demo-shell/DemoShell";

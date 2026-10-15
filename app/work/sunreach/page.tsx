@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Stop feeding your generator. Keep your day moving.",
     description: "A free solar site inspection from Sunreach Power.",
+    images: [{ url: "/og/sunreach.jpg", width: 1200, height: 630, alt: "Sunreach Power" }],
   },
+  twitter: { card: "summary_large_image", images: ["/og/sunreach.jpg"] },
 };
 export default function SunreachPage() {
   return <SunreachLanding />;

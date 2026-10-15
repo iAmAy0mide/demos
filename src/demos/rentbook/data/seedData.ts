@@ -182,6 +182,7 @@ export function createSeedRentbookData(today: Date): RentbookData {
         priority: "high",
         status: "assigned",
         estimate: 85000,
+        createdAt: shifted(today, -11),
       },
       {
         id: "maintenance-2",
@@ -190,6 +191,7 @@ export function createSeedRentbookData(today: Date): RentbookData {
         priority: "normal",
         status: "reported",
         estimate: 45000,
+        createdAt: shifted(today, -6),
       },
       {
         id: "maintenance-3",
@@ -198,6 +200,7 @@ export function createSeedRentbookData(today: Date): RentbookData {
         priority: "normal",
         status: "in_progress",
         estimate: 120000,
+        createdAt: shifted(today, -3),
       },
       {
         id: "maintenance-4",
@@ -206,6 +209,7 @@ export function createSeedRentbookData(today: Date): RentbookData {
         priority: "low",
         status: "reported",
         estimate: 35000,
+        createdAt: shifted(today, -1),
       },
     ],
     activity: [

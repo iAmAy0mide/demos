@@ -1,10 +1,11 @@
 import { balanceForCharge, OVERPAYMENT_CREDIT_LIMIT } from "./finance";
 
-import type { MaintenanceRequest, Payment, Receipt, RentbookData } from "../types";
+import type { MaintenanceRequest, Payment, Receipt, RentbookData, Unit } from "../types";
 
 export type RentbookState = RentbookData & {
   selectedPropertyId: string | "all";
   isLoaded: boolean;
+  maintenanceError: string | null;
 };
 export type RentbookAction =
   | { type: "hydrate"; payload: RentbookData; selectedPropertyId?: string | "all" }
@@ -28,6 +29,7 @@ export const initialRentbookState: RentbookState = {
   activity: [],
   selectedPropertyId: "all",
   isLoaded: false,
+  maintenanceError: null,
 };
 export function rentbookReducer(state: RentbookState, action: RentbookAction): RentbookState {
   switch (action.type) {
@@ -36,11 +38,17 @@ export function rentbookReducer(state: RentbookState, action: RentbookAction): R
         ...action.payload,
         selectedPropertyId: action.selectedPropertyId ?? "all",
         isLoaded: true,
+        maintenanceError: null,
       };
     case "select_property":
       return { ...state, selectedPropertyId: action.propertyId };
     case "reset":
-      return { ...action.payload, selectedPropertyId: "all", isLoaded: true };
+      return {
+        ...action.payload,
+        selectedPropertyId: "all",
+        isLoaded: true,
+        maintenanceError: null,
+      };
     case "record_payment":
       return recordPayment(state, action.payment);
     case "log_reminder":
@@ -70,15 +78,92 @@ export function rentbookReducer(state: RentbookState, action: RentbookAction): R
         ],
       };
     case "add_maintenance":
-      return { ...state, maintenance: [action.request, ...state.maintenance] };
-    case "update_maintenance":
+      if (!state.units.some((unit) => unit.id === action.request.unitId)) {
+        return { ...state, maintenanceError: "Choose a valid unit before creating this request." };
+      }
       return {
         ...state,
-        maintenance: state.maintenance.map((request) =>
-          request.id === action.request.id ? action.request : request,
-        ),
+        maintenance: [action.request, ...state.maintenance],
+        maintenanceError: null,
       };
+    case "update_maintenance":
+      return updateMaintenance(state, action.request);
   }
+}
+
+const MAINTENANCE_STATUSES = ["reported", "assigned", "in_progress", "done"] as const;
+
+function updateMaintenance(state: RentbookState, nextRequest: MaintenanceRequest): RentbookState {
+  const previousRequest = state.maintenance.find((request) => request.id === nextRequest.id);
+  if (!previousRequest) {
+    return { ...state, maintenanceError: "This request no longer exists." };
+  }
+  if (!state.units.some((unit) => unit.id === nextRequest.unitId)) {
+    return { ...state, maintenanceError: "Choose a valid unit before saving this request." };
+  }
+  if (!isAdjacentStatusMove(previousRequest.status, nextRequest.status)) {
+    return {
+      ...state,
+      maintenanceError: "Move a maintenance request one status step at a time.",
+    };
+  }
+  return {
+    ...state,
+    maintenance: state.maintenance.map((request) =>
+      request.id === nextRequest.id
+        ? withMaintenanceActivity(previousRequest, nextRequest)
+        : request,
+    ),
+    units: updateUnitMaintenanceStatus(state.units, previousRequest, nextRequest),
+    maintenanceError: null,
+  };
+}
+
+function isAdjacentStatusMove(
+  previous: MaintenanceRequest["status"],
+  next: MaintenanceRequest["status"],
+) {
+  return Math.abs(MAINTENANCE_STATUSES.indexOf(previous) - MAINTENANCE_STATUSES.indexOf(next)) <= 1;
+}
+
+function withMaintenanceActivity(previous: MaintenanceRequest, next: MaintenanceRequest) {
+  if (previous.status === next.status) {
+    return next;
+  }
+  const date = new Date().toISOString().slice(0, 10);
+  return {
+    ...next,
+    activity: [
+      ...(previous.activity ?? []),
+      {
+        id: `maintenance-activity-${previous.id}-${next.status}`,
+        date,
+        message: `Status moved from ${previous.status.replace("_", " ")} to ${next.status.replace("_", " ")}.`,
+      },
+    ],
+  };
+}
+
+function updateUnitMaintenanceStatus(
+  units: Unit[],
+  previous: MaintenanceRequest,
+  next: MaintenanceRequest,
+) {
+  if (previous.status === next.status) {
+    return units;
+  }
+  return units.map((unit): Unit => {
+    if (unit.id !== next.unitId) {
+      return unit;
+    }
+    if (next.status === "in_progress" && unit.status === "vacant") {
+      return { ...unit, status: "under_maintenance" };
+    }
+    if (previous.status === "in_progress" && unit.status === "under_maintenance") {
+      return { ...unit, status: "vacant" };
+    }
+    return unit;
+  });
 }
 
 function recordPayment(state: RentbookState, payment: Payment): RentbookState {

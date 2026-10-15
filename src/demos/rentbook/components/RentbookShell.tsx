@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type RefObject } from "react";
 
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
+import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
 
 import { PaymentDialog } from "./PaymentDialog";
 import { ReceiptDialog } from "./ReceiptDialog";
@@ -164,16 +165,14 @@ function useRentbookShortcut(
 }
 
 function usePaymentHint(setShowPaymentHint: (isVisible: boolean) => void) {
+  const isEmbedded = useIsEmbedded();
   useEffect(() => {
-    if (
-      window.location.search.includes("embed=1") ||
-      localStorage.getItem("rentbook-payment-hint")
-    ) {
+    if (isEmbedded || localStorage.getItem("rentbook-payment-hint")) {
       return;
     }
     setShowPaymentHint(true);
     localStorage.setItem("rentbook-payment-hint", "seen");
-  }, [setShowPaymentHint]);
+  }, [isEmbedded, setShowPaymentHint]);
 }
 
 function useFocusCommandInput(

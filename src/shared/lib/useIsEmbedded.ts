@@ -3,14 +3,18 @@
 import { useEffect, useState } from "react";
 
 export function useIsEmbedded() {
-  const [isEmbedded, setIsEmbedded] = useState(false);
+  const [isEmbedded, setIsEmbedded] = useState(readEmbeddedState);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setIsEmbedded(window.location.search.includes("embed=1") || window.self !== window.top);
-    }, 0);
-    return () => window.clearTimeout(timer);
+    setIsEmbedded(readEmbeddedState());
   }, []);
 
   return isEmbedded;
+}
+
+function readEmbeddedState() {
+  return (
+    typeof window !== "undefined" &&
+    (window.location.search.includes("embed=1") || window.self !== window.top)
+  );
 }

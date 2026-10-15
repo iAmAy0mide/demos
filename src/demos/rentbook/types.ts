@@ -68,7 +68,9 @@ export type MaintenanceRequest = {
   assignee?: string;
   notes?: string;
   createdAt?: string;
+  activity?: MaintenanceActivity[];
 };
+export type MaintenanceActivity = { id: string; date: string; message: string };
 export type ActivityEntry = { id: string; tenantId: string; date: string; message: string };
 export type Expense = {
   id: string;

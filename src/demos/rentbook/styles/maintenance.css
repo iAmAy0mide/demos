@@ -26,7 +26,7 @@
 .rbk-maintenance-row {
   display: grid;
   width: 100%;
-  grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
   gap: 0.75rem;
   padding: 1rem;
   border-width: 0 0 1px;
@@ -52,6 +52,25 @@
   border: 1px solid var(--rbk-line);
   padding: 0.55rem;
   font: inherit;
+}
+.rbk-maintenance-activity {
+  border-top: 1px solid var(--rbk-line);
+  padding-top: 1rem;
+}
+.rbk-maintenance-activity h3,
+.rbk-maintenance-activity ol {
+  margin: 0;
+}
+.rbk-maintenance-activity ol {
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 1.1rem;
+  color: var(--rbk-muted);
+  font-size: 0.82rem;
+}
+.rbk-maintenance-activity time {
+  color: var(--rbk-ink);
+  font-family: var(--rbk-font-mono);
 }
 @media (max-width: 600px) {
   .rbk-maintenance-row {

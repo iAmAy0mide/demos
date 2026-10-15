@@ -38,7 +38,7 @@ export function RentbookCommandDialog({
   const panelRef = useRef<HTMLElement>(null);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
-  useDismissibleLayer({ isOpen: true, onDismiss: onClose, layerRef: panelRef });
+  useDismissibleLayer({ isOpen: true, onDismiss: onClose, layerRef: panelRef, trapFocus: true });
   const commands: Command[] = useMemo(
     () => [
       ...state.tenants.map((tenant) => ({

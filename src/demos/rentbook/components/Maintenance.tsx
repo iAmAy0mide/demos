@@ -71,6 +71,7 @@ export function Maintenance() {
             <span className={`rbk-status rbk-status-${request.priority}`}>{request.priority}</span>
             <span>{request.status.replace("_", " ")}</span>
             <span>{naira(request.estimate)}</span>
+            <span>{requestAge(request.createdAt)}</span>
           </button>
         ))}
       </section>
@@ -93,8 +94,23 @@ export function Maintenance() {
           }}
         />
       ) : null}
+      {state.maintenanceError ? (
+        <p className="rbk-toast" role="alert">
+          {state.maintenanceError}
+        </p>
+      ) : null}
     </main>
   );
+}
+function requestAge(createdAt: string | undefined) {
+  if (!createdAt) {
+    return "Existing request";
+  }
+  const days = Math.max(
+    0,
+    Math.floor((Date.now() - new Date(`${createdAt}T00:00:00`).getTime()) / 86_400_000),
+  );
+  return `${days}d open`;
 }
 function unitName(request: MaintenanceRequest, state: ReturnType<typeof useRentbook>["state"]) {
   const unit = state.units.find((entry) => entry.id === request.unitId);
@@ -161,6 +177,24 @@ function MaintenanceSheet({
             Next status
           </button>
         </div>
+        <section className="rbk-maintenance-activity" aria-labelledby="maintenance-activity-title">
+          <h3 id="maintenance-activity-title">Activity</h3>
+          <ol>
+            {(
+              draft.activity ?? [
+                {
+                  id: `maintenance-created-${draft.id}`,
+                  date: draft.createdAt ?? "Earlier",
+                  message: "Request added to the building care register.",
+                },
+              ]
+            ).map((entry) => (
+              <li key={entry.id}>
+                <time>{entry.date}</time> {entry.message}
+              </li>
+            ))}
+          </ol>
+        </section>
         <button className="rbk-primary" type="button" onClick={() => onSave(draft)}>
           Save update
         </button>
@@ -196,6 +230,13 @@ function NewRequest({
       status: "reported",
       estimate: 0,
       createdAt: new Date().toISOString().slice(0, 10),
+      activity: [
+        {
+          id: `maintenance-activity-${crypto.randomUUID()}`,
+          date: new Date().toISOString().slice(0, 10),
+          message: "Request reported.",
+        },
+      ],
     });
   }
   return (

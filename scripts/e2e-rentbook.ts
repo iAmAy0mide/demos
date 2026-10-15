@@ -1,5 +1,7 @@
 import { runE2E, type E2ETest } from "./lib/e2e.ts";
 
+import { readFile } from "node:fs/promises";
+
 import type { Page } from "playwright";
 
 const port = Number(process.env.E2E_PORT ?? "3100");
@@ -62,6 +64,11 @@ const tests: E2ETest[] = [
     viewport: { name: "desktop", width: 1296, height: 640, isMobile: false },
     run: exerciseReportsAndMaintenance,
   },
+  {
+    id: "R11",
+    viewport: { name: "desktop", width: 1296, height: 640, isMobile: false },
+    run: verifyEmbedDoesNotPersist,
+  },
 ];
 
 await runE2E({ readinessUrl: overviewUrl, suites: [{ tests, shouldPass: true }] });
@@ -102,6 +109,17 @@ async function checkPhoneRoll(page: Page) {
   const display = await row.evaluate((element) => getComputedStyle(element).display);
   if (display !== "block") {
     throw new Error("Rent roll does not stack its rows on phone.");
+  }
+  if (!(await page.getByTestId("rentbook-mobile-nav").isVisible())) {
+    throw new Error("Rentbook phone navigation is not visible.");
+  }
+  await page.goto(maintenanceUrl, { waitUntil: "domcontentloaded" });
+  await page.getByTestId("maintenance-page").waitFor();
+  await page.locator(".rbk-maintenance-row").first().click();
+  const sheet = page.locator(".rbk-maintenance-sheet");
+  const height = await sheet.evaluate((element) => element.getBoundingClientRect().height);
+  if (height < 700) {
+    throw new Error("Maintenance detail is not a full-height phone sheet.");
   }
 }
 
@@ -253,6 +271,9 @@ async function exercisePaletteAndShortcuts(page: Page) {
   await page.getByLabel("Find a command").fill("Adaeze");
   await page.getByRole("link", { name: "Adaeze Okoro" }).click();
   await page.getByTestId("tenant-ledger").waitFor();
+  await page.keyboard.press("?");
+  await page.getByRole("heading", { name: "Keyboard shortcuts" }).waitFor();
+  await page.keyboard.press("Escape");
   await page.keyboard.press("g");
   await page.keyboard.press("r");
   await page.getByRole("heading", { name: "Rent roll" }).waitFor();
@@ -260,6 +281,11 @@ async function exercisePaletteAndShortcuts(page: Page) {
   await page.getByTestId("payment-drawer").waitFor();
   await page.getByLabel("Close record payment").click();
   await page.getByRole("button", { name: "Discard" }).click();
+  await page.getByLabel(/Search tenants/i).focus();
+  await page.keyboard.press("p");
+  if (await page.getByTestId("payment-drawer").isVisible()) {
+    throw new Error("Payment shortcut fired while a text input had focus.");
+  }
   await page.keyboard.press("n");
   await page.getByRole("heading", { name: "New request" }).waitFor();
 }
@@ -268,11 +294,25 @@ async function exerciseReportsAndMaintenance(page: Page) {
   await page.goto(reportsUrl, { waitUntil: "domcontentloaded" });
   await page.getByTestId("reports-page").waitFor();
   const before = await page.locator(".rbk-report-table tbody tr").count();
+  const beforeIncome = await page.locator(".rbk-report-table tbody").textContent();
   await page.getByLabel("Property").selectOption("property-1");
   if ((await page.locator(".rbk-report-table tbody tr").count()) !== before) {
     throw new Error(
       "Reports table row count should remain a six-month series after property scope.",
     );
+  }
+  if ((await page.locator(".rbk-report-table tbody").textContent()) === beforeIncome) {
+    throw new Error("Reports did not recalculate when the property scope changed.");
+  }
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export CSV" }).click();
+  const download = await downloadPromise;
+  const csv = await readFile((await download.path()) ?? "", "utf8");
+  if (!csv.startsWith("\ufeffDate,Property,Tenant,Unit,Amount")) {
+    throw new Error("Rentbook CSV did not have the expected UTF-8 BOM and header.");
+  }
+  if (csv.trim().split("\r\n").length < 2) {
+    throw new Error("Rentbook CSV did not include data rows.");
   }
   await page.goto(maintenanceUrl, { waitUntil: "domcontentloaded" });
   await page.getByTestId("maintenance-page").waitFor();
@@ -281,4 +321,17 @@ async function exerciseReportsAndMaintenance(page: Page) {
   await page.getByLabel("Request").fill("Test gate repair");
   await page.getByRole("button", { name: "Create request" }).click();
   await page.getByText("Test gate repair").waitFor();
+  await page.getByText("Test gate repair").click();
+  await page.getByRole("button", { name: "Next status" }).click();
+  await page.getByRole("button", { name: "Save update" }).click();
+  await page.getByText("assigned").waitFor();
+}
+
+async function verifyEmbedDoesNotPersist(page: Page) {
+  await page.goto(`${overviewUrl}?embed=1`, { waitUntil: "domcontentloaded" });
+  await page.getByTestId("rentbook-overview").waitFor();
+  const storageSize = await page.evaluate(() => localStorage.length);
+  if (storageSize !== 0) {
+    throw new Error("Embed mode wrote Rentbook state to localStorage.");
+  }
 }

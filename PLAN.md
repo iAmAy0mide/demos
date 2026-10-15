@@ -2,6 +2,15 @@
 
 Living plan and progress tracker for **Axmion Showcase**. Codex reads this at the start of every session and updates it at the end of every session.
 
+### Session: 2026-10-15, Rentbook phone and publishing verification
+
+- Done: Committed phone scroll contracts and the mobile-navigation E2E hook as `d162efb` (4 files, 9 insertions, 5 deletions). Marked the ledger and report tables as deliberate horizontal scrollers and darkened the vacant status token to meet AA text contrast.
+- Visual evidence: inspected regenerated Rentbook desktop/mobile previews and Open Graph image. The desktop shows the full ledger dashboard; the phone crop preserves the compact header, stat grid and bottom navigation; the OG crop retains the same dashboard hierarchy.
+- Phone verification: the fresh production server passed 36 route/viewport overflow checks and 72 top/bottom Axmion-pill-clearance checks across all required Rentbook routes at 320, 360, 390 and 412px.
+- Contrast: emerald 6.11:1 / 6.51:1; red 6.37:1 / 6.80:1; amber 5.50:1 / 5.86:1; slate 4.64:1 / 4.95:1; muted grey 4.87:1 / 5.19:1 (paper / white).
+- In progress: regenerated published preview/OG assets are staged for the separate publishing commit. `npm run e2e:rentbook` reached R1 PASS and continued through its runner; the orchestration process disconnected before its final report, so do not claim a full E2E pass until rerun output is retained. Lighthouse was not run because no Lighthouse binary is installed.
+- Handoff: Phase 5 remains `Ready for review`, never Approved. Finish the full command matrix and Lighthouse, commit the asset refresh and this log, then capture final command output.
+
 ### Session: 2026-10-15, Rentbook reports and maintenance continuation
 
 - Done: Committed property-scoped reports with SVG/table alternatives, client-side RFC 4180 CSV export and print styling as `d047712`; committed the maintenance list, status filtering, request dialog and update sheet as `729e956`. Added the command palette, keyboard routes/actions, one-time payment hint, embedded-mode guard, maintenance activity/status enforcement and expanded browser coverage in `f837618`, `38df287`, `4d56c4b`, `c87de6e` and `46bd1a2`.

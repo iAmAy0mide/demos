@@ -8,6 +8,8 @@ const rentRollUrl = `${overviewUrl}/rent-roll`;
 const paymentsUrl = `${overviewUrl}/payments`;
 const tenantsUrl = `${overviewUrl}/tenants`;
 const propertiesUrl = `${overviewUrl}/properties`;
+const reportsUrl = `${overviewUrl}/reports`;
+const maintenanceUrl = `${overviewUrl}/maintenance`;
 
 const tests: E2ETest[] = [
   {
@@ -49,6 +51,16 @@ const tests: E2ETest[] = [
     id: "R8",
     viewport: { name: "phone", width: 390, height: 844, isMobile: true },
     run: exerciseBuilding,
+  },
+  {
+    id: "R9",
+    viewport: { name: "desktop", width: 1296, height: 640, isMobile: false },
+    run: exercisePaletteAndShortcuts,
+  },
+  {
+    id: "R10",
+    viewport: { name: "desktop", width: 1296, height: 640, isMobile: false },
+    run: exerciseReportsAndMaintenance,
   },
 ];
 
@@ -232,4 +244,41 @@ async function exerciseBuilding(page: Page) {
   }
   await page.goto(`${propertiesUrl}/missing`, { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: /not in this book/i }).waitFor();
+}
+
+async function exercisePaletteAndShortcuts(page: Page) {
+  await page.goto(overviewUrl, { waitUntil: "domcontentloaded" });
+  await page.keyboard.press("Control+K");
+  await page.getByTestId("command-palette").waitFor();
+  await page.getByLabel("Find a command").fill("Adaeze");
+  await page.getByRole("link", { name: "Adaeze Okoro" }).click();
+  await page.getByTestId("tenant-ledger").waitFor();
+  await page.keyboard.press("g");
+  await page.keyboard.press("r");
+  await page.getByRole("heading", { name: "Rent roll" }).waitFor();
+  await page.keyboard.press("p");
+  await page.getByTestId("payment-drawer").waitFor();
+  await page.getByLabel("Close record payment").click();
+  await page.getByRole("button", { name: "Discard" }).click();
+  await page.keyboard.press("n");
+  await page.getByRole("heading", { name: "New request" }).waitFor();
+}
+
+async function exerciseReportsAndMaintenance(page: Page) {
+  await page.goto(reportsUrl, { waitUntil: "domcontentloaded" });
+  await page.getByTestId("reports-page").waitFor();
+  const before = await page.locator(".rbk-report-table tbody tr").count();
+  await page.getByLabel("Property").selectOption("property-1");
+  if ((await page.locator(".rbk-report-table tbody tr").count()) !== before) {
+    throw new Error(
+      "Reports table row count should remain a six-month series after property scope.",
+    );
+  }
+  await page.goto(maintenanceUrl, { waitUntil: "domcontentloaded" });
+  await page.getByTestId("maintenance-page").waitFor();
+  await page.getByRole("button", { name: "New request" }).click();
+  await page.getByLabel("Unit").selectOption({ index: 1 });
+  await page.getByLabel("Request").fill("Test gate repair");
+  await page.getByRole("button", { name: "Create request" }).click();
+  await page.getByText("Test gate repair").waitFor();
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type RefObject } from "react";
 
 import { useLagosNow } from "@/src/shared/lib/useLagosNow";
@@ -20,13 +20,14 @@ type RentbookShellProps = { children: React.ReactNode };
 export function RentbookShell({ children }: RentbookShellProps) {
   const { state, dispatch } = useRentbook();
   const pathname = usePathname();
+  const router = useRouter();
   const now = useLagosNow();
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [isResetOpen, setIsResetOpen] = useState(false);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
   const commandInput = useRef<HTMLInputElement>(null);
 
-  useRentbookShortcut(setIsCommandOpen, setIsShortcutsOpen);
+  useRentbookShortcut(setIsCommandOpen, setIsShortcutsOpen, router.push);
   useFocusCommandInput(isCommandOpen, commandInput);
 
   const openPayment = () => window.dispatchEvent(new Event("rentbook:payment"));
@@ -68,7 +69,7 @@ export function RentbookShell({ children }: RentbookShellProps) {
             setIsCommandOpen(false);
             setIsResetOpen(true);
           }}
-          onOpenMaintenance={() => window.location.assign("/work/rentbook/maintenance?new=1")}
+          onOpenMaintenance={() => router.push("/work/rentbook/maintenance?new=1")}
           onShowShortcuts={() => setIsShortcutsOpen(true)}
         />
       ) : null}
@@ -96,6 +97,7 @@ export function RentbookShell({ children }: RentbookShellProps) {
 function useRentbookShortcut(
   setIsCommandOpen: (isOpen: boolean) => void,
   setIsShortcutsOpen: (isOpen: boolean) => void,
+  navigate: (href: string) => void,
 ) {
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
@@ -123,13 +125,13 @@ function useRentbookShortcut(
         document.querySelector<HTMLInputElement>("[aria-label='Search tenants']")?.focus();
       }
       if (event.key.toLowerCase() === "n") {
-        window.location.assign("/work/rentbook/maintenance?new=1");
+        navigate("/work/rentbook/maintenance?new=1");
       }
     };
 
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, [setIsCommandOpen, setIsShortcutsOpen]);
+  }, [navigate, setIsCommandOpen, setIsShortcutsOpen]);
 }
 
 function useFocusCommandInput(

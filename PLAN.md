@@ -2,6 +2,12 @@
 
 Living plan and progress tracker for **Axmion Showcase**. Codex reads this at the start of every session and updates it at the end of every session.
 
+### Session: 2026-10-15, Rentbook reports and maintenance continuation
+
+- Done: Committed property-scoped reports with SVG/table alternatives, client-side RFC 4180 CSV export and print styling as `d047712`; committed the maintenance list, status filtering, request dialog and update sheet as `729e956`.
+- Verification: `npm run typecheck` and `npm run check:csv` passed. Both commits passed their pre-commit gates with 0 errors and 24 existing size/complexity warnings.
+- Next session: Build the Rentbook command palette/shortcuts as the next vertical slice, then run its e2e coverage before beginning the phone/polish and hub-publishing pass. The full suite, screenshots, Lighthouse, previews/OG and Phase status update are still outstanding.
+
 ### Session: 2026-10-15, Rentbook tenant and property continuation
 
 - Done: Preserved the existing uncommitted tenant-ledger, portfolio and building-view work; tightened dynamic-route validation to the seeded IDs; separated the ledger notes panel and SVG elevation keyboard mechanics; cleared the three newly introduced continuation lint warnings. The pure ledger and building-layout checkers pass.

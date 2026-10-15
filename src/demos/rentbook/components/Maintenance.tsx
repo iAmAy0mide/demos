@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { useRentbook } from "./RentbookProvider";
@@ -12,9 +13,10 @@ type Status = (typeof STATUSES)[number];
 
 export function Maintenance() {
   const { state, dispatch } = useRentbook();
+  const searchParams = useSearchParams();
   const [filter, setFilter] = useState<Status | "all">("all");
   const [selected, setSelected] = useState<MaintenanceRequest | null>(null);
-  const [isNew, setIsNew] = useState(false);
+  const [isNew, setIsNew] = useState(() => searchParams.get("new") === "1");
   const requests = useMemo(
     () =>
       state.maintenance

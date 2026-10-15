@@ -25,10 +25,12 @@ export function RentbookShell({ children }: RentbookShellProps) {
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [isResetOpen, setIsResetOpen] = useState(false);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const [showPaymentHint, setShowPaymentHint] = useState(false);
   const commandInput = useRef<HTMLInputElement>(null);
 
   useRentbookShortcut(setIsCommandOpen, setIsShortcutsOpen, router.push);
   useFocusCommandInput(isCommandOpen, commandInput);
+  usePaymentHint(setShowPaymentHint);
 
   const openPayment = () => window.dispatchEvent(new Event("rentbook:payment"));
   const selectProperty = (propertyId: string) => dispatch({ type: "select_property", propertyId });
@@ -90,6 +92,14 @@ export function RentbookShell({ children }: RentbookShellProps) {
           </section>
         </div>
       ) : null}
+      {showPaymentHint ? (
+        <aside className="rbk-shortcut-hint" role="status">
+          Try recording a payment: press P
+          <button type="button" onClick={() => setShowPaymentHint(false)} aria-label="Dismiss hint">
+            ×
+          </button>
+        </aside>
+      ) : null}
     </>
   );
 }
@@ -100,6 +110,7 @@ function useRentbookShortcut(
   navigate: (href: string) => void,
 ) {
   useEffect(() => {
+    let awaitingGo = false;
     const handleShortcut = (event: KeyboardEvent) => {
       if (
         event.target instanceof HTMLInputElement ||
@@ -111,6 +122,24 @@ function useRentbookShortcut(
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         setIsCommandOpen(true);
+      }
+      if (awaitingGo) {
+        const destination = {
+          o: "/work/rentbook",
+          r: "/work/rentbook/rent-roll",
+          t: "/work/rentbook/tenants",
+          p: "/work/rentbook/properties",
+        }[event.key.toLowerCase()];
+        awaitingGo = false;
+        if (destination) {
+          event.preventDefault();
+          navigate(destination);
+          return;
+        }
+      }
+      if (event.key.toLowerCase() === "g") {
+        awaitingGo = true;
+        return;
       }
       if (event.key === "?") {
         event.preventDefault();
@@ -132,6 +161,19 @@ function useRentbookShortcut(
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
   }, [navigate, setIsCommandOpen, setIsShortcutsOpen]);
+}
+
+function usePaymentHint(setShowPaymentHint: (isVisible: boolean) => void) {
+  useEffect(() => {
+    if (
+      window.location.search.includes("embed=1") ||
+      localStorage.getItem("rentbook-payment-hint")
+    ) {
+      return;
+    }
+    setShowPaymentHint(true);
+    localStorage.setItem("rentbook-payment-hint", "seen");
+  }, [setShowPaymentHint]);
 }
 
 function useFocusCommandInput(

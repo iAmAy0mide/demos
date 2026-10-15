@@ -31,6 +31,30 @@
   align-items: center;
   justify-content: space-between;
 }
+.rbk-command-result {
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rbk-line);
+}
+.rbk-command-result small {
+  color: var(--rbk-muted);
+  font: 0.65rem var(--rbk-font-mono);
+}
+.rbk-command-result a,
+.rbk-command-result button {
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--rbk-ink);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+.rbk-command-result mark {
+  background: color-mix(in srgb, var(--rbk-emerald) 18%, var(--rbk-surface));
+  color: inherit;
+}
 
 .rbk-command-heading button,
 .rbk-command-panel > a,
@@ -75,6 +99,29 @@
 }
 .rbk-mobile-nav {
   display: none;
+}
+.rbk-shortcut-hint {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 30;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  max-width: 19rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--rbk-emerald);
+  background: var(--rbk-surface);
+  box-shadow: 0 0.8rem 2rem var(--rbk-shadow);
+  font-size: 0.8rem;
+}
+.rbk-shortcut-hint button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--rbk-ink);
+  font: inherit;
 }
 
 .rbk-deferred-screen {

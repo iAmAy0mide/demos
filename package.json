@@ -43,6 +43,8 @@
     "audit:reduced-motion": "node --experimental-strip-types scripts/audit-reduced-motion.ts",
     "audit:bundle": "node --experimental-strip-types scripts/audit-bundle.ts",
     "audit:layout-shift": "node --experimental-strip-types scripts/audit-layout-shift.ts",
+    "visual:capture": "node --experimental-strip-types scripts/visual-baseline.ts --capture",
+    "visual:compare": "node --experimental-strip-types scripts/visual-baseline.ts --compare",
     "e2e:fieldhand": "node --experimental-strip-types scripts/e2e-fieldhand.ts",
     "e2e:rentbook": "node --experimental-strip-types scripts/e2e-rentbook.ts",
     "e2e": "npm run e2e:fieldhand && npm run e2e:rentbook"
@@ -62,6 +64,7 @@
     "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
+    "@types/pngjs": "6.0.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "chrome-launcher": "1.2.2",

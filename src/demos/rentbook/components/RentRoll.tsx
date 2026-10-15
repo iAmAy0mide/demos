@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import { useDismissibleLayer } from "@/src/shared/lib/useDismissibleLayer";
@@ -311,7 +312,7 @@ export function RentRoll() {
                           >
                             Record payment
                           </button>
-                          <a href="/work/rentbook/tenants">View tenant</a>
+                          <Link href="/work/rentbook/tenants">View tenant</Link>
                           {(status === "overdue" || status === "partial") && tenant ? (
                             <button
                               type="button"

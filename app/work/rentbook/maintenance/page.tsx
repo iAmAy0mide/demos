@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { Maintenance } from "@/src/demos/rentbook/components/Maintenance";
 
 import type { Metadata } from "next";
@@ -8,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function MaintenancePage() {
-  return <Maintenance />;
+  return (
+    <Suspense fallback={<main className="rbk-page">Preparing maintenance…</main>}>
+      <Maintenance />
+    </Suspense>
+  );
 }

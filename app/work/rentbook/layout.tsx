@@ -1,4 +1,5 @@
 import { Hanken_Grotesk, Spline_Sans_Mono } from "next/font/google";
+import { Suspense } from "react";
 
 import "@/src/demos/rentbook/styles/tokens.css";
 import "@/src/demos/rentbook/styles/rentbook.css";
@@ -52,7 +53,9 @@ export default function RentbookLayout({ children }: Readonly<{ children: React.
   return (
     <div className={`rentbook-demo ${hanken.variable} ${spline.variable}`}>
       <RentbookProvider>
-        <RentbookShell>{children}</RentbookShell>
+        <Suspense fallback={<main className="rbk-page">Preparing Rentbook…</main>}>
+          <RentbookShell>{children}</RentbookShell>
+        </Suspense>
       </RentbookProvider>
       <DemoShell
         currentDemo="rentbook"

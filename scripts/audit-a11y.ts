@@ -1,8 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { chromium, type Page } from "playwright";
 
-import { withProductionServer } from "./lib/e2e";
-import { auditRoutes } from "./lib/routes";
+import { withProductionServer } from "./lib/e2e.ts";
+import { auditRoutes } from "./lib/routes.ts";
 
 import type { AxeResults, Result } from "axe-core";
 

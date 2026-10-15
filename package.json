@@ -39,6 +39,10 @@
     "check:pill-clearance": "node --experimental-strip-types scripts/check-pill-clearance.ts",
     "audit:lighthouse": "node --experimental-strip-types scripts/audit-lighthouse.ts",
     "audit:a11y": "node --experimental-strip-types scripts/audit-a11y.ts",
+    "audit:touch-targets": "node --experimental-strip-types scripts/audit-touch-targets.ts",
+    "audit:reduced-motion": "node --experimental-strip-types scripts/audit-reduced-motion.ts",
+    "audit:bundle": "node --experimental-strip-types scripts/audit-bundle.ts",
+    "audit:layout-shift": "node --experimental-strip-types scripts/audit-layout-shift.ts",
     "e2e:fieldhand": "node --experimental-strip-types scripts/e2e-fieldhand.ts",
     "e2e:rentbook": "node --experimental-strip-types scripts/e2e-rentbook.ts",
     "e2e": "npm run e2e:fieldhand && npm run e2e:rentbook"

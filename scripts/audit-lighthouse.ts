@@ -4,8 +4,8 @@ import { launch } from "chrome-launcher";
 import lighthouse, { type Result as LighthouseResult } from "lighthouse";
 import { chromium } from "playwright";
 
-import { withProductionServer } from "./lib/e2e";
-import { auditRoutes, type AuditRoute } from "./lib/routes";
+import { withProductionServer } from "./lib/e2e.ts";
+import { auditRoutes, type AuditRoute } from "./lib/routes.ts";
 
 const OUTPUT_DIRECTORY = ".audit/lighthouse";
 const DESKTOP_PATHS = new Set([

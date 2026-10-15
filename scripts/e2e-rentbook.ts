@@ -6,6 +6,7 @@ const port = Number(process.env.E2E_PORT ?? "3100");
 const overviewUrl = `http://127.0.0.1:${port}/work/rentbook`;
 const rentRollUrl = `${overviewUrl}/rent-roll`;
 const paymentsUrl = `${overviewUrl}/payments`;
+const tenantsUrl = `${overviewUrl}/tenants`;
 
 const tests: E2ETest[] = [
   {
@@ -32,6 +33,11 @@ const tests: E2ETest[] = [
     id: "R5",
     viewport: { name: "phone", width: 390, height: 844, isMobile: true },
     run: exerciseReminders,
+  },
+  {
+    id: "R6",
+    viewport: { name: "desktop", width: 1296, height: 640, isMobile: false },
+    run: exerciseTenantRegister,
   },
 ];
 
@@ -136,4 +142,20 @@ async function exerciseReminders(page: Page) {
   await page.getByRole("button", { name: "Copy text" }).click();
   await page.getByRole("button", { name: "Skip" }).click();
   await page.getByText("2 of 2").waitFor();
+}
+
+async function exerciseTenantRegister(page: Page) {
+  await page.goto(tenantsUrl, { waitUntil: "domcontentloaded" });
+  await page.getByTestId("tenant-list").waitFor();
+  const accounts = page.getByRole("link").filter({ hasText: "Flat" });
+  const count = await accounts.count();
+  await page.getByLabel("Search tenants").fill("Adaeze Okoro");
+  if ((await accounts.count()) !== 1) {
+    throw new Error("Tenant search did not narrow the register.");
+  }
+  await page.getByLabel("Search tenants").fill("");
+  await page.getByRole("button", { name: "overdue" }).click();
+  if ((await accounts.count()) >= count) {
+    throw new Error("Tenant status filter did not narrow the register.");
+  }
 }

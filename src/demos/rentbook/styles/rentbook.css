@@ -1,6 +1,7 @@
 .rentbook-demo {
   font-family: var(--rbk-font-sans);
   min-height: 100dvh;
+  overflow-x: clip;
 }
 .rentbook-demo * {
   box-sizing: border-box;

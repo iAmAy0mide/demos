@@ -30,8 +30,8 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 
 ## Current stage
 
-> **Phase 7: Axmion hub**
-> Status: `In progress (7C verification blocked)`
+> **Phase 8: Polish**
+> Status: `In progress (8A of 5)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -50,7 +50,7 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | 5   | Rentbook (second custom tool)                                 | Ready for review                      |
 | 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started                           |
 | 7   | Axmion hub (built last, covers every demo that exists)        | In progress (7C verification blocked) |
-| 8   | Polish: performance, a11y, responsive, motion                 | Not started                           |
+| 8   | Polish: performance, a11y, responsive, motion                 | In progress (8A of 5)                 |
 
 ---
 
@@ -390,6 +390,7 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-14 | 7C-fix   | Kept anatomy hotspot positions in one typed 320×480 coordinate system.                                                                                   | SVG regions and 44px interactive targets retain their correspondence at every tested viewport.                                                                                        |
 | 2026-10-14 | 7C       | Centralized Playwright e2e lifecycle management in `scripts/lib/e2e.ts`.                                                                                 | Fieldhand and Rentbook now use one production-server, isolation, retry, screenshot and cleanup contract.                                                                              |
 | 2026-10-14 | R1       | Extended the Rentbook seed with receipts, expenses and lease fees, and rebuilt overview figures from its scoped ledger.                                  | A single schema-versioned portfolio now drives summary figures, the chart, attention list and payment feed without a parallel UI fixture.                                             |
+| 2026-10-15 | 8A       | Added exact-version audit-only dependencies: Lighthouse 13.5.0, chrome-launcher 1.2.2, @axe-core/playwright 4.14.0, pixelmatch 8.0.0 and pngjs 7.0.0.    | The Phase 8 runners need reproducible browser, accessibility, performance and visual-diff tooling without shipping any new client dependency.                                         |
 
 ---
 

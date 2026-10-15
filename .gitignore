@@ -13,6 +13,7 @@
 # testing
 /coverage
 /.screenshots
+/.audit
 /.cache
 /test-results
 /playwright-report

@@ -1,17 +1,9 @@
 import { chromium, type Browser, type Page } from "playwright";
 
+import { auditRoutes, routesFromEnvironment } from "./lib/routes";
+
 const baseUrl = process.env.CHECK_BASE_URL ?? "http://127.0.0.1:3000";
-const defaultRoutes = [
-  "/",
-  "/work/fieldhand",
-  "/work/fieldhand/schedule",
-  "/work/fieldhand/quotes",
-  "/work/rentbook",
-  "/work/sunreach",
-  "/work/meridian",
-  "/work/harmattan",
-];
-const routes = process.env.CHECK_ROUTES?.split(",").filter(Boolean) ?? defaultRoutes;
+const routes = routesFromEnvironment(process.env.CHECK_ROUTES, auditRoutes);
 const phones = [
   [320, 568],
   [360, 740],
@@ -74,7 +66,7 @@ try {
   for (const [width, height] of phones) {
     const page = await createPhonePage(browser, width, height);
     for (const route of routes) {
-      const hasOverflow = await checkRoute(page, route, width, height);
+      const hasOverflow = await checkRoute(page, route.path, width, height);
       failed ||= hasOverflow;
     }
     await page.close();

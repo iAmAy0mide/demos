@@ -7,6 +7,7 @@ type Offender = { selector: string; width: number; height: number; text: string 
 
 await withProductionServer(async (baseUrl) => {
   const browser = await chromium.launch();
+  const totals = new Map<string, number>();
   try {
     const page = await browser.newPage({
       viewport: { width: 390, height: 844 },
@@ -17,15 +18,25 @@ await withProductionServer(async (baseUrl) => {
       await page.goto(`${baseUrl}${route.path}`, { waitUntil: "networkidle" });
       const offenders = await inspect(page);
       console.log(`touch ${route.path}: ${offenders.length}`);
-      if (offenders.length) {
-        console.table(offenders);
-      }
+      totals.set(route.demo, (totals.get(route.demo) ?? 0) + offenders.length);
+      reportOffenders(route.path, offenders);
     }
+    console.table([...totals].map(([demo, offenders]) => ({ demo, offenders })));
     await page.close();
   } finally {
     await browser.close();
   }
 });
+
+function reportOffenders(route: string, offenders: Offender[]) {
+  if (!offenders.length) {
+    return;
+  }
+  console.table(offenders.slice(0, 20));
+  if (offenders.length > 20) {
+    console.log(`touch ${route}: ${offenders.length - 20} additional offenders omitted`);
+  }
+}
 
 function inspect(page: Page): Promise<Offender[]> {
   return page.evaluate(() =>

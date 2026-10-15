@@ -107,8 +107,31 @@ function summarize(route: string, formFactor: FormFactor, result: LighthouseResu
     lcp: Math.round(value("largest-contentful-paint")),
     cls: Number(value("cumulative-layout-shift").toFixed(3)),
     tbt: Math.round(value("total-blocking-time")),
-    javascriptBytes: Math.round(value("total-byte-weight")),
+    javascriptBytes: transferredJavaScript(result),
   };
+}
+
+function transferredJavaScript(result: LighthouseResult) {
+  const details: unknown = result.audits["network-requests"]?.details;
+  if (!isRecord(details) || !Array.isArray(details.items)) {
+    return 0;
+  }
+  return Math.round(
+    details.items.reduce(
+      (total: number, request: unknown) =>
+        total +
+        (isRecord(request) &&
+        request.resourceType === "Script" &&
+        typeof request.transferSize === "number"
+          ? request.transferSize
+          : 0),
+      0,
+    ),
+  );
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }
 
 function medianSummary(results: Summary[]) {

@@ -2,6 +2,13 @@
 
 Living plan and progress tracker for **Axmion Showcase**. Codex reads this at the start of every session and updates it at the end of every session.
 
+### Session: 2026-10-15, Phase 8A audit baseline
+
+- Status: `8A complete; 8B performance next`. Added one typed route registry and committed runners for Lighthouse, axe, touch targets, reduced motion, bundle composition, layout shift and deterministic visual comparison. The full ranked evidence report is `docs/polish-audit.md`; no `app/` or `src/` product file was changed.
+- Highest-priority evidence: Rentbook performance is 46 desktop / 63–65 mobile with TBT up to 4532ms; hub performance is 40 desktop / 62 mobile; axe found 8 critical, 782 serious, 151 moderate and 50 minor affected nodes; touch testing found 799 undersized controls; Meridian quote CLS is 0.1229; and responsive/shell checks found the documented overflow and floating-shell collisions.
+- Verification: `npm run format` and `npm run check` pass with the same 25 existing lint warnings and zero errors. `npm run build` passes and generates all 49 pages. All eight audit/visual commands completed; 135 visual comparisons stayed under 1%. `check:full` passes through the mobile-menu check and exits red at the intentional all-route overflow findings. Fieldhand E2E passes P1–P8 and B1–B6 but B7 fails; Rentbook passes R1–R3, R6 and R11 but fails R4, R5 and R7–R10.
+- Next session: start 8B with the ranked performance items only—profile Rentbook hydration/long ledgers, the hub preview/hero pipeline, Fieldhand route-specific clients and unused Motion delivery. Preserve the audit baseline and do not mix accessibility or responsive fixes into 8B.
+
 ### Session: 2026-10-15, Rentbook phone and publishing verification
 
 - Done: Committed phone scroll contracts and the mobile-navigation E2E hook as `d162efb` (4 files, 9 insertions, 5 deletions). Marked the ledger and report tables as deliberate horizontal scrollers and darkened the vacant status token to meet AA text contrast.
@@ -31,7 +38,7 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 ## Current stage
 
 > **Phase 8: Polish**
-> Status: `In progress (8A of 5)`
+> Status: `In progress (8A complete; 8B next)`
 
 **Status values:** `Not started` → `In progress` → `Ready for review` → `Approved`
 Codex may set `In progress` and `Ready for review`. Only the project owner sets `Approved`.
@@ -50,7 +57,7 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | 5   | Rentbook (second custom tool)                                 | Ready for review                      |
 | 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started                           |
 | 7   | Axmion hub (built last, covers every demo that exists)        | In progress (7C verification blocked) |
-| 8   | Polish: performance, a11y, responsive, motion                 | In progress (8A of 5)                 |
+| 8   | Polish: performance, a11y, responsive, motion                 | In progress (8A complete; 8B next)    |
 
 ---
 

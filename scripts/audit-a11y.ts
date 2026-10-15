@@ -38,12 +38,13 @@ async function scanViewport(
   baseUrl: string,
   viewport: (typeof VIEWPORTS)[number],
 ) {
-  const page = await browser.newPage({ viewport });
+  const context = await browser.newContext({ viewport, colorScheme: "light" });
+  const page = await context.newPage();
   const findings: Finding[] = [];
   for (const route of auditRoutes) {
     findings.push(...(await scanRoute(page, baseUrl, route, viewport.name)));
   }
-  await page.close();
+  await context.close();
   return findings;
 }
 
@@ -62,8 +63,10 @@ async function scanRoute(
     }
   }
   if (route.demo === "fieldhand") {
-    await page.getByRole("button", { name: "Toggle color theme" }).click();
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.goto(`${baseUrl}${route.path}`, { waitUntil: "networkidle" });
     findings.push(...flatten(await scan(page), route.path, `${viewportName}:other-theme`));
+    await page.emulateMedia({ colorScheme: "light" });
   }
   return findings;
 }
@@ -86,18 +89,23 @@ function flatten(results: AxeResults, route: string, state: string): Finding[] {
 }
 
 async function openInteraction(page: Page, interaction: string) {
+  const drawerClose = page.getByRole("button", { name: "Close job details" });
+  if (await drawerClose.isVisible().catch(() => false)) {
+    await drawerClose.click({ timeout: 3_000 });
+  }
   const actions: Record<string, () => Promise<void>> = {
     "command palette": () => page.keyboard.press("Control+KeyK"),
-    "assign picker": () => page.getByTestId("job-card-assign-VL-1042").click(),
-    "create job": () => page.getByTestId("new-job-button").click(),
-    "payment drawer": () => page.getByRole("button", { name: "Record payment" }).click(),
+    "assign picker": () => page.getByTestId("job-card-assign-VL-1042").click({ timeout: 3_000 }),
+    "create job": () => page.getByTestId("new-job-button").click({ timeout: 3_000 }),
+    "payment drawer": () =>
+      page.getByRole("button", { name: "Record payment" }).click({ timeout: 3_000 }),
     receipt: () =>
       page
         .getByRole("button", { name: /receipt/i })
         .first()
-        .click(),
-    "mobile menu": () => page.getByRole("button", { name: "Open menu" }).click(),
-    "bag drawer": () => page.getByRole("button", { name: /Open bag/ }).click(),
+        .click({ timeout: 3_000 }),
+    "mobile menu": () => page.getByRole("button", { name: "Open menu" }).click({ timeout: 3_000 }),
+    "bag drawer": () => page.getByRole("button", { name: /Open bag/ }).click({ timeout: 3_000 }),
   };
   const action = actions[interaction];
   if (!action) {

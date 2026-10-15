@@ -11,8 +11,10 @@ export type AuditRoute = {
 };
 
 const fieldhandInteractions = ["command palette", "assign picker", "create job"];
+const fieldhandCommonInteractions = ["command palette"];
 const harmattanInteractions = ["mobile menu", "bag drawer"];
-const rentbookInteractions = ["command palette", "payment drawer", "receipt"];
+const rentbookInteractions = ["command palette", "payment drawer"];
+const rentbookPaymentInteractions = [...rentbookInteractions, "receipt"];
 
 export const auditRoutes: AuditRoute[] = [
   { path: "/", label: "Hub", demo: "hub", kind: "marketing", interactions: [] },
@@ -28,14 +30,14 @@ export const auditRoutes: AuditRoute[] = [
     label: "Fieldhand quotes",
     demo: "fieldhand",
     kind: "app",
-    interactions: fieldhandInteractions,
+    interactions: fieldhandCommonInteractions,
   },
   {
     path: "/work/fieldhand/schedule?job=VL-1042",
     label: "Fieldhand schedule",
     demo: "fieldhand",
     kind: "app",
-    interactions: fieldhandInteractions,
+    interactions: fieldhandCommonInteractions,
   },
   {
     path: "/work/sunreach",
@@ -252,7 +254,7 @@ export const auditRoutes: AuditRoute[] = [
     label: "Rentbook payments",
     demo: "rentbook",
     kind: "app",
-    interactions: rentbookInteractions,
+    interactions: rentbookPaymentInteractions,
   },
   {
     path: "/work/rentbook/properties",

@@ -56,11 +56,8 @@ async function checkPhone(page: Page, width: number, height: number) {
     .getByRole("dialog", { name: "Navigation" })
     .getByRole("link", { name: "Contact" })
     .click();
-  await page.locator("#contact").waitFor();
-  const scrolledToContact = await page.evaluate(() => window.scrollY > 0);
-  if (!scrolledToContact) {
-    throw new Error("A mobile navigation anchor did not scroll to its section.");
-  }
+  await page.locator("#contact").waitFor({ state: "visible" });
+  await page.waitForFunction(() => window.scrollY > 0);
   await openMenu(page);
   const cta = page
     .getByRole("dialog", { name: "Navigation" })

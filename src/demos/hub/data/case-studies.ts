@@ -27,11 +27,11 @@ export const caseStudies: Record<Work["id"], CaseStudy> = {
     problem:
       "Rent follow-up gets unreliable when a portfolio is spread across notebooks, transfers and chats.",
     whatWeBuilt:
-      "A rent roll with property filters, payment actions and a ledger that makes the next decision obvious.",
+      "A property-aware rent roll, printable receipts and a building view that makes the next collection or care decision obvious.",
     whatToNotice: [
       "Press P to record a payment.",
-      "Filter the rent roll by property.",
-      "Open the command menu without leaving the ledger.",
+      "Print a receipt after recording it.",
+      "Open a building to inspect every unit at a glance.",
     ],
     whyItConverts: "It leads with the cash position and lets a manager act from the same screen.",
   },

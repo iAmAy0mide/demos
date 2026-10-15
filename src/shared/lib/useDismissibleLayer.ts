@@ -51,6 +51,7 @@ export function useDismissibleLayer({
     }
     const previousFocus =
       document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const trigger = triggerRef?.current;
     const trapTab = (event: KeyboardEvent) => {
       if (event.key !== "Tab") {
         return;
@@ -75,7 +76,7 @@ export function useDismissibleLayer({
     document.addEventListener("keydown", trapTab);
     return () => {
       document.removeEventListener("keydown", trapTab);
-      window.setTimeout(() => (triggerRef?.current ?? previousFocus)?.focus(), 0);
+      window.setTimeout(() => (trigger ?? previousFocus)?.focus(), 0);
     };
   }, [isOpen, layerRef, trapFocus, triggerRef]);
 }

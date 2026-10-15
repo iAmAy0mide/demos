@@ -3,8 +3,8 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type RefObject } from "react";
 
-import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 import { useIsEmbedded } from "@/src/shared/lib/useIsEmbedded";
+import { useLagosNow } from "@/src/shared/lib/useLagosNow";
 
 import { PaymentDialog } from "./PaymentDialog";
 import { ReceiptDialog } from "./ReceiptDialog";

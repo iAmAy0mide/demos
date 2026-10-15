@@ -1,13 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function useIsEmbedded() {
-  const [isEmbedded, setIsEmbedded] = useState(readEmbeddedState);
-
-  useEffect(() => {
-    setIsEmbedded(readEmbeddedState());
-  }, []);
+  const [isEmbedded] = useState(readEmbeddedState);
 
   return isEmbedded;
 }

@@ -90,7 +90,7 @@ export function RentbookHeader({
         >
           <Command aria-hidden="true" size={16} />
         </button>
-        <button className="rbk-command-trigger" type="button" onClick={onOpenReset}>
+        <button className="rbk-reset-trigger" type="button" onClick={onOpenReset}>
           Reset demo
         </button>
         <button className="rbk-primary" type="button" onClick={onOpenPayment}>

@@ -134,6 +134,9 @@
   .rbk-summary-five {
     grid-template-columns: repeat(2, 1fr);
   }
+  .rbk-summary-five article:last-child {
+    grid-column: span 2;
+  }
   .rbk-ledger-grid {
     grid-template-columns: 1fr;
   }

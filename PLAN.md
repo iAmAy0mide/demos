@@ -4,9 +4,10 @@ Living plan and progress tracker for **Axmion Showcase**. Codex reads this at th
 
 ### Session: 2026-10-15, Rentbook reports and maintenance continuation
 
-- Done: Committed property-scoped reports with SVG/table alternatives, client-side RFC 4180 CSV export and print styling as `d047712`; committed the maintenance list, status filtering, request dialog and update sheet as `729e956`.
-- Verification: `npm run typecheck` and `npm run check:csv` passed. Both commits passed their pre-commit gates with 0 errors and 24 existing size/complexity warnings.
-- Next session: Build the Rentbook command palette/shortcuts as the next vertical slice, then run its e2e coverage before beginning the phone/polish and hub-publishing pass. The full suite, screenshots, Lighthouse, previews/OG and Phase status update are still outstanding.
+- Done: Committed property-scoped reports with SVG/table alternatives, client-side RFC 4180 CSV export and print styling as `d047712`; committed the maintenance list, status filtering, request dialog and update sheet as `729e956`. Added the command palette, keyboard routes/actions, one-time payment hint, embedded-mode guard, maintenance activity/status enforcement and expanded browser coverage in `f837618`, `38df287`, `4d56c4b`, `c87de6e` and `46bd1a2`.
+- Publishing: Rentbook is published in `src/shared/works.ts`; the hub case study now calls out P-to-pay, printable receipts and the building view. `npm run previews` and `npm run og` generated the current assets. The Rentbook desktop preview revealed clipped summary figures, so the source correction is included in the final publishing worktree and needs a fresh production build before regenerated assets are accepted.
+- Verification: `npm run typecheck` and `npm run check:csv` passed. Commits passed their pre-commit gates with 0 errors and 25 existing size/complexity warnings. The sandbox observer stops long production builds before their final line; only the earlier successful build output is recorded. Lighthouse and the exhaustive all-route phone/style smoke remain for owner review.
+- Handoff: Phase 5 is Ready for review, never Approved. Review the regenerated Rentbook preview at desktop and phone, run the full production/e2e/phone/Lighthouse set in a terminal that can retain long processes, then commit the remaining publishing asset refresh.
 
 ### Session: 2026-10-15, Rentbook tenant and property continuation
 
@@ -37,7 +38,7 @@ Codex may set `In progress` and `Ready for review`. Only the project owner sets 
 | 2   | Sunreach Power (landing page)                                 | Approved                              |
 | 3   | Meridian Freight (business site)                              | Approved                              |
 | 4   | Harmattan Coffee Co. (business site)                          | Approved                              |
-| 5   | Rentbook (second custom tool)                                 | Approved                              |
+| 5   | Rentbook (second custom tool)                                 | Ready for review                      |
 | 6   | Stockroom (optional third tool; owner decision after Phase 5) | Not started                           |
 | 7   | Axmion hub (built last, covers every demo that exists)        | In progress (7C verification blocked) |
 | 8   | Polish: performance, a11y, responsive, motion                 | Not started                           |

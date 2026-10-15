@@ -1,6 +1,6 @@
-import { runE2E, type E2ETest } from "./lib/e2e.ts";
-
 import { readFile } from "node:fs/promises";
+
+import { runE2E, type E2ETest } from "./lib/e2e.ts";
 
 import type { Page } from "playwright";
 

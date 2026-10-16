@@ -10,7 +10,7 @@ export function DemoLink({ children, ...props }: DemoLinkProps) {
     <Link {...props} target="_blank" rel="noopener noreferrer">
       {children}
       <ExternalLink aria-hidden="true" size="0.8em" strokeWidth={2} />
-      <span className="axm-sr-only"> (opens in a new tab)</span>
+      <span className="axm-visually-hidden"> (opens in a new tab)</span>
     </Link>
   );
 }

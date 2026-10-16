@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "@/src/shared/components/AxmionAttribution/AxmionAttribution.css";
 import "@/src/shared/demo-shell/DemoShell.css";
+import "@/src/shared/styles/accessibility.css";
 
 export const metadata: Metadata = {
   title: "Axmion Web Innovations",

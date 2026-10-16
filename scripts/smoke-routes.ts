@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 
 import { chromium } from "playwright";
 
-import { auditRoutes, type AuditRoute } from "./lib/routes";
+import { auditRoutes, type AuditRoute } from "./lib/routes.ts";
 
 const DEFAULT_PORT = 3101;
 const DEFAULT_BASE_URL = `http://127.0.0.1:${DEFAULT_PORT}`;

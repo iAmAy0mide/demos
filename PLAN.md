@@ -398,12 +398,22 @@ Record every notable decision here: new dependencies, font substitutions, deviat
 | 2026-10-14 | 7C       | Centralized Playwright e2e lifecycle management in `scripts/lib/e2e.ts`.                                                                                                  | Fieldhand and Rentbook now use one production-server, isolation, retry, screenshot and cleanup contract.                                                                              |
 | 2026-10-14 | R1       | Extended the Rentbook seed with receipts, expenses and lease fees, and rebuilt overview figures from its scoped ledger.                                                   | A single schema-versioned portfolio now drives summary figures, the chart, attention list and payment feed without a parallel UI fixture.                                             |
 | 2026-10-15 | 8A       | Added exact-version audit-only dependencies: Lighthouse 13.5.0, chrome-launcher 1.2.2, @axe-core/playwright 4.14.0, pixelmatch 8.0.0, pngjs 7.0.0 and @types/pngjs 6.0.5. | The Phase 8 runners need reproducible browser, accessibility, performance and visual-diff tooling without shipping any new client dependency.                                         |
+| 2026-10-16 | 7C-fix   | Standardized hub demo actions and rebuilt the footer around the published-work registry, a scoped CTA, and an inert cropped SVG wordmark.                                 | Explicit component roles and browser guards prevent broad footer/link rules from exposing assistive copy, wrapping conversion actions, or restoring obsolete work-kind labels.        |
 
 ---
 
 ## Handoff notes
 
 Codex writes here at the end of each session. Keep the most recent session at the top.
+
+### Session: 2026-10-16, hub link, action and footer repair
+
+- Status: Deliverable complete in `e0282d7`, `29a4332`, `4cbad98`, with the smoke-runner compatibility repair in `e26fc75`; Phase 7 remains `In progress` because the repository-wide inherited failures below are outside this hub-only session.
+- Done: Replaced the undefined visible assistive-text class with a root-loaded clipped utility and browser guard; standardized case-study, service, anatomy, preview and mobile-menu actions across the required widths; removed the mobile header containing-block bug that clipped the fixed menu; and rebuilt the footer with an explicit brand/CTA hierarchy, registry-ordered work links, responsive 1/2/4-column grids, stacked phone attribution, shell clearance and a non-interactive cropped SVG wordmark. The Node 24 smoke runner now resolves its typed route registry.
+- Visual and keyboard evidence: Viewed footer screenshots at 320, 390, 768 and 1440px plus the affected work, service, anatomy and open-menu states. The hub has zero overflow from 320–1920px, shell clearance is clear at every tested top/bottom position, and the keyboard-only phone path passes skip link, menu activation, dialog trap, Escape restoration and Back to top.
+- Green verification: `npm run check` passes with 0 errors and the same 25 existing size/complexity warnings; `npm run build` generates 49 pages; visually-hidden, anatomy, demo-link, footer, menu, hub-only overflow and hub-only pill checks pass; and `check:seo` passes. No new dependency was added.
+- Expected visual baseline change: `visual:compare` stops at the first changed image because `hub-phone.png` grew from 390×13874 to 390×14493. That hub phone change—and the hub tablet/desktop action/footer/menu images—is expected; the runner is fail-fast on dimension changes, so it did not compare unrelated routes in this run.
+- Existing failures, unchanged from the Phase 8A baseline: `check:full` stops at all-route overflow findings in Sunreach, Meridian, Harmattan and Rentbook while the hub is clear; smoke routes reach the known Rentbook invalid-tenant route returning 200 instead of 404; Fieldhand B7 fails focus-leave dismissal; Rentbook passes R1–R3/R6/R11 and fails R4/R5/R7–R10. The next session should address those only in their owning phase rather than broadening this hub repair.
 
 ### Session: 2026-10-14, shared e2e infrastructure
 

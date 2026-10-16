@@ -46,10 +46,11 @@ export function CaseStudySection({ work, index, isActive, onActivate }: CaseStud
         </div>
         <p className="axm-case-reason">{study.whyItConverts}</p>
         <div className="axm-case-actions">
-          <DemoLink className="axm-button" href={work.route}>
+          <DemoLink className="axm-button axm-case-primary" href={work.route}>
             Open live demo
           </DemoLink>
           <a
+            className="axm-case-secondary"
             href={buildWhatsAppLink(buildContextMessage(work.name))}
             target="_blank"
             rel="noopener noreferrer"
@@ -57,7 +58,9 @@ export function CaseStudySection({ work, index, isActive, onActivate }: CaseStud
             Get one like this
           </a>
           {work.id === "sunreach" && (
-            <DemoLink href="/work/sunreach?annotations=1">See why it converts</DemoLink>
+            <DemoLink className="axm-case-tertiary" href="/work/sunreach?annotations=1">
+              See why it converts
+            </DemoLink>
           )}
         </div>
       </div>
